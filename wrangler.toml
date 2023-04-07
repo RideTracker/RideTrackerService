@@ -6,3 +6,8 @@ env = { }
 
 [triggers]
 crons = [ ]
+
+[[ d1_databases ]]
+binding = "DATABASE" # i.e. available in your Worker on env.DB
+database_name = "staging"
+database_id = "96c03eb6-d7d5-40e6-8032-1cb6599ac100"
