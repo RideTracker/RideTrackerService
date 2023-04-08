@@ -1,15 +1,14 @@
 import { Router } from "itty-router";
+import { ThrowableRouter, withContent, withParams } from "itty-router-extras";
 
-import { handlePingRequest } from "./routes/ping";
-import { handleUserRequest } from "./routes/user";
-import { handleProductRequest } from "./routes/product";
+import { withSchema } from "./middlewares/schema";
+
+import { authenticationRegisterSchema, handleAuthenticationRegisterRequest } from "./routes/authentication/register";
 
 function registerEndpoints() {
-    const router = Router();
+    const router = ThrowableRouter();
 
-    router.get("/api/ping", handlePingRequest);
-    router.get("/api/user", handleUserRequest);
-    router.get("/api/product", handleProductRequest);
+    router.post("/api/user/authentication/register", withContent, withSchema(authenticationRegisterSchema), handleAuthenticationRegisterRequest);
 
     return router;
 };
