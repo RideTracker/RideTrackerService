@@ -11,7 +11,7 @@
   "scripts": {
     "start": "wrangler dev",
     "deploy": "wrangler publish",
-    "database": "wrangler d1 execute staging --local --file=./schema.sql",
+    "database": "wrangler d1 execute staging --local --file=./schema.sql --persist",
     "deploy:database": "wrangler d1 execute staging --file=./schema.sql"
   },
   "dependencies": {

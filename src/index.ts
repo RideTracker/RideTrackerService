@@ -5,11 +5,11 @@ import { handleUserRequest } from "./routes/user";
 import { handleProductRequest } from "./routes/product";
 
 function registerEndpoints() {
-    const router = Router({ base: "/api" });
+    const router = Router();
 
-    router.get("/ping", handlePingRequest);
-    router.get("/user", handleUserRequest);
-    router.get("/product", handleProductRequest);
+    router.get("/api/ping", handlePingRequest);
+    router.get("/api/user", handleUserRequest);
+    router.get("/api/product", handleProductRequest);
 
     return router;
 };
