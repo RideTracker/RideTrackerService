@@ -19,7 +19,7 @@ export async function handleAuthenticationLoginRequest(request: any, env: Env) {
 
     const user = await getUserByEmail(env.DATABASE, email);
 
-    if(!user)
+    if(user === null)
         return Response.json({ success: false, message: "This email is not registered to anyone." });
 
     return Response.json({ success: true, user });
