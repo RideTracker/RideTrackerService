@@ -1,4 +1,3 @@
-import { User } from "../../../models/user";
 import { UserVerification } from "../../../models/userVerification";
 
 export async function deleteUserVerification(database: D1Database, userVerification: UserVerification): Promise<void> {

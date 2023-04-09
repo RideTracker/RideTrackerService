@@ -1,4 +1,3 @@
-import { User } from "../../../models/user";
 import { UserVerification } from "../../../models/userVerification";
 
 export async function getUserVerification(database: D1Database, id: string): Promise<UserVerification | null> {

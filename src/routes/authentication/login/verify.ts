@@ -1,9 +1,5 @@
-import { createUserVerification } from "../../../controllers/users/verifications/createUserVerification";
 import { deleteUserVerification } from "../../../controllers/users/verifications/deleteUserVerification";
-import { getUserByEmail } from "../../../controllers/users/getUserByEmail";
 import { getUserVerification } from "../../../controllers/users/verifications/getUserVerification";
-import { sendUserVerificationEmail } from "../../../controllers/users/verifications/sendUserVerificationEmail";
-import { verifyPassword } from "../../../utils/encryption";
 
 export const authenticationLoginVerificationSchema = {
     content: {
