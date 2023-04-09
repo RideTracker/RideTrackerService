@@ -7,6 +7,8 @@ import { authLoginSchema, handleAuthLoginRequest } from "./routes/auth/login";
 import { authLoginVerificationSchema, handleAuthLoginVerificationRequest } from "./routes/auth/login/verify";
 import { authRegisterSchema, handleAuthRegisterRequest } from "./routes/auth/register";
 import { authRenewSchema, handleAuthRenewRequest } from "./routes/auth/renew";
+import { withAuth } from "./middlewares/auth";
+import { getUserById } from "./controllers/users/getUserById";
 
 
 function registerEndpoints() {
@@ -16,6 +18,13 @@ function registerEndpoints() {
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withSchema(authRenewSchema), handleAuthRenewRequest);
+
+    router.get("/api/ping", withContent, withAuth, async (request, env: Env) => {
+        return Response.json({
+            ping: "pong",
+            user: await getUserById(env.DATABASE, request.user)
+        });
+    });
 
     return router;
 };
