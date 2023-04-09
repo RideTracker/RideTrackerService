@@ -1,7 +1,9 @@
+import { getUserById } from "../../../controllers/users/getUserById";
+import { createUserKey } from "../../../controllers/users/keys/createUserKey";
 import { deleteUserVerification } from "../../../controllers/users/verifications/deleteUserVerification";
 import { getUserVerification } from "../../../controllers/users/verifications/getUserVerification";
 
-export const authenticationLoginVerificationSchema = {
+export const authLoginVerificationSchema = {
     content: {
         id: {
             type: "string",
@@ -15,7 +17,7 @@ export const authenticationLoginVerificationSchema = {
     }
 };
 
-export async function handleAuthenticationLoginVerificationRequest(request: any, env: Env) {
+export async function handleAuthLoginVerificationRequest(request: any, env: Env) {
     const { id, code } = request.content;
 
     const userVerification = await getUserVerification(env.DATABASE, id);
@@ -30,5 +32,12 @@ export async function handleAuthenticationLoginVerificationRequest(request: any,
 
     await deleteUserVerification(env.DATABASE, userVerification);
 
-    return Response.json({ success: true });
+    const user = await getUserById(env.DATABASE, userVerification.user);
+
+    if(user === null)
+        return Response.json({ success: false, message: "User no longer exists." });
+
+    const userKey = await createUserKey(env.DATABASE, user);
+
+    return Response.json({ success: true, key: userKey.id });
 };

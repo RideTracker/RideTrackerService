@@ -1,4 +1,4 @@
-export const authenticationRenewSchema = {
+export const authRenewSchema = {
     content: {
         token: {
             type: "string",
@@ -7,6 +7,6 @@ export const authenticationRenewSchema = {
     }
 };
 
-export async function handleAuthenticationRenewRequest(request: any) {
+export async function handleAuthRenewRequest(request: any) {
     return Response.json({ status: 200, message: "OK" });
 };

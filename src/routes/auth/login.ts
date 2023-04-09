@@ -3,7 +3,7 @@ import { getUserByEmail } from "../../controllers/users/getUserByEmail";
 import { sendUserVerificationEmail } from "../../controllers/users/verifications/sendUserVerificationEmail";
 import { verifyPassword } from "../../utils/encryption";
 
-export const authenticationLoginSchema = {
+export const authLoginSchema = {
     content: {
         email: {
             type: "string",
@@ -17,7 +17,7 @@ export const authenticationLoginSchema = {
     }
 };
 
-export async function handleAuthenticationLoginRequest(request: any, env: Env) {
+export async function handleAuthLoginRequest(request: any, env: Env) {
     const { email, password } = request.content;
 
     const user = await getUserByEmail(env.DATABASE, email);

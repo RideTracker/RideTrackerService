@@ -1,6 +1,6 @@
 import { encryptPassword } from "../../utils/encryption";
 
-export const authenticationRegisterSchema = {
+export const authRegisterSchema = {
     content: {
         password: {
             type: "string",
@@ -9,7 +9,7 @@ export const authenticationRegisterSchema = {
     }
 };
 
-export async function handleAuthenticationRegisterRequest(request: any) {
+export async function handleAuthRegisterRequest(request: any) {
     const { password } = request.content;
 
     return Response.json({ status: 200, message: "OK", password: await encryptPassword(password) });

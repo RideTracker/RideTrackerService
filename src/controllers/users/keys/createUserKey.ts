@@ -5,7 +5,7 @@ export async function createUserKey(database: D1Database, user: User): Promise<U
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO user_keys (id, user, timestamp) VALUES (?, ?, ?, ?)").bind(id, user.id, timestamp).run();
+    await database.prepare("INSERT INTO user_keys (id, user, timestamp) VALUES (?, ?, ?)").bind(id, user.id, timestamp).run();
     
     return {
         id,
