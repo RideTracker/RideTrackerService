@@ -5,12 +5,7 @@ import { getUserKeyByCode } from "../../controllers/users/keys/getUserKeyByCode"
 
 export const authRenewSchema = {
     content: {
-        id: {
-            type: "string",
-            required: true
-        },
-        
-        code: {
+        key: {
             type: "string",
             required: true
         }
@@ -18,21 +13,21 @@ export const authRenewSchema = {
 };
 
 export async function handleAuthRenewRequest(request: any, env: Env) {
-    const { id, code } = request.content;
+    const { key } = request.content;
 
-    const user = await getUserById(env.DATABASE, id);
-
-    if(user === null)
-        return Response.json({ success: false });
-
-    let userKey = await getUserKeyByCode(env.DATABASE, user, code);
+    let userKey = await getUserKeyByCode(env.DATABASE, key);
 
     if(userKey === null)
         return Response.json({ success: false });
 
     await deleteUserKey(env.DATABASE, userKey);
 
+    const user = await getUserById(env.DATABASE, userKey.user);
+
+    if(user === null)
+        return Response.json({ success: false });
+
     userKey = await createUserKey(env.DATABASE, user);
 
-    return Response.json({ success: true, code: userKey.id });
+    return Response.json({ success: true, key: userKey.id });
 };
