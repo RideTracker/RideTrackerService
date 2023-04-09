@@ -1,5 +1,5 @@
-import { User } from "../models/user";
-import { UserVerification } from "../models/userVerification";
+import { User } from "../../../models/user";
+import { UserVerification } from "../../../models/userVerification";
 
 export async function generateUserVerificationCode(): Promise<string> {
     const randomArray = new Uint32Array(1);
@@ -18,7 +18,7 @@ export async function createUserVerification(database: D1Database, user: User): 
     
     return {
         id,
-        user,
+        user: user.id,
         code,
         timestamp
     };

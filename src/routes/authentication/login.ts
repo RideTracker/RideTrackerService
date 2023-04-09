@@ -1,6 +1,6 @@
-import { createUserVerification } from "../../controllers/createUserVerification";
-import { getUserByEmail } from "../../controllers/getUserByEmail";
-import { sendUserVerificationEmail } from "../../controllers/sendUserVerificationEmail";
+import { createUserVerification } from "../../controllers/users/verifications/createUserVerification";
+import { getUserByEmail } from "../../controllers/users/getUserByEmail";
+import { sendUserVerificationEmail } from "../../controllers/users/verifications/sendUserVerificationEmail";
 import { verifyPassword } from "../../utils/encryption";
 
 export const authenticationLoginSchema = {
@@ -30,7 +30,7 @@ export async function handleAuthenticationLoginRequest(request: any, env: Env) {
 
     const userVerification = await createUserVerification(env.DATABASE, user);
 
-    await sendUserVerificationEmail(userVerification);
+    await sendUserVerificationEmail(user, userVerification);
 
     return Response.json({ success: true });
 };

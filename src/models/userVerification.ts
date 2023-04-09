@@ -2,7 +2,7 @@ import { User } from "./user";
 
 export type UserVerification = {
     id: string;
-    user: User;
+    user: string;
 
     code: string;
     timestamp: number;
