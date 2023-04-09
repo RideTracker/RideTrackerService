@@ -79,9 +79,9 @@ INSERT INTO "activity_comments" VALUES ('d4b22d54-8871-442e-87d3-abc2831b0822','
 INSERT INTO "activity_summary" VALUES ('188fd10c-4bcf-42f8-b30f-421619720565','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg',7.3,23.7,33.0,36.5,0,1678553188986);
 INSERT INTO "bikes" VALUES ('844d20e9-a253-415e-9f5d-ae86a4c21947','95c00e4b-607e-43d3-b871-4661ebc2cedd','Vittoria','Battaglin C11','https://i.imgur.com/Lol0MH3.jpg',1678313271079.0);
 INSERT INTO "bike_summary" VALUES ('493992a7-7c2d-49af-9d09-fed49e3c7496','844d20e9-a253-415e-9f5d-ae86a4c21947',1,7.3,33.0,1678553980492);
-INSERT INTO "users" VALUES ('256264be-d8ac-4e41-9099-f6d96c50ba3c','norasoderlund@icloud.com2','$2b$10$lwiy50csdvj9apF6Bvi5KueO7lZyPGq1GAe4y3Aq9wtJ2errkSQO6','Nora','Summerswille','https://i.imgur.com/dIV7nwq.png',1678613688440.0);
-INSERT INTO "users" VALUES ('59174df4-1b1b-4d5f-9d6a-79f23a6b9e69','norasoderlund2@icloud.com','$2b$10$zCtxyXsgsY5Ai57i6tbd.uNzrKnLe70YhwdUR66AdMhvWnraU69xC','Nora','Söderlund',NULL,1678485977894.0);
-INSERT INTO "users" VALUES ('95c00e4b-607e-43d3-b871-4661ebc2cedd','norasoderlund@icloud.com','$2b$10$zCtxyXsgsY5Ai57i6tbd.uNzrKnLe70YhwdUR66AdMhvWnraU69xC','Nora','Söderlund','https://avatars.githubusercontent.com/u/78360666?v=4',1678300150558.0);
+INSERT INTO "users" VALUES ('256264be-d8ac-4e41-9099-f6d96c50ba3c','norasoderlund@icloud.com2','ues1NuDbbXuwZP0AqN9dkz3NurYY1eIo0IlUsOgkcHg=.Av8nleF1FsnhdWSUgrf6OQ==','Nora','Summerswille','https://i.imgur.com/dIV7nwq.png',1678613688440.0);
+INSERT INTO "users" VALUES ('59174df4-1b1b-4d5f-9d6a-79f23a6b9e69','norasoderlund2@icloud.com','ues1NuDbbXuwZP0AqN9dkz3NurYY1eIo0IlUsOgkcHg=.Av8nleF1FsnhdWSUgrf6OQ==','Nora','Söderlund',NULL,1678485977894.0);
+INSERT INTO "users" VALUES ('95c00e4b-607e-43d3-b871-4661ebc2cedd','norasoderlund@icloud.com','ues1NuDbbXuwZP0AqN9dkz3NurYY1eIo0IlUsOgkcHg=.Av8nleF1FsnhdWSUgrf6OQ==','Nora','Söderlund','https://avatars.githubusercontent.com/u/78360666?v=4',1678300150558.0);
 INSERT INTO "user_keys" VALUES ('06ecb46f-010b-4724-a3a0-c41620240976','95c00e4b-607e-43d3-b871-4661ebc2cedd',1678300150558.0);
 INSERT INTO "user_keys" VALUES ('0b01cdb8-f29c-4425-ac6e-36d462085358','95c00e4b-607e-43d3-b871-4661ebc2cedd',1678551471042.0);
 INSERT INTO "user_keys" VALUES ('15f46022-c2a7-47f9-9148-7831fbbd5569','256264be-d8ac-4e41-9099-f6d96c50ba3c',1678618719397.0);

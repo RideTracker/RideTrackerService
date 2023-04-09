@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
-    "bcryptjs": "^2.4.3",
     "itty-router": "^3.0.12",
     "itty-router-extras": "^0.4.2"
   }
