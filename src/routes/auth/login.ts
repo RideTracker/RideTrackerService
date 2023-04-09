@@ -30,7 +30,10 @@ export async function handleAuthLoginRequest(request: any, env: Env) {
 
     const userVerification = await createUserVerification(env.DATABASE, user);
 
+    if(userVerification === null)
+        return Response.json({ success: false, message: "Something went wrong." });
+
     await sendUserVerificationEmail(user, userVerification);
 
-    return Response.json({ success: true });
+    return Response.json({ success: true, verification: userVerification.id });
 };
