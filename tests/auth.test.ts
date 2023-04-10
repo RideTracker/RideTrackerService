@@ -8,7 +8,7 @@ if(import.meta.env.VITE_GITHUB_SHA) {
         test("verifying github sha", async () => {
             while(true) {
                 try {
-                    const response = await getResponse("GET", "/tests/github", null);
+                    const response = await getResponse("GET", "/staging/github", null);
 
                     // @ts-ignore
                     if(response.sha === import.meta.env.VITE_GITHUB_SHA)
@@ -26,7 +26,7 @@ if(import.meta.env.VITE_GITHUB_SHA) {
 
 describe("auth", async () => {
     test("preparing database", async () => {
-        await getResponse("POST", "/tests/register", null, {
+        await getResponse("POST", "/staging/register", null, {
             email: "testlund@ridetracker.app"
         });
     });
@@ -41,7 +41,7 @@ describe("auth", async () => {
 
         expect(response.success).toBe(true);
 
-        const codeResponse = await getResponse("POST", "/tests/verification", null, {
+        const codeResponse = await getResponse("POST", "/staging/verification", null, {
             id: response.verification
         });
     
@@ -63,7 +63,7 @@ describe("auth", async () => {
 
         expect(response.success).toBe(true);
 
-        const codeResponse = await getResponse("POST", "/tests/verification", null, {
+        const codeResponse = await getResponse("POST", "/staging/verification", null, {
             id: response.verification
         });
     

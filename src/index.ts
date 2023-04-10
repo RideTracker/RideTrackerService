@@ -14,6 +14,8 @@ import { getUserVerification } from "./controllers/users/verifications/getUserVe
 import { getUserByEmail } from "./controllers/users/getUserByEmail";
 import { deleteUser } from "./controllers/users/deleteUser";
 import { handleAuthProfileRequest } from "./routes/auth/profile";
+import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
+import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
 
 
 function registerEndpoints() {
@@ -31,33 +33,10 @@ function registerEndpoints() {
         });
     });
 
-    router.post("/tests/register", withStaging, withContent, async (request, env: Env) => {
-        const { email } = request.content;
+    router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
+    router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
 
-        const user = await getUserByEmail(env.DATABASE, email);
-
-        if(user === null)
-            return Response.json({ success: true });
-
-        await deleteUser(env.DATABASE, user);
-
-        return Response.json({ success: true });
-    });
-
-    router.post("/tests/verification", withStaging, withContent, async (request, env: Env) => {
-        const { id } = request.content;
-
-        const userVerification = await getUserVerification(env.DATABASE, id);
-
-        if(userVerification === null)
-            return Response.json({ success: false, message: "Id doesn't exist." });
-
-        return Response.json({
-            code: userVerification.code
-        });
-    });
-
-    router.get("/tests/github", withStaging, async (request, env: Env) => {
+    router.get("/staging/github", withStaging, async (request, env: Env) => {
         return Response.json({ sha: env.GITHUB_SHA });
     });
 
