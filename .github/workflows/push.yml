@@ -24,4 +24,4 @@ jobs:
           command: publish --env staging
         
       - name: Run vite tests
-        run: npx vitest run
+        run: npx vitest run --ignore=".*/\..*/"
