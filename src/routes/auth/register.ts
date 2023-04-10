@@ -46,7 +46,7 @@ export async function handleAuthRegisterRequest(request: any, env: Env) {
     if(password.length < 3)
         return Response.json({ success: false, message: "Password must be at least 3 characters. We recommend a minimum of 6 characters or longer!" });
     
-    const user = await createUser(env.DATABASE, firstname, lastname, email, password);
+    const user = await createUser(env.DATABASE, firstname, lastname, email, await encryptPassword(password));
 
     if(user === null)
         return Response.json({ success: false, message: "Something went wrong!" });
@@ -58,5 +58,5 @@ export async function handleAuthRegisterRequest(request: any, env: Env) {
 
     await sendUserVerificationEmail(user, userVerification);
 
-    return Response.json({ success: true });
+    return Response.json({ success: true, verification: userVerification.id });
 };

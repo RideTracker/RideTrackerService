@@ -6,14 +6,16 @@
     "@types/itty-router-extras": "^0.4.0",
     "better-sqlite3": "^8.0.1",
     "typescript": "^5.0.3",
+    "vitest": "^0.30.0",
     "wrangler": "2.14.0"
   },
   "private": true,
   "scripts": {
     "start": "wrangler dev",
     "deploy": "wrangler publish",
-    "database": "wrangler d1 execute staging --local --persist-to local --file=./schema.sql",
-    "deploy:database": "wrangler d1 execute staging --file ./schema.sql"
+    "database": "wrangler d1 execute staging --local --file=./schema.sql",
+    "deploy:database": "wrangler d1 execute staging --file ./schema.sql",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",

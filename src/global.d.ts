@@ -3,3 +3,5 @@ declare type Env = {
     
     DATABASE: D1Database;
 };
+
+declare const ENVIRONMENT: "staging" | "production";

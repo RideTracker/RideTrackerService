@@ -2,12 +2,22 @@ name = "test-service"
 main = "src/index.ts"
 compatibility_date = "2023-04-07"
 usage_model = "bundled"
-env = { }
 
 [triggers]
 crons = [ ]
 
+[vars]
+ENVIRONMENT = "production"
+
 [[ d1_databases ]]
-binding = "DATABASE" # i.e. available in your Worker on env.DB
+binding = "DATABASE"
+database_name = "staging"
+database_id = "96c03eb6-d7d5-40e6-8032-1cb6599ac100"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+[[ env.staging.d1_databases ]]
+binding = "DATABASE"
 database_name = "staging"
 database_id = "96c03eb6-d7d5-40e6-8032-1cb6599ac100"
