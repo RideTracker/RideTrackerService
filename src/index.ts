@@ -57,6 +57,10 @@ function registerEndpoints() {
         });
     });
 
+    router.get("/tests/github", withStaging, async (request, env: Env) => {
+        return Response.json({ sha: env.GITHUB_SHA });
+    });
+
     return router;
 };
 

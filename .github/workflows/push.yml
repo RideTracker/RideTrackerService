@@ -21,7 +21,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: publish --env staging
+          command: publish --env staging --var GITHUB_SHA:${{ github.sha }}
         
       - name: Run vite tests
-        run: npx vitest run
+        run: npx vitest run -e GITHUB_SHA=${{ github.sha }}
