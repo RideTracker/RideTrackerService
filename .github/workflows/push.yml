@@ -1,9 +1,10 @@
 run-name: Run tests by @${{ github.actor }}
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
