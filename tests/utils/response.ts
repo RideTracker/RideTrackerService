@@ -5,7 +5,7 @@ export async function getResponse(method: string, url: string, key: string | nul
             "Authorization": key ?? "",
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(body)
+        body: (method !== "GET" && body !== null)?(JSON.stringify(body)):(undefined)
     });
 
     return await response.json();
