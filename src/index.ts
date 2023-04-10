@@ -23,7 +23,7 @@ function registerEndpoints() {
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
-    router.post("/api/auth/profile", withContent, withAuth, handleAuthProfileRequest);
+    router.get("/api/auth/profile", withContent, withAuth, handleAuthProfileRequest);
 
     router.get("/api/ping", withContent, async (request, env: Env) => {
         return Response.json({

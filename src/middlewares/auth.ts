@@ -7,7 +7,7 @@ export async function withAuth(request: any, env: Env, context: any) {
     const userKey = await getUserKeyByCode(env.DATABASE, key);
 
     if(userKey === null)
-       return Response.json({ success: false, message: "Authorization failed" }, { status: 500 });
+       return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
 
     request.userId = userKey.user;
     request.userKey = userKey.id;
