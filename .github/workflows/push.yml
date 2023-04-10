@@ -28,7 +28,6 @@ jobs:
         with:
           apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
           email: ${{ secrets.CLOUDFLARE_API_EMAIL }}
-          wranglerVersion: '1.6.0'
           command: d1 execute staging --file ./schema.sql --env staging
         
   tests:
