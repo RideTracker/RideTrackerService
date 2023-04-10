@@ -1,4 +1,4 @@
-run-name: Run tests by @${{ github.actor }}
+run-name: Run tests
 
 on:
   workflow_dispatch:
@@ -12,10 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-
-      - name: Install dependencies
-        run: npm install
         
       - name: Publish using wrangler
         uses: cloudflare/wrangler-action@2.0.0
@@ -31,6 +27,7 @@ jobs:
         
   tests:
     name: Run tests
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
