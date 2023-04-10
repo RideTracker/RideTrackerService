@@ -25,5 +25,5 @@ jobs:
         
       - name: Run vite tests
         env:
-          GITHUB_SHA: ${{ github.sha }}
+          VITE_GITHUB_SHA: ${{ github.sha }}
         run: npx vitest run
