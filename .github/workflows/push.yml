@@ -26,7 +26,8 @@ jobs:
       - name: Upload database
         uses: cloudflare/wrangler-action@2.0.0
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
+          email: ${{ secrets.CLOUDFLARE_EMAIL }}
           command: d1 execute staging --file ./schema.sql --env staging
         
   tests:
