@@ -2,14 +2,16 @@ import { assert, describe, expect, test } from "vitest";
 import { getResponse } from "./utils/response";
 import { getUserByEmail } from "../src/controllers/users/getUserByEmail";
 
-if(process.env.VITE_GITHUB_SHA) {
+// @ts-ignore
+if(import.meta.env.VITE_GITHUB_SHA) {
     describe("github", async () => {
         test("verifying github sha", async () => {
             while(true) {
                 try {
                     const response = await getResponse("GET", "/tests/github", null);
 
-                    if(response.sha === process.env.VITE_GITHUB_SHA)
+                    // @ts-ignore
+                    if(response.sha === import.meta.env.VITE_GITHUB_SHA)
                         break;
 
                     await new Promise((resolve) => setTimeout(resolve, 5000));
