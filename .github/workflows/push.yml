@@ -27,7 +27,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
-          email: ${{ secrets.CLOUDFLARE_EMAIL }}
+          email: ${{ secrets.CLOUDFLARE_API_EMAIL }}
           command: d1 execute staging --file ./schema.sql --env staging
         
   tests:
