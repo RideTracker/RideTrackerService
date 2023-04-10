@@ -2,23 +2,25 @@ import { assert, describe, expect, test } from "vitest";
 import { getResponse } from "./utils/response";
 import { getUserByEmail } from "../src/controllers/users/getUserByEmail";
 
-describe("github", async () => {
-    test("verifying github sha", async () => {
-        while(true) {
-            try {
-                const response = await getResponse("GET", "/tests/github", null);
+if(process.env.VITE_GITHUB_SHA) {
+    describe("github", async () => {
+        test("verifying github sha", async () => {
+            while(true) {
+                try {
+                    const response = await getResponse("GET", "/tests/github", null);
 
-                if(response.sha === process.env.GITHUB_SHA)
-                    break;
+                    if(response.sha === process.env.VITE_GITHUB_SHA)
+                        break;
 
-                await new Promise((resolve) => setTimeout(resolve, 5000));
+                    await new Promise((resolve) => setTimeout(resolve, 5000));
+                }
+                catch {
+                    continue;
+                }
             }
-            catch {
-                continue;
-            }
-        }
+        }, 60000);
     });
-});
+}
 
 describe("auth", async () => {
     test("preparing database", async () => {

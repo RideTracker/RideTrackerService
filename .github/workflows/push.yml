@@ -24,4 +24,7 @@ jobs:
           command: publish --env staging --var GITHUB_SHA:${{ github.sha }}
         
       - name: Run vite tests
-        run: npx vitest run -e GITHUB_SHA=${{ github.sha }}
+        run: npx vitest run
+        with:
+          env:
+            GITHUB_SHA: ${{ github.sha }}
