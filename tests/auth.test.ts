@@ -3,6 +3,12 @@ import { getResponse } from "./utils/response";
 import { getUserByEmail } from "../src/controllers/users/getUserByEmail";
 
 describe("auth", async () => {
+    test("preparing database", async () => {
+        await getResponse("POST", "/tests/register", {
+            email: "testlund@ridetracker.app"
+        });
+    });
+
     test("register user", async () => {
         const response = await getResponse("POST", "/api/auth/register", {
             firstname: "Nora",

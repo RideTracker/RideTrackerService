@@ -11,6 +11,8 @@ import { withAuth } from "./middlewares/auth";
 import { getUserById } from "./controllers/users/getUserById";
 import { withStaging } from "./middlewares/staging";
 import { getUserVerification } from "./controllers/users/verifications/getUserVerification";
+import { getUserByEmail } from "./controllers/users/getUserByEmail";
+import { deleteUser } from "./controllers/users/deleteUser";
 
 
 function registerEndpoints() {
@@ -25,6 +27,19 @@ function registerEndpoints() {
         return Response.json({
             ping: "pong"
         });
+    });
+
+    router.post("/tests/register", withStaging, withContent, async (request, env: Env) => {
+        const { email } = request.content;
+
+        const user = await getUserByEmail(env.DATABASE, email);
+
+        if(user === null)
+            return Response.json({ success: true });
+
+        await deleteUser(env.DATABASE, user);
+
+        return Response.json({ success: true });
     });
 
     router.post("/tests/verification", withStaging, withContent, async (request, env: Env) => {
