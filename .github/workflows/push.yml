@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to staging
+    name: Deploy to staging and run tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,17 +23,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: publish --env staging
         
-  tests:
-    name: Run tests
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-
-      - name: Install dependencies
-        run: npm install
-        
       - name: Run vite tests
-        run: vitest run
-        
+        run: npx vitest run
