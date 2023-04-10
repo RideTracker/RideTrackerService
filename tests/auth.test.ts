@@ -4,13 +4,13 @@ import { getUserByEmail } from "../src/controllers/users/getUserByEmail";
 
 describe("auth", async () => {
     test("preparing database", async () => {
-        await getResponse("POST", "/tests/register", {
+        await getResponse("POST", "/tests/register", null, {
             email: "testlund@ridetracker.app"
         });
     });
 
     test("register user", async () => {
-        const response = await getResponse("POST", "/api/auth/register", {
+        const response = await getResponse("POST", "/api/auth/register", null, {
             firstname: "Nora",
             lastname: "Testlund",
             email: "testlund@ridetracker.app",
@@ -19,11 +19,11 @@ describe("auth", async () => {
 
         expect(response.success).toBe(true);
 
-        const codeResponse = await getResponse("POST", "/tests/verification", {
+        const codeResponse = await getResponse("POST", "/tests/verification", null, {
             id: response.verification
         });
     
-        const verifyResponse = await getResponse("POST", "/api/auth/login/verify", {
+        const verifyResponse = await getResponse("POST", "/api/auth/login/verify", null, {
             id: response.verification,
             code: codeResponse.code
         });
@@ -34,18 +34,18 @@ describe("auth", async () => {
     let userKey: any = null;
     
     test("login user", async () => {
-        const response = await getResponse("POST", "/api/auth/login", {
+        const response = await getResponse("POST", "/api/auth/login", null, {
             email: "testlund@ridetracker.app",
             password: "testlund123"
         });
 
         expect(response.success).toBe(true);
 
-        const codeResponse = await getResponse("POST", "/tests/verification", {
+        const codeResponse = await getResponse("POST", "/tests/verification", null, {
             id: response.verification
         });
     
-        const verifyResponse = await getResponse("POST", "/api/auth/login/verify", {
+        const verifyResponse = await getResponse("POST", "/api/auth/login/verify", null, {
             id: response.verification,
             code: codeResponse.code
         });
@@ -56,12 +56,17 @@ describe("auth", async () => {
     });
     
     test("renew user", async () => {
-        const response = await getResponse("POST", "/api/auth/renew", {
-            key: userKey
-        });
-
-        console.log(response);
+        const response = await getResponse("POST", "/api/auth/renew", userKey);
 
         expect(response.success).toBe(true);
+
+        userKey = response.key;
+    });
+
+    test("get user profile", async () => {
+        const response = await getResponse("GET", "/api/auth/profile", userKey);
+
+        expect(response.success).toBe(true);
+        expect(response.user.name).toBe("Nora Testlund");
     });
 });

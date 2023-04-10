@@ -13,6 +13,7 @@ import { withStaging } from "./middlewares/staging";
 import { getUserVerification } from "./controllers/users/verifications/getUserVerification";
 import { getUserByEmail } from "./controllers/users/getUserByEmail";
 import { deleteUser } from "./controllers/users/deleteUser";
+import { handleAuthProfileRequest } from "./routes/auth/profile";
 
 
 function registerEndpoints() {
@@ -21,7 +22,8 @@ function registerEndpoints() {
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
-    router.post("/api/auth/renew", withContent, withSchema(authRenewSchema), handleAuthRenewRequest);
+    router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
+    router.post("/api/auth/profile", withContent, withAuth, handleAuthProfileRequest);
 
     router.get("/api/ping", withContent, async (request, env: Env) => {
         return Response.json({
