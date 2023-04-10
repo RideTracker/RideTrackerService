@@ -18,10 +18,16 @@ jobs:
         run: npm install
         
       - name: Publish using wrangler
-        run: npx wrangler publish --env staging
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: publish --env staging
         
-      - name: Upload empty database
-        run: wrangler d1 execute staging --file ./schema.sql --env staging
+      - name: Upload database
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: d1 execute staging --file ./schema.sql --env staging
         
   tests:
     name: Run tests
