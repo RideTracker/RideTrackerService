@@ -1,0 +1,31 @@
+run-name: Run tests by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Publish using wrangler
+        run: npx wrangler publish --env staging
+        
+      - name: Upload empty database
+        run: wrangler d1 execute staging --file ./schema.sql --env staging
+        
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run vite tests
+        run: vitest run
+        
