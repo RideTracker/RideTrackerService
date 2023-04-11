@@ -16,6 +16,7 @@ import { deleteUser } from "./controllers/users/deleteUser";
 import { handleAuthProfileRequest } from "./routes/auth/profile";
 import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
+import { handleFeedRequest } from "./routes/feed";
 
 
 function registerEndpoints() {
@@ -26,6 +27,8 @@ function registerEndpoints() {
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
     router.get("/api/auth/profile", withContent, withAuth, handleAuthProfileRequest);
+    
+    router.get("/api/feed", withAuth, handleFeedRequest);
 
     router.get("/api/ping", withContent, async (request, env: Env) => {
         return Response.json({

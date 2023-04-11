@@ -1,6 +1,5 @@
 import { assert, describe, expect, test } from "vitest";
 import { getResponse } from "./utils/response";
-import { getUserByEmail } from "../src/controllers/users/getUserByEmail";
 
 // @ts-ignore
 if(import.meta.env.VITE_GITHUB_SHA) {
@@ -90,5 +89,11 @@ describe("auth", async () => {
 
         expect(response.success).toBe(true);
         expect(response.user.name).toBe("Nora Testlund");
+    });
+
+    test("get feed", async () => {
+        const response = await getResponse("GET", "/api/feed", userKey);
+
+        expect(response.success).toBe(true);
     });
 });
