@@ -2,6 +2,8 @@ import { getLatestActivityCommand } from "../../controllers/activities/comments/
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
+import { getBikeById } from "../../controllers/bikes/getBikeById";
+import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
 import { getUserById } from "../../controllers/users/getUserById";
 import { User } from "../../models/user";
 
@@ -27,6 +29,9 @@ export async function handleActivityRequest(request: Request, env: Env) {
     if(!acitivityAuthor)
         return Response.json({ success: false });
 
+    const activityBike = (activity.bike) && await getBikeById(env.DATABASE, activity.bike);
+    const activityBikeSummary = (activityBike) && await getBikeSummaryById(env.DATABASE, activityBike.id);
+
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
 
     const activityComment = await getLatestActivityCommand(env.DATABASE, id);
@@ -44,6 +49,19 @@ export async function handleActivityRequest(request: Request, env: Env) {
                 id: acitivityAuthor.id,
                 name: acitivityAuthor.firstname + " " + acitivityAuthor.lastname,
                 avatar: acitivityAuthor.avatar
+            },
+
+            bike: activityBike && {
+                id: activityBike.id,
+                name: activityBike.name,
+                model: activityBike.model,
+                image: activityBike.image,
+
+                summary: activityBikeSummary && {
+                    rides: activityBikeSummary.rides,
+                    distance: activityBikeSummary.distance,
+                    elevation: activityBikeSummary.elevation
+                }
             },
             
             summary: activitySummary && {
