@@ -101,5 +101,7 @@ describe("auth", async () => {
         const response = await getResponse("GET", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675", userKey);
 
         expect(response.success).toBe(true);
+
+        console.log("activity", response);
     });
 });

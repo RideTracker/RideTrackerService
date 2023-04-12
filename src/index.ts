@@ -17,7 +17,7 @@ import { handleAuthProfileRequest } from "./routes/auth/profile";
 import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
 import { handleFeedRequest } from "./routes/feed";
-import { handleActivityRequest } from "./routes/activities";
+import { activityRequestSchema, handleActivityRequest } from "./routes/activities";
 
 
 function registerEndpoints() {
@@ -30,7 +30,7 @@ function registerEndpoints() {
     router.get("/api/auth/profile", withContent, withAuth, handleAuthProfileRequest);
     
     router.get("/api/feed", withAuth, handleFeedRequest);
-    router.get("/api/activities/:id?", withAuth, withParams, handleActivityRequest);
+    router.get("/api/activities/:id?", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
 
     router.get("/api/ping", withContent, async (request, env: Env) => {
         return Response.json({

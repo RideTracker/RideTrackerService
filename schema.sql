@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS "activity_likes" (
 DROP TABLE IF EXISTS "activity_summary";
 CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"id"	varchar(255) NOT NULL,
-	"activity"	varchar(255) NOT NULL,
 	"area"	varchar(255) NOT NULL,
 	"distance"	double NOT NULL,
 	"average_speed"	double NOT NULL,
@@ -86,7 +85,7 @@ CREATE TABLE IF NOT EXISTS "user_verifications" (
 INSERT INTO "activities" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd','844d20e9-a253-415e-9f5d-ae86a4c21947',1678300150558.0);
 INSERT INTO "activities" VALUES ('6ecd9429-739d-45fa-bc09-489bd20a10fd','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,1678303566794.0);
 INSERT INTO "activity_comments" VALUES ('d4b22d54-8871-442e-87d3-abc2831b0822','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,'Nice one!',1679214607615);
-INSERT INTO "activity_summary" VALUES ('188fd10c-4bcf-42f8-b30f-421619720565','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg',7.3,23.7,33.0,36.5,0,1678553188986);
+INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg',7.3,23.7,33.0,36.5,0,1678553188986);
 INSERT INTO "bikes" VALUES ('844d20e9-a253-415e-9f5d-ae86a4c21947','95c00e4b-607e-43d3-b871-4661ebc2cedd','Vittoria','Battaglin C11','https://i.imgur.com/Lol0MH3.jpg',1678313271079.0);
 INSERT INTO "bike_summary" VALUES ('493992a7-7c2d-49af-9d09-fed49e3c7496','844d20e9-a253-415e-9f5d-ae86a4c21947',1,7.3,33.0,1678553980492);
 
