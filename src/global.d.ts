@@ -7,3 +7,13 @@ declare type Env = {
 
     GITHUB_SHA: string | undefined;
 };
+
+declare type Request = {
+    [key: string]: any | undefined;
+    
+    key: {
+        id: string;
+        user: string;
+        timestamp: number;
+    };
+};

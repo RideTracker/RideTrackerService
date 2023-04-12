@@ -5,24 +5,15 @@ import { getUserKeyByCode } from "../../controllers/users/keys/getUserKeyByCode"
 import { getUserKeyById } from "../../controllers/users/keys/getUserKeyById";
 import { User } from "../../models/user";
 
-export const authRenewSchema = {
-    content: {
-        key: {
-            type: "string",
-            required: true
-        }
-    }
-};
-
-export async function handleAuthRenewRequest(request: any, env: Env) {
-    let userKey = await getUserKeyById(env.DATABASE, request.userKey);
+export async function handleAuthRenewRequest(request: Request, env: Env) {
+    let userKey = await getUserKeyById(env.DATABASE, request.key.user);
     
     if(userKey === null)
         return Response.json({ success: false });
 
     await deleteUserKey(env.DATABASE, userKey);
 
-    const user = await getUserById(env.DATABASE, request.userId) as User;
+    const user = await getUserById(env.DATABASE, request.key.user) as User;
     
     if(user === null)
         return Response.json({ success: false });

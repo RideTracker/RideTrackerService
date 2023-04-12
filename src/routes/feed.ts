@@ -1,6 +1,6 @@
 import { getActivities } from "../controllers/activities/getActivities";
 
-export async function handleFeedRequest(request: any, env: Env) {
+export async function handleFeedRequest(request: Request, env: Env) {
     const activities = await getActivities(env.DATABASE);
 
     if(!activities)

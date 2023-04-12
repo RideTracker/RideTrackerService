@@ -17,7 +17,7 @@ export const authLoginSchema = {
     }
 };
 
-export async function handleAuthLoginRequest(request: any, env: Env) {
+export async function handleAuthLoginRequest(request: Request, env: Env) {
     const { email, password } = request.content;
 
     const user = await getUserByEmail(env.DATABASE, email);

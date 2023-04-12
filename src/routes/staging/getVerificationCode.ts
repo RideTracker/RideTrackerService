@@ -1,6 +1,6 @@
 import { getUserVerification } from "../../controllers/users/verifications/getUserVerification";
 
-export async function handleStagingVerificationRequest(request: any, env: Env) {
+export async function handleStagingVerificationRequest(request: Request, env: Env) {
     const { id } = request.content;
 
     const userVerification = await getUserVerification(env.DATABASE, id);

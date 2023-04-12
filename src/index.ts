@@ -6,13 +6,9 @@ import { withSchema } from "./middlewares/schema";
 import { authLoginSchema, handleAuthLoginRequest } from "./routes/auth/login";
 import { authLoginVerificationSchema, handleAuthLoginVerificationRequest } from "./routes/auth/login/verify";
 import { authRegisterSchema, handleAuthRegisterRequest } from "./routes/auth/register";
-import { authRenewSchema, handleAuthRenewRequest } from "./routes/auth/renew";
+import { handleAuthRenewRequest } from "./routes/auth/renew";
 import { withAuth } from "./middlewares/auth";
-import { getUserById } from "./controllers/users/getUserById";
 import { withStaging } from "./middlewares/staging";
-import { getUserVerification } from "./controllers/users/verifications/getUserVerification";
-import { getUserByEmail } from "./controllers/users/getUserByEmail";
-import { deleteUser } from "./controllers/users/deleteUser";
 import { handleAuthProfileRequest } from "./routes/auth/profile";
 import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
@@ -32,7 +28,7 @@ function registerEndpoints() {
     router.get("/api/feed", withAuth, handleFeedRequest);
     router.get("/api/activities/:id?", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
 
-    router.get("/api/ping", withContent, async (request, env: Env) => {
+    router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
             ping: "pong"
         });
@@ -41,7 +37,7 @@ function registerEndpoints() {
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
 
-    router.get("/staging/github", withStaging, async (request, env: Env) => {
+    router.get("/staging/github", withStaging, async (request: Request, env: Env) => {
         return Response.json({ sha: env.GITHUB_SHA });
     });
 

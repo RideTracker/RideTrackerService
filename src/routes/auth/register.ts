@@ -28,7 +28,7 @@ export const authRegisterSchema = {
     }
 };
 
-export async function handleAuthRegisterRequest(request: any, env: Env) {
+export async function handleAuthRegisterRequest(request: Request, env: Env) {
     const { firstname, lastname, email, password } = request.content;
 
     if(firstname.length < 2 || firstname.length > 128)

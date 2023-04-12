@@ -1,7 +1,7 @@
 import { deleteUser } from "../../controllers/users/deleteUser";
 import { getUserByEmail } from "../../controllers/users/getUserByEmail";
 
-export async function handleStagingDeleteUserRequest(request: any, env: Env) {
+export async function handleStagingDeleteUserRequest(request: Request, env: Env) {
     const { email } = request.content;
 
     const user = await getUserByEmail(env.DATABASE, email);

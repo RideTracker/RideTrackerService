@@ -1,4 +1,5 @@
 import { getActivityById } from "../../controllers/activities/getActivityById";
+import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 
 export const activityRequestSchema = {
@@ -10,7 +11,7 @@ export const activityRequestSchema = {
     }
 };
 
-export async function handleActivityRequest(request: any, env: Env) {
+export async function handleActivityRequest(request: Request, env: Env) {
     const { id } = request.params;
 
     const activity = await getActivityById(env.DATABASE, id);
@@ -19,6 +20,7 @@ export async function handleActivityRequest(request: any, env: Env) {
         return Response.json({ success: false });
 
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
+    const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
 
     return Response.json({
         success: true,
@@ -36,6 +38,9 @@ export async function handleActivityRequest(request: any, env: Env) {
             },
 
             timestamp: activity.timestamp
+        },
+
+        user: {
         }
     });
 };
