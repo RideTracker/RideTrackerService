@@ -1,7 +1,9 @@
+import { getLatestActivityCommand } from "../../controllers/activities/comments/getLatestActivityComment";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 import { getUserById } from "../../controllers/users/getUserById";
+import { User } from "../../models/user";
 
 export const activityRequestSchema = {
     params: {
@@ -26,6 +28,10 @@ export async function handleActivityRequest(request: Request, env: Env) {
         return Response.json({ success: false });
 
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
+
+    const activityComment = await getLatestActivityCommand(env.DATABASE, id);
+    const activityCommentUser = (activityComment) && await getUserById(env.DATABASE, activityComment.user);
+
     const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
 
     return Response.json({
@@ -34,7 +40,7 @@ export async function handleActivityRequest(request: Request, env: Env) {
         activity: {
             id: activity.id,
 
-            author: {
+            user: {
                 id: acitivityAuthor.id,
                 name: acitivityAuthor.firstname + " " + acitivityAuthor.lastname,
                 avatar: acitivityAuthor.avatar
@@ -47,6 +53,18 @@ export async function handleActivityRequest(request: Request, env: Env) {
                 elevation: activitySummary.elevation,
                 maxSpeed: activitySummary.maxSpeed,
                 comments: activitySummary.comments
+            },
+
+            comment: activityComment && {
+                message: activityComment.message,
+
+                user: activityCommentUser && {
+                    id: activityCommentUser.id,
+                    name: activityCommentUser.firstname + " " + activityCommentUser.lastname,
+                    avatar: activityCommentUser.avatar
+                },
+
+                timestamp: activityComment.timestamp
             },
 
             timestamp: activity.timestamp
