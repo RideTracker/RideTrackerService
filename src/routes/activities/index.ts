@@ -1,6 +1,7 @@
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
+import { getUserById } from "../../controllers/users/getUserById";
 
 export const activityRequestSchema = {
     params: {
@@ -19,6 +20,11 @@ export async function handleActivityRequest(request: Request, env: Env) {
     if(!activity)
         return Response.json({ success: false });
 
+    const acitivityAuthor = await getUserById(env.DATABASE, activity.user);
+
+    if(!acitivityAuthor)
+        return Response.json({ success: false });
+
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
     const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
 
@@ -27,6 +33,12 @@ export async function handleActivityRequest(request: Request, env: Env) {
 
         activity: {
             id: activity.id,
+
+            author: {
+                id: acitivityAuthor.id,
+                name: acitivityAuthor.firstname + " " + acitivityAuthor.lastname,
+                avatar: acitivityAuthor.avatar
+            },
             
             summary: activitySummary && {
                 area: activitySummary.area,
