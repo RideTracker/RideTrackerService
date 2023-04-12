@@ -41,6 +41,7 @@ export async function handleActivityRequest(request: Request, env: Env) {
         },
 
         user: {
+            likes: !!activityUserLike
         }
     });
 };
