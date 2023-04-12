@@ -6,21 +6,16 @@ import { getUserKeyById } from "../../controllers/users/keys/getUserKeyById";
 import { User } from "../../models/user";
 
 export async function handleAuthRenewRequest(request: Request, env: Env) {
-    let userKey = await getUserKeyById(env.DATABASE, request.key.user);
+    await deleteUserKey(env.DATABASE, request.key);
+
+    const user = await getUserById(env.DATABASE, request.key.user);
     
-    if(userKey === null)
+    if(!user)
         return Response.json({ success: false });
 
-    await deleteUserKey(env.DATABASE, userKey);
+    const userKey = await createUserKey(env.DATABASE, user);
 
-    const user = await getUserById(env.DATABASE, request.key.user) as User;
-    
-    if(user === null)
-        return Response.json({ success: false });
-
-    userKey = await createUserKey(env.DATABASE, user);
-
-    if(userKey === null)
+    if(!userKey)
         return Response.json({ success: false });
         
     return Response.json({ success: true, key: userKey.id });
