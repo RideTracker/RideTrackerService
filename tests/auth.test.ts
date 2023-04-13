@@ -105,6 +105,14 @@ describe("auth", async () => {
         console.log("activity", response);
     });
 
+    test("get activity comments", async () => {
+        const response = await getResponse("GET", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments", userKey);
+
+        expect(response.success).toBe(true);
+
+        console.log("activity comments", response);
+    });
+
     test("get user bikes", async () => {
         const response = await getResponse("GET", "/api/bikes", userKey);
 
