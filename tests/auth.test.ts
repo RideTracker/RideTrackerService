@@ -104,4 +104,12 @@ describe("auth", async () => {
 
         console.log("activity", response);
     });
+
+    test("get user bikes", async () => {
+        const response = await getResponse("GET", "/api/bikes", userKey);
+
+        expect(response.success).toBe(true);
+
+        console.log("bikes", response);
+    });
 });
