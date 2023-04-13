@@ -113,6 +113,16 @@ describe("auth", async () => {
         console.log("activity comments", response);
     });
 
+    test("create activity comment", async () => {
+        const response = await getResponse("POST", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/create", userKey, {
+            message: "Nice test!"
+        });
+
+        expect(response.success).toBe(true);
+
+        console.log("create activity comment", response);
+    });
+
     test("get user bikes", async () => {
         const response = await getResponse("GET", "/api/bikes", userKey);
 
