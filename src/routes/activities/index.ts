@@ -1,4 +1,4 @@
-import { getLatestActivityCommand } from "../../controllers/activities/comments/getLatestActivityComment";
+import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
@@ -34,7 +34,7 @@ export async function handleActivityRequest(request: Request, env: Env) {
 
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
 
-    const activityComment = await getLatestActivityCommand(env.DATABASE, id);
+    const activityComment = await getLatestActivityComment(env.DATABASE, id);
     const activityCommentUser = (activityComment) && await getUserById(env.DATABASE, activityComment.user);
 
     const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);

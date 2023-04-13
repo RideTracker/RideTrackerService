@@ -1,12 +1,5 @@
-import { getLatestActivityCommand } from "../controllers/activities/comments/getLatestActivityComment";
-import { getActivityById } from "../controllers/activities/getActivityById";
-import { getActivityLikeByUser } from "../controllers/activities/likes/getActivityLikeByUser";
-import { getActivitySummaryById } from "../controllers/activities/summary/getActivitySummaryById";
-import { getBikeById } from "../controllers/bikes/getBikeById";
 import { getBikesByUser } from "../controllers/bikes/getBikeByUser";
 import { getBikeSummaryById } from "../controllers/bikes/summary/getBikeSummaryById";
-import { getUserById } from "../controllers/users/getUserById";
-import { User } from "../models/user";
 
 export async function handleBikesRequest(request: Request, env: Env) {
     const bikes = await getBikesByUser(env.DATABASE, request.key.user);

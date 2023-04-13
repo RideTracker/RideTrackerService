@@ -15,6 +15,7 @@ import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
 import { handleFeedRequest } from "./routes/feed";
 import { activityRequestSchema, handleActivityRequest } from "./routes/activities";
 import { handleBikesRequest } from "./routes/bikes";
+import { handleActivityCommentsRequest } from "./routes/activities/comments";
 
 
 function registerEndpoints() {
@@ -31,6 +32,7 @@ function registerEndpoints() {
     router.get("/api/bikes", withAuth, handleBikesRequest);
     
     router.get("/api/activities/:id?", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
+    router.get("/api/activities/:id/comments?", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
 
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
