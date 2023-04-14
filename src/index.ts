@@ -17,6 +17,7 @@ import { activityRequestSchema, handleActivityRequest } from "./routes/activitie
 import { handleBikesRequest } from "./routes/bikes";
 import { handleActivityCommentsRequest } from "./routes/activities/comments";
 import { activityCreateCommentRequestSchema, handleActivityCreateCommentRequest } from "./routes/activities/comments/create";
+import { activityEditCommentRequestSchema, handleActivityEditCommentRequest } from "./routes/activities/comments/edit";
 
 
 function registerEndpoints() {
@@ -35,6 +36,7 @@ function registerEndpoints() {
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments/create", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
+    router.patch("/api/activities/:activityId/comments/:commentId/edit", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
 
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({

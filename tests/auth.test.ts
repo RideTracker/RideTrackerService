@@ -113,6 +113,8 @@ describe("auth", async () => {
         console.log("activity comments", response);
     });
 
+    let commentId: string | null = null;
+
     test("create activity comment", async () => {
         const response = await getResponse("POST", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/create", userKey, {
             message: "Nice test!"
@@ -120,7 +122,19 @@ describe("auth", async () => {
 
         expect(response.success).toBe(true);
 
+        commentId = response.comment.id;
+
         console.log("create activity comment", response);
+    });
+
+    test("edit activity comment", async () => {
+        const response = await getResponse("PATCH", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/edit`, userKey, {
+            message: "Nice edited test!"
+        });
+
+        expect(response.success).toBe(true);
+
+        console.log("edit activity comment", response);
     });
 
     test("get user bikes", async () => {

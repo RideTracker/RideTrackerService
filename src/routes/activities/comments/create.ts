@@ -18,6 +18,11 @@ export const activityCreateCommentRequestSchema = {
     },
 
     content: {
+        parent: {
+            type: "string",
+            required: false
+        },
+
         message: {
             type: "string",
             required: true
@@ -27,14 +32,14 @@ export const activityCreateCommentRequestSchema = {
 
 export async function handleActivityCreateCommentRequest(request: Request, env: Env) {
     const { id } = request.params;
-    const { message } = request.content;
+    const { parent, message } = request.content;
 
     const activity = await getActivityById(env.DATABASE, id);
 
     if(!activity)
         return Response.json({ success: false });
     
-    const comment = await createActivityComment(env.DATABASE, id, request.key.user, message);
+    const comment = await createActivityComment(env.DATABASE, id, request.key.user, parent ?? null, message);
 
     if(!comment)
         return Response.json({ success: false });
