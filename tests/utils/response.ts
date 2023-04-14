@@ -2,7 +2,7 @@ export async function getResponse(method: string, url: string, key: string | nul
     const response = await fetch("https://service-staging.norasoderlund9092.workers.dev" + url, {
         method,
         headers: {
-            "Authorization": key ?? "",
+            "Authorization": (key)?(`Bearer ${key}`):(""),
             "Content-Type": "application/json"
         },
         body: (body !== undefined)?(JSON.stringify(body)):(undefined)
