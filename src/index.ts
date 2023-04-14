@@ -20,6 +20,8 @@ import { activityCreateCommentRequestSchema, handleActivityCreateCommentRequest 
 import { activityEditCommentRequestSchema, handleActivityEditCommentRequest } from "./routes/activities/comments/edit";
 import { activityDeleteCommentRequestSchema, handleActivityDeleteCommentRequest } from "./routes/activities/comments/delete";
 import { createBikeRequestSchema, handleCreateBikeRequest } from "./routes/bikes/create";
+import { handleUploadBikeImageRequest, uploadBikeImageRequestSchema } from "./routes/bikes/image";
+import { handleVerifyBikeImageRequest, verifyBikeImageRequestSchema } from "./routes/bikes/image/verify";
 
 
 function registerEndpoints() {
@@ -35,6 +37,8 @@ function registerEndpoints() {
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
+    router.post("/api/bikes/:bikeId/images", withAuth, withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
+    router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth, withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
     
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
