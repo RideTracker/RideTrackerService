@@ -1,4 +1,4 @@
-import { getBikesByUser } from "../controllers/bikes/getBikeByUser";
+import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
 import { getBikeSummaryById } from "../controllers/bikes/summary/getBikeSummaryById";
 
 export async function handleBikesRequest(request: Request, env: Env) {
