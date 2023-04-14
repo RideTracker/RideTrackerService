@@ -1,4 +1,3 @@
-import { Activity } from "../../models/activity";
 import { Bike } from "../../models/bike";
 
 export async function getBikeById(database: D1Database, id: string): Promise<Bike | null> {
