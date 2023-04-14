@@ -138,7 +138,7 @@ describe("auth", async () => {
     });
 
     test("delete activity comment", async () => {
-        const response = await getResponse("DELETE", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/edit`, userKey);
+        const response = await getResponse("DELETE", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/delete`, userKey);
 
         expect(response.success).toBe(true);
 
