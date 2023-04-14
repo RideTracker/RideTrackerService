@@ -4,6 +4,8 @@ declare type Env = {
     DATABASE: D1Database;
     
     ENVIRONMENT: "production" | "staging";
+    CLOUDFLARE_ACCOUNT_ID: string;
+    CLOUDFLARE_API_IMAGES_TOKEN: string;
 
     GITHUB_SHA: string | undefined;
 };
