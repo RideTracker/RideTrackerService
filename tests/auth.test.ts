@@ -137,6 +137,14 @@ describe("auth", async () => {
         console.log("edit activity comment", response);
     });
 
+    test("delete activity comment", async () => {
+        const response = await getResponse("DELETE", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/edit`, userKey);
+
+        expect(response.success).toBe(true);
+
+        console.log("delete activity comment", response);
+    });
+
     test("get user bikes", async () => {
         const response = await getResponse("GET", "/api/bikes", userKey);
 
