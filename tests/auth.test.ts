@@ -116,7 +116,7 @@ describe("auth", async () => {
     let commentId: string | null = null;
 
     test("create activity comment", async () => {
-        const response = await getResponse("POST", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/create", userKey, {
+        const response = await getResponse("POST", "/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments", userKey, {
             message: "Nice test!"
         });
 
@@ -128,7 +128,7 @@ describe("auth", async () => {
     });
 
     test("edit activity comment", async () => {
-        const response = await getResponse("PATCH", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/edit`, userKey, {
+        const response = await getResponse("PATCH", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}`, userKey, {
             message: "Nice edited test!"
         });
 
@@ -138,7 +138,7 @@ describe("auth", async () => {
     });
 
     test("delete activity comment", async () => {
-        const response = await getResponse("DELETE", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}/delete`, userKey);
+        const response = await getResponse("DELETE", `/api/activities/7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675/comments/${commentId}`, userKey);
 
         expect(response.success).toBe(true);
 
