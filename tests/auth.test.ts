@@ -74,7 +74,6 @@ describe("auth", async () => {
         expect(verifyResponse.success).toBe(true);
 
         userKey = verifyResponse.key;
-        userId = verifyResponse.user.id;
     });
     
     test("renew user", async () => {
@@ -83,6 +82,7 @@ describe("auth", async () => {
         expect(response.success).toBe(true);
 
         userKey = response.key;
+        userId = response.user.id;
     });
 
     test("get feed", async () => {
