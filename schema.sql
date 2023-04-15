@@ -71,6 +71,14 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")
 );
+DROP TABLE IF EXISTS "user_follows";
+CREATE TABLE IF NOT EXISTS "user_follows" (
+	"id"	varchar(255) NOT NULL,
+	"user"	varchar(255) NOT NULL,
+	"follow"	varchar(255) NOT NULL,
+	"timestamp"	double NOT NULL,
+	PRIMARY KEY("id")
+);
 DROP TABLE IF EXISTS "user_keys";
 CREATE TABLE IF NOT EXISTS "user_keys" (
 	"id"	varchar(255) NOT NULL,

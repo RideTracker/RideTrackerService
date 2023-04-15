@@ -1,10 +1,5 @@
-import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
-import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityCountByUser } from "../../controllers/activities/getActivityCountByUser";
-import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
-import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
-import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
+import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../controllers/users/getUserById";
 
 export const profileRequestSchema = {
@@ -24,6 +19,7 @@ export async function handleProfileRequest(request: Request, env: Env) {
     if(!user)
         return Response.json({ success: false });
 
+    const userFollowsCount = await getUserFollowersCount(env.DATABASE, user.id);
     const userActivitiesCount = await getActivityCountByUser(env.DATABASE, user.id);
 
     return Response.json({
@@ -37,7 +33,7 @@ export async function handleProfileRequest(request: Request, env: Env) {
             },
 
             stats: {
-                followers: 0,
+                followers: userFollowsCount,
                 activities: userActivitiesCount
             }
         }
