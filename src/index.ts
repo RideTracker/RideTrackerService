@@ -21,6 +21,7 @@ import { activityDeleteCommentRequestSchema, handleActivityDeleteCommentRequest 
 import { createBikeRequestSchema, handleCreateBikeRequest } from "./routes/bikes/create";
 import { handleUploadBikeImageRequest, uploadBikeImageRequestSchema } from "./routes/bikes/image";
 import { handleVerifyBikeImageRequest, verifyBikeImageRequestSchema } from "./routes/bikes/image/verify";
+import { handleProfileRequest, profileRequestSchema } from "./routes/profiles";
 
 
 function registerEndpoints() {
@@ -43,6 +44,8 @@ function registerEndpoints() {
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
+
+    router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
 
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({

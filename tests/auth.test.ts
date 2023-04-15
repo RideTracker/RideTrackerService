@@ -52,7 +52,7 @@ describe("auth", async () => {
         expect(verifyResponse.success).toBe(true);
     });
 
-    let userKey: any = null;
+    let userKey: any = null, userId: any = null;
     
     test("login user", async () => {
         const response = await getResponse("POST", "/api/auth/login", null, {
@@ -74,6 +74,7 @@ describe("auth", async () => {
         expect(verifyResponse.success).toBe(true);
 
         userKey = verifyResponse.key;
+        userId = verifyResponse.user.id;
     });
     
     test("renew user", async () => {
@@ -144,5 +145,13 @@ describe("auth", async () => {
         expect(response.success).toBe(true);
 
         console.log("bikes", response);
+    });
+
+    test("get profile", async () => {
+        const response = await getResponse("GET", `/api/profiles/${userId}`, userKey);
+
+        expect(response.success).toBe(true);
+
+        console.log("profile", response);
     });
 });
