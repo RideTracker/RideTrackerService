@@ -9,7 +9,6 @@ import { authRegisterSchema, handleAuthRegisterRequest } from "./routes/auth/reg
 import { handleAuthRenewRequest } from "./routes/auth/renew";
 import { withAuth } from "./middlewares/auth";
 import { withStaging } from "./middlewares/staging";
-import { handleAuthProfileRequest } from "./routes/auth/profile";
 import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
 import { handleFeedRequest } from "./routes/feed";
