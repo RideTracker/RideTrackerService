@@ -121,6 +121,15 @@ INSERT INTO "users" VALUES ('256264be-d8ac-4e41-9099-f6d96c50ba3c','norasoderlun
 INSERT INTO "users" VALUES ('59174df4-1b1b-4d5f-9d6a-79f23a6b9e69','norasoderlund2@icloud.com','ues1NuDbbXuwZP0AqN9dkz3NurYY1eIo0IlUsOgkcHg=.Av8nleF1FsnhdWSUgrf6OQ==','Nora','Söderlund',NULL,1678485977894.0);
 INSERT INTO "users" VALUES ('95c00e4b-607e-43d3-b871-4661ebc2cedd','norasoderlund@icloud.com','ues1NuDbbXuwZP0AqN9dkz3NurYY1eIo0IlUsOgkcHg=.Av8nleF1FsnhdWSUgrf6OQ==','Nora','Söderlund','https://avatars.githubusercontent.com/u/78360666?v=4',1678300150558.0);
 
+DROP TABLE IF EXISTS "user_avatars";
+CREATE TABLE IF NOT EXISTS "user_avatars" (
+	"id"	varchar(255) NOT NULL,
+	"user"	varchar(255) NOT NULL,
+	"combination"	varchar(1024) NOT NULL,
+	"timestamp"	double NOT NULL,
+	PRIMARY KEY("id")
+);
+
 DROP TABLE IF EXISTS "user_follows";
 CREATE TABLE IF NOT EXISTS "user_follows" (
 	"id"	varchar(255) NOT NULL,
