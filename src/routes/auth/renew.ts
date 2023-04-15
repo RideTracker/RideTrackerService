@@ -18,5 +18,13 @@ export async function handleAuthRenewRequest(request: Request, env: Env) {
     if(!userKey)
         return Response.json({ success: false });
         
-    return Response.json({ success: true, key: userKey.id });
+    return Response.json({
+        success: true,
+        key: userKey.id,
+        user: {
+            id: user.id,
+            name: user.firstname + " " + user.lastname,
+            avatar: user.avatar
+        }
+    });
 };

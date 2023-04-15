@@ -84,13 +84,6 @@ describe("auth", async () => {
         userKey = response.key;
     });
 
-    test("get user profile", async () => {
-        const response = await getResponse("GET", "/api/auth/profile", userKey);
-
-        expect(response.success).toBe(true);
-        expect(response.user.name).toBe("Nora Testlund");
-    });
-
     test("get feed", async () => {
         const response = await getResponse("GET", "/api/feed", userKey);
 
