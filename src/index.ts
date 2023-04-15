@@ -22,6 +22,7 @@ import { createBikeRequestSchema, handleCreateBikeRequest } from "./routes/bikes
 import { handleUploadBikeImageRequest, uploadBikeImageRequestSchema } from "./routes/bikes/image";
 import { handleVerifyBikeImageRequest, verifyBikeImageRequestSchema } from "./routes/bikes/image/verify";
 import { handleProfileRequest, profileRequestSchema } from "./routes/profiles";
+import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "./routes/profiles/activities";
 
 
 function registerEndpoints() {
@@ -46,6 +47,7 @@ function registerEndpoints() {
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
+    router.post("/api/profiles/:userId/activities", withAuth, withParams, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
 
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
