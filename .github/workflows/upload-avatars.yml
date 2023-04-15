@@ -20,37 +20,41 @@ jobs:
       
     - name: List PNG files in avatars folder
       run: |
-        echo "::set-output name=files::$(find ./avatars -name '*.png' -type f)"
+        echo "$(find ./avatars -name '*.png' -type f)" > png_files.txt
       id: list-files
       
     - name: Get Direct Creator Upload URL from Cloudflare Images
       run: |
-        for file in ${{ steps.list-files.outputs.files }}; do
-          filename=$(basename $file)
+        upload_urls=""
+        while read file; do
+          filename=$(basename "$file")
           response=$(curl -s -X POST "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/images/v1/direct_upload" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }}" \
             -H "Content-Type: image/png" \
-            -d '{"filename":"'$filename'", "metadata":{"type":"avatar"}}')
-          upload_url=$(echo $response | jq -r '.upload_url')
-          echo "::set-output name=upload-urls::${{ steps.upload-urls.outputs.upload-urls }} $upload_url $filename"
-        done
+            -d '{"filename":"'"$filename"'", "metadata":{"type":"avatar"}}')
+          upload_url=$(echo "$response" | jq -r '.upload_url')
+          upload_urls="$upload_urls $upload_url $filename"
+        done < png_files.txt
+        echo "UPLOAD_URLS=$upload_urls" >> $GITHUB_ENV
       id: upload-urls
       
     - name: Upload images to Cloudflare Images
       run: |
-        for url in ${{ steps.upload-urls.outputs.upload-urls }}; do
-          upload_url=$(echo $url | cut -d' ' -f2)
-          filename=$(echo $url | cut -d' ' -f3-)
-          curl -X PUT --data-binary "@./avatars/$filename" $upload_url
-          echo "::set-output name=uploads::${{ steps.uploads.outputs.uploads }} $filename"
-        done
+        uploads=""
+        while read url; do
+          upload_url=$(echo "$url" | cut -d' ' -f2)
+          filename=$(echo "$url" | cut -d' ' -f3-)
+          curl -X PUT --data-binary "@./avatars/$filename" "$upload_url"
+          uploads="$uploads $filename"
+        done <<< "$UPLOAD_URLS"
+        echo "UPLOADS=$uploads" >> $GITHUB_ENV
       id: uploads
       
     - name: Call API endpoint
       run: |
-        for upload in ${{ steps.uploads.outputs.uploads }}; do
+        while read upload; do
           filename=$upload
           type=$(basename $(dirname ./avatars/$filename))
           image_id=$(curl -s -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }}" "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/images/v1?filename=$filename" | jq -r '.result[0].id')
           curl -X POST -d '{"image_id":"'$image_id'", "type":"'$type'", "filename":"'$filename'"}' -H 'Content-Type: application/json' https://example.com/api/avatars/upload
-        done
+        done <<< "$UPLOADS"
