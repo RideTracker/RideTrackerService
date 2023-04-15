@@ -45,6 +45,23 @@ CREATE TABLE IF NOT EXISTS "activity_summary" (
 
 INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg',7.3,23.7,33.0,36.5,0,1678553188986);
 
+DROP TABLE IF EXISTS "avatars";
+CREATE TABLE IF NOT EXISTS "avatars" (
+	"id"	varchar(255) NOT NULL,
+	"image"	varchar(255) NOT NULL,
+	"timestamp"	bigint NOT NULL,
+	PRIMARY KEY("id")
+);
+
+DROP TABLE IF EXISTS "avatar_images";
+CREATE TABLE IF NOT EXISTS "avatar_images" (
+	"id"	varchar(255) NOT NULL,
+	"name"	varchar(255) NOT NULL,
+	"image"	varchar(255) NOT NULL,
+	"timestamp"	bigint NOT NULL,
+	PRIMARY KEY("id")
+);
+
 DROP TABLE IF EXISTS "bikes";
 CREATE TABLE IF NOT EXISTS "bikes" (
 	"id"	varchar(255) NOT NULL,
