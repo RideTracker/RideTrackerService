@@ -24,7 +24,7 @@ import { handleVerifyBikeImageRequest, verifyBikeImageRequestSchema } from "./ro
 import { handleProfileRequest, profileRequestSchema } from "./routes/profiles";
 import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "./routes/profiles/activities";
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "./routes/profiles/bikes";
-
+import { handleBikeRequest, bikeRequestSchema } from "./routes/bikes/index";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -38,6 +38,7 @@ function registerEndpoints() {
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
+    router.get("/api/bikes/:bikeId", withAuth, withSchema(bikeRequestSchema), handleBikeRequest);
     router.post("/api/bikes/:bikeId/images", withAuth, withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
     router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth, withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
     
