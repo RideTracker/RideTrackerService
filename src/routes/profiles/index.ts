@@ -1,5 +1,6 @@
 import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
 import { getActivityById } from "../../controllers/activities/getActivityById";
+import { getActivityCountByUser } from "../../controllers/activities/getActivityCountByUser";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
@@ -23,13 +24,22 @@ export async function handleProfileRequest(request: Request, env: Env) {
     if(!user)
         return Response.json({ success: false });
 
+    const userActivitiesCount = await getActivityCountByUser(env.DATABASE, user.id);
+
     return Response.json({
         success: true,
 
-        user: {
-            id: user.id,
-            name: user.firstname + " " + user.lastname,
-            avatar: user.avatar
+        profile: {
+            user: {
+                id: user.id,
+                name: user.firstname + " " + user.lastname,
+                avatar: user.avatar
+            },
+
+            stats: {
+                followers: 0,
+                activities: userActivitiesCount
+            }
         }
     });
 };
