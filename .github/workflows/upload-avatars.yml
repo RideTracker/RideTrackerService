@@ -20,7 +20,7 @@ jobs:
       
     - name: List PNG files in avatars folder
       run: |
-        echo "$(find ./avatars -name '*.png' -type f)" > png_files.txt
+        echo "$(find ./assets/avatars -name '*.png' -type f)" > png_files.txt
       id: list-files
       
     - name: Get Direct Creator Upload URL from Cloudflare Images
