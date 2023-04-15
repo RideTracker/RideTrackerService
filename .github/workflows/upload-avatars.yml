@@ -31,8 +31,6 @@ jobs:
                 -H "X-Content-Type: image/png" \
                 --data-binary "@$file" \
                 --silent)
-              id=$(echo "$response" | jq -r '.result.id')
-              echo "Image uploaded with ID: $id"
-              echo "::set-output name=ids::$id"
+              echo "Image uploaded"
             done
           done
