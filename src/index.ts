@@ -76,6 +76,15 @@ console.log("Listening to requests...");
 
 export default {
     async fetch(request: any, env: any) {
-        return router.handle(request, env);
+        const timestamp = performance.now();
+
+        const response = router.handle(request, env);
+
+        const elapsed = performance.now() - timestamp;
+
+        if(elapsed >= 9)
+            console.warn(`Request took ${elapsed}ms to execute`, request);
+
+        return response;
     }
 };
