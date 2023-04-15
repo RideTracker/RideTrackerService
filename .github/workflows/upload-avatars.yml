@@ -20,16 +20,19 @@ jobs:
         id: upload_avatars
         run: |
           for dir in ./assets/avatars/*/; do
-            dir_name=$(basename $dir)
-            for file in $dir*.png; do
-              file_name=$(basename "$file")
-              response=$(curl -s -X POST -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }}" \
-                "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/media" \
-                -d "meta[type]=avatar" \
-                --upload-file "$file")
-              image_id=$(echo $response | jq -r .result.id)
-              echo "::set-output name=${file_name%.*}::$image_id"
-              echo "::set-output name=${file_name%.*}_type::$dir_name"
+            dirname=$(basename "$dir")
+            echo "Processing avatars in $dirname folder"
+            files=$(find "$dir" -type f -name "*.png")
+            for file in $files; do
+              echo "Processing file: $file"
+              response=$(curl -X POST "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/images/v1" \
+                -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }}" \
+                -H "Content-Type: image/png" \
+                -H "X-Content-Type: image/png" \
+                --data-binary "@$file" \
+                --silent)
+              id=$(echo "$response" | jq -r '.result.id')
+              echo "Image uploaded with ID: $id"
+              echo "::set-output name=ids::$id"
             done
           done
-          
