@@ -47,7 +47,7 @@ function registerEndpoints() {
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
-    router.post("/api/profiles/:userId/activities", withAuth, withParams, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
+    router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
 
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
