@@ -48,19 +48,29 @@ INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','V
 DROP TABLE IF EXISTS "avatars";
 CREATE TABLE IF NOT EXISTS "avatars" (
 	"id"	varchar(255) NOT NULL,
-	"image"	varchar(255) NOT NULL,
+	"name"	varchar(255) NOT NULL,
+	"type"	varchar(255) NOT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")
 );
 
-DROP TABLE IF EXISTS "avatar_images";
-CREATE TABLE IF NOT EXISTS "avatar_images" (
-	"id"	varchar(255) NOT NULL,
-	"name"	varchar(255) NOT NULL,
-	"image"	varchar(255) NOT NULL,
-	"timestamp"	bigint NOT NULL,
-	PRIMARY KEY("id")
-);
+INSERT INTO "avatars" VALUES ("013d988e-8592-4f32-262f-8a1dfb65bf00", "Female Head 1", "head", 1681589543123);
+INSERT INTO "avatars" VALUES ("804ab294-c9c4-46f0-a3df-62f137bbe400", "Female Head 2", "head", 1681589543123);
+
+INSERT INTO "avatars" VALUES ("913d1665-b39b-460e-3422-d4c78b4d1700", "Male Head 1", "head", 1681589543123);
+INSERT INTO "avatars" VALUES ("e5b34eee-90b6-410d-4d39-3fcddcc59a00", "Male Head 2", "head", 1681589543123);
+
+INSERT INTO "avatars" VALUES ("9e0ff60a-2c2b-4c5f-22f3-d1ba0264a000", "Helmet 1", "helmet", 1681589543123);
+INSERT INTO "avatars" VALUES ("382127fc-947b-452a-a9e2-9037b5520d00", "Helmet 2", "helmet", 1681589543123);
+INSERT INTO "avatars" VALUES ("6a55fae8-40f7-45bc-bc1e-dd5d2029d400", "Helmet 3", "helmet", 1681589543123);
+
+INSERT INTO "avatars" VALUES ("0bb142a4-fe56-4889-4632-5415cc108200", "Sunglass 1", "sunglass", 1681589543123);
+INSERT INTO "avatars" VALUES ("dd6765cb-3ae9-45ad-3727-63e4ef21e300", "Sunglass 2", "sunglass", 1681589543123);
+INSERT INTO "avatars" VALUES ("48e43415-148b-4c51-cee9-2937758f6100", "Sunglass 3", "sunglass", 1681589543123);
+
+INSERT INTO "avatars" VALUES ("98435e3a-e453-4d42-3838-b2a376207300", "Jersey 1", "jersey", 1681589543123);
+INSERT INTO "avatars" VALUES ("05b01ea9-b338-4d26-9217-201c0fb61800", "Jersey 2", "jersey", 1681589543123);
+INSERT INTO "avatars" VALUES ("8be37068-536a-434b-c833-456e3c741500", "Jersey 3", "jersey", 1681589543123);
 
 DROP TABLE IF EXISTS "bikes";
 CREATE TABLE IF NOT EXISTS "bikes" (

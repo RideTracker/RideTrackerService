@@ -25,6 +25,7 @@ import { handleProfileRequest, profileRequestSchema } from "./routes/profiles";
 import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "./routes/profiles/activities";
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "./routes/profiles/bikes";
 import { handleBikeRequest, bikeRequestSchema } from "./routes/bikes/index";
+import { handleAvatarsRequest } from "./routes/avatars";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -34,6 +35,8 @@ function registerEndpoints() {
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
     
+    router.get("/api/avatars", withAuth, handleAvatarsRequest);
+
     router.get("/api/feed", withAuth, handleFeedRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
