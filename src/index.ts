@@ -83,7 +83,7 @@ export default {
         const elapsed = Date.now() - timestamp;
 
         if(elapsed >= 9)
-            console.warn(`Request took ${elapsed}ms to execute`, request);
+            console.log(`Warning, request took ${elapsed}ms to execute`, request);
 
         return response;
     }
