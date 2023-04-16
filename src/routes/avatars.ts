@@ -22,12 +22,19 @@ export async function handleAvatarsRequest(request: Request, env: Env) {
     return Response.json({
         success: true,
 
-        avatars: avatars.map((avatar) => {
-            return {
-                id: avatar.id,
-                type: avatar.type
-            };
-        }),
+        avatars: {
+            dimensions: {
+                width: 3000,
+                height: 3000
+            },
+
+            items: avatars.map((avatar) => {
+                return {
+                    id: avatar.id,
+                    type: avatar.type
+                };
+            }),
+        },
 
         user: {
             avatars: userAvatars.map((userAvatar) => {
