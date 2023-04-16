@@ -25,7 +25,11 @@ export async function handleAvatarsRequest(request: Request, env: Env) {
         avatars: avatars.map((avatar) => {
             return {
                 id: avatar.id,
-                type: avatar.type
+                type: avatar.type,
+                width: avatar.width,
+                height: avatar.height,
+                left: avatar.left,
+                top: avatar.top
             };
         }),
 
