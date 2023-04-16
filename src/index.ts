@@ -26,6 +26,7 @@ import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "./routes/profiles/bikes";
 import { handleBikeRequest, bikeRequestSchema } from "./routes/bikes/index";
 import { handleAvatarsRequest } from "./routes/avatars";
+import { createCanvas } from "canvas";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
