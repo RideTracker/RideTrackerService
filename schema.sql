@@ -58,6 +58,8 @@ CREATE TABLE IF NOT EXISTS "avatars" (
 	PRIMARY KEY("id")
 );
 
+INSERT INTO "avatars" VALUES ("a34484b3-de17-45dc-84d1-6f546c2b3300", "Wallpaper 1", "wallpaper", 1920, 768, NULL, NULL, 1681589543123);
+
 INSERT INTO "avatars" VALUES ("013d988e-8592-4f32-262f-8a1dfb65bf00", "Female Head 1", "head", 1209, 2113, NULL, 1200, 1681589543123);
 INSERT INTO "avatars" VALUES ("804ab294-c9c4-46f0-a3df-62f137bbe400", "Female Head 2", "head", 1205, 2214, NULL, 1200, 1681589543123);
 
