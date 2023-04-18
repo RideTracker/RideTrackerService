@@ -70,8 +70,8 @@ DROP TABLE IF EXISTS "avatar_colors";
 CREATE TABLE IF NOT EXISTS "avatar_colors" (
 	"id"	varchar(255) NOT NULL,
 	"avatar"	varchar(255) NOT NULL,
-	"index"	int NOT NULL,
 	"type"	varchar(255) NOT NULL,
+	"index"	int NOT NULL,
 	"default_color"	varchar(16) DEFAULT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")

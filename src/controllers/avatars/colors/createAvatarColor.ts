@@ -1,7 +1,7 @@
 import { AvatarColor } from "../../../models/avatarColor";
 import { getAvatarColorById } from "./getAvatarColorById";
 
-export async function createAvatarColor(database: D1Database, avatar: string, type: string, index: number, defaultColor: string): Promise<AvatarColor | null> {
+export async function createAvatarColor(database: D1Database, avatar: string, type: string, index: number, defaultColor: string | null): Promise<AvatarColor | null> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
