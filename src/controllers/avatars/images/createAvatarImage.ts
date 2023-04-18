@@ -5,7 +5,7 @@ export async function createAvatarImage(database: D1Database, avatar: string, im
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO avatar_colors (id, avatar, image, index, color_index, timestamp) VALUES (?, ?, ?, ?, ?, ?)").bind(id, avatar, image, index, colorIndex, timestamp).run();
+    await database.prepare("INSERT INTO avatar_colors (id, avatar, image, `index`, color_index, timestamp) VALUES (?, ?, ?, ?, ?, ?)").bind(id, avatar, image, index, colorIndex, timestamp).run();
 
     return await getAvatarImageById(database, id);
 };
