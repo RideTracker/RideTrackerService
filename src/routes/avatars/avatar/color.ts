@@ -10,7 +10,7 @@ export async function handleCreateAvatarColorRequest(request: Request, env: Env)
     if(!avatar)
         return Response.json({ success: false });
 
-    const avatarColor = await createAvatarColor(env.DATABASE, avatar.id, type, index, defaultColor);
+    const avatarColor = await createAvatarColor(env.DATABASE, avatar.id, type, index, defaultColor ?? null);
 
     if(!avatarColor)
         return Response.json({ success: false });

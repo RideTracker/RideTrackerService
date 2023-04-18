@@ -11,7 +11,7 @@ export async function handleCreateAvatarImageRequest(request: Request, env: Env)
     if(!avatar)
         return Response.json({ success: false });
 
-    const avatarImage = await createAvatarImage(env.DATABASE, avatar.id, image, index, colorIndex);
+    const avatarImage = await createAvatarImage(env.DATABASE, avatar.id, image, index, colorIndex ?? null);
 
     if(!avatarImage)
         return Response.json({ success: false });
