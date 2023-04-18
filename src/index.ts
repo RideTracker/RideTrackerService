@@ -26,7 +26,9 @@ import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "./routes/profiles/bikes";
 import { handleBikeRequest, bikeRequestSchema } from "./routes/bikes/index";
 import { handleAvatarsRequest } from "./routes/avatars";
-import { createCanvas } from "canvas";
+import { handleCreateAvatarRequest } from "./routes/avatars/create";
+import { handleCreateAvatarColorRequest } from "./routes/avatars/avatar/color";
+import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -37,6 +39,9 @@ function registerEndpoints() {
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
     
     router.get("/api/avatars", withAuth, handleAvatarsRequest);
+    router.post("/api/avatars", withStaging, withAuth, withContent, handleCreateAvatarRequest);
+    router.post("/api/avatars/:avatarId/color", withStaging, withAuth, withParams, withContent, handleCreateAvatarColorRequest);
+    router.post("/api/avatars/:avatarId/image", withStaging, withAuth, withParams, withContent, handleCreateAvatarImageRequest);
 
     router.get("/api/feed", withAuth, handleFeedRequest);
     

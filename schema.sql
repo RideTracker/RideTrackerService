@@ -59,11 +59,20 @@ DROP TABLE IF EXISTS "avatar_images";
 CREATE TABLE IF NOT EXISTS "avatar_images" (
 	"id"	varchar(255) NOT NULL,
 	"avatar"	varchar(255) NOT NULL,
-	"type"	varchar(255) NOT NULL,
 	"image"	varchar(255) NOT NULL,
-	"layer"	int NOT NULL,
+	"index"	int NOT NULL,
 	"color_index"	int DEFAULT NULL,
-	"default_color"	VARCHAR(16) DEFAULT NULL,
+	"timestamp"	bigint NOT NULL,
+	PRIMARY KEY("id")
+);
+
+DROP TABLE IF EXISTS "avatar_colors";
+CREATE TABLE IF NOT EXISTS "avatar_colors" (
+	"id"	varchar(255) NOT NULL,
+	"avatar"	varchar(255) NOT NULL,
+	"index"	int NOT NULL,
+	"type"	varchar(255) NOT NULL,
+	"default_color"	varchar(16) DEFAULT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")
 );
