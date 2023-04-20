@@ -1,6 +1,8 @@
 import { createAvatar } from "../../controllers/avatars/createAvatar";
 import { deleteAvatarById } from "../../controllers/avatars/deleteAvatarById";
 import { getAvatarByName } from "../../controllers/avatars/getAvatarByName";
+import { getAvatarImages } from "../../controllers/avatars/images/getAvatarImages";
+import { getAvatarImagesByAvatar } from "../../controllers/avatars/images/getAvatarImagesByAvatar";
 
 export async function handleCreateAvatarRequest(request: Request, env: Env) {
     const { name, type, image } = request.content;
@@ -25,6 +27,16 @@ export async function handleCreateAvatarRequest(request: Request, env: Env) {
             name: avatar.name,
             type: avatar.type,
             image: avatar.image
+        },
+
+        existingAvatar: existingAvatar && {
+            image: existingAvatar.image,
+
+            images: (await getAvatarImagesByAvatar(env.DATABASE, existingAvatar.id))?.map((avatarImage) => {
+                return {
+                    image: avatarImage.image
+                };
+            })
         }
     });
 };
