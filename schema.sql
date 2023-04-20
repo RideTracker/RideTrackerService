@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS "avatar_images" (
 	"avatar"	varchar(255) NOT NULL,
 	"image"	varchar(255) NOT NULL,
 	"index"	int NOT NULL,
-	"color_index"	int DEFAULT NULL,
+	"color_type"	varchar(255) DEFAULT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")
 );

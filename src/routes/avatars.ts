@@ -52,7 +52,7 @@ export async function handleAvatarsRequest(request: Request, env: Env) {
                     return {
                         index: avatarImage.index,
                         image: avatarImage.image,
-                        colorIndex: avatarImage.colorIndex
+                        colorType: avatarImage.colorType
                     }
                 })
             };

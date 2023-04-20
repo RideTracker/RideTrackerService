@@ -4,14 +4,14 @@ import { createAvatarImage } from "../../../controllers/avatars/images/createAva
 
 export async function handleCreateAvatarImageRequest(request: Request, env: Env) {
     const { avatarId } = request.params;
-    const { image, index, colorIndex } = request.content;
+    const { image, index, colorType } = request.content;
 
     const avatar = await getAvatarById(env.DATABASE, avatarId);
 
     if(!avatar)
         return Response.json({ success: false });
 
-    const avatarImage = await createAvatarImage(env.DATABASE, avatar.id, image, index, colorIndex ?? null);
+    const avatarImage = await createAvatarImage(env.DATABASE, avatar.id, image, index, colorType ?? null);
 
     if(!avatarImage)
         return Response.json({ success: false });
@@ -24,7 +24,7 @@ export async function handleCreateAvatarImageRequest(request: Request, env: Env)
                 id: avatarImage.id,
                 image: avatarImage.image,
                 index: avatarImage.index,
-                colorIndex: avatarImage.colorIndex
+                colorType: avatarImage.colorType
             }
         }
     });

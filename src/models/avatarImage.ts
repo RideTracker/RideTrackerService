@@ -3,6 +3,6 @@ export type AvatarImage = {
     avatar: string;
     image: string;
     index: number;
-    colorIndex: number | null;
+    colorType: string | null;
     timestamp: number;
 };
