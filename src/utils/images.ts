@@ -78,7 +78,7 @@ export async function uploadImage(name: string, base64Image: string, url: string
 
     const mimeType = "image/png";
     
-    const buffer = Buffer.from(base64Image, 'base64');
+    const buffer = Buffer.from(base64Image.split(';base64,')[1], 'base64');
     const uint8Array = new Uint8Array(buffer);
     const blob = new Blob([ uint8Array ], { type: mimeType });
 
@@ -91,9 +91,9 @@ export async function uploadImage(name: string, base64Image: string, url: string
         body
     });
 
-    const content = await response.json() as any;
+    const content = await response.text();
 
     console.log("uploadImage", content);
 
-    return content;
+    return JSON.parse(content);
 };
