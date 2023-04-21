@@ -1,3 +1,5 @@
+import { getDirectUploadUrl } from "../../utils/images";
+
 export async function handleUploadUserAvatarRequest(request: Request, env: Env) {
     const directUpload = await getDirectUploadUrl(env, {
         type: "user",

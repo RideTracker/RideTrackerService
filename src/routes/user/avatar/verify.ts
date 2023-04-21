@@ -1,4 +1,5 @@
 import { createUserAvatar } from "../../../controllers/users/avatars/createUserAvatar";
+import { getImage } from "../../../utils/images";
 
 export const verifyUserImageRequestSchema = {
     content: {

@@ -1,4 +1,4 @@
-async function getDirectUploadUrl(env: Env, metadata: any | null) {
+export async function getDirectUploadUrl(env: Env, metadata: any | null) {
     const body = new FormData();
 
     if(metadata)
@@ -27,7 +27,7 @@ async function getDirectUploadUrl(env: Env, metadata: any | null) {
     };
 };
 
-async function getImage(env: Env, image: string) {
+export async function getImage(env: Env, image: string) {
     const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${image}`, {
         method: "GET",
         
@@ -53,7 +53,7 @@ async function getImage(env: Env, image: string) {
     };
 };
 
-async function deleteImage(env: Env, image: string) {
+export async function deleteImage(env: Env, image: string) {
     const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/images/v1/${image}`, {
         method: "DELETE",
         
