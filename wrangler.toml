@@ -3,6 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2023-04-07"
 usage_model = "bundled"
 compatibility_flags = [ "nodejs_compat" ]
+nodejs_compat = true
+node_compat = true
 
 [triggers]
 crons = [ ]
