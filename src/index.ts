@@ -29,7 +29,7 @@ import { handleAvatarsRequest } from "./routes/avatars";
 import { handleCreateAvatarRequest } from "./routes/avatars/create";
 import { handleCreateAvatarColorRequest } from "./routes/avatars/avatar/color";
 import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
-import { handleUploadUserAvatarRequest } from "./routes/user/avatar";
+import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./routes/user/avatar";
 import { handleVerifyUserImageRequest, verifyUserImageRequestSchema } from "./routes/user/avatar/verify";
 
 function registerEndpoints() {
@@ -63,7 +63,7 @@ function registerEndpoints() {
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
     
-    router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadBikeImageRequestSchema), handleUploadUserAvatarRequest);
+    router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
     
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
