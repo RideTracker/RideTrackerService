@@ -29,6 +29,8 @@ import { handleAvatarsRequest } from "./routes/avatars";
 import { handleCreateAvatarRequest } from "./routes/avatars/create";
 import { handleCreateAvatarColorRequest } from "./routes/avatars/avatar/color";
 import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
+import { handleUploadUserAvatarRequest } from "./routes/user/avatar";
+import { handleVerifyUserImageRequest, verifyUserImageRequestSchema } from "./routes/user/avatar/verify";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -60,7 +62,10 @@ function registerEndpoints() {
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
-
+    
+    router.post("/api/user/avatar", withAuth, handleUploadUserAvatarRequest);
+    router.post("/api/user/avatar/verify", withAuth, withSchema(verifyUserImageRequestSchema), handleVerifyUserImageRequest);
+    
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
             ping: "pong"

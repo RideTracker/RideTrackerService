@@ -130,6 +130,7 @@ DROP TABLE IF EXISTS "user_avatars";
 CREATE TABLE IF NOT EXISTS "user_avatars" (
 	"id"	varchar(255) NOT NULL,
 	"user"	varchar(255) NOT NULL,
+	"image"	varchar(255) NOT NULL,
 	"combination"	varchar(1024) NOT NULL,
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")

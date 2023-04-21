@@ -1,19 +1,20 @@
-import { createBike } from "../../../controllers/bikes/createBike";
-import { getBikeById } from "../../../controllers/bikes/getBikeById";
-import { createBikeImage } from "../../../controllers/bikes/images/createBikeImage";
-import { getBikeImagesCount } from "../../../controllers/bikes/images/getBikeImagesCount";
+import { createUserAvatar } from "../../../controllers/users/avatars/createUserAvatar";
 
 export const verifyUserImageRequestSchema = {
     content: {
         imageId: {
             type: "string",
             required: true
+        },
+
+        combination: {
+            type: "object"
         }
     }
 };
 
 export async function handleVerifyUserImageRequest(request: Request, env: Env) {
-    const { imageId } = request.content;
+    const { imageId, combination } = request.content;
 
     const image = await getImage(env, imageId);
 
@@ -29,9 +30,9 @@ export async function handleVerifyUserImageRequest(request: Request, env: Env) {
     if(image.metadata.user !== request.key.user)
         return Response.json({ success: false });
 
-    //const userAvatar = await setUser
+    const userAvatar = await createUserAvatar(env.DATABASE, request.key.user, image.id, JSON.stringify(combination));
 
-    if(!image)
+    if(!userAvatar)
         return Response.json({ success: false });
 
     return Response.json({
