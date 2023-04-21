@@ -62,6 +62,7 @@ export async function handleAvatarsRequest(request: Request, env: Env) {
             avatars: userAvatars.map((userAvatar) => {
                 return {
                     id: userAvatar.id,
+                    image: userAvatar.image,
                     combination: JSON.parse(userAvatar.combination)
                 }
             })
