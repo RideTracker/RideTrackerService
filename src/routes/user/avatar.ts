@@ -1,3 +1,5 @@
+import { createUserAvatar } from "../../controllers/users/avatars/createUserAvatar";
+import { setUserAvatar } from "../../controllers/users/setUserAvatar";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 
 export const uploadUserImageRequestSchema = {
@@ -27,9 +29,20 @@ export async function handleUploadUserAvatarRequest(request: Request, env: Env) 
     const upload = await uploadImage("Avatar.png", image, directUpload.url);
 
     if(!upload.success)
-        return upload;
+        return Response.json({ success: false });
+
+    const userAvatar = await createUserAvatar(env.DATABASE, request.key.user, directUpload.id, JSON.stringify(combination));
+
+    if(!userAvatar)
+        return Response.json({ success: false });
+
+    await setUserAvatar(env.DATABASE, request.key.user, userAvatar.image);
 
     return Response.json({
-        success: true
+        success: true,
+
+        userAvatar: {
+            id: userAvatar.id
+        }
     });
 };

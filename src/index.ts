@@ -30,7 +30,6 @@ import { handleCreateAvatarRequest } from "./routes/avatars/create";
 import { handleCreateAvatarColorRequest } from "./routes/avatars/avatar/color";
 import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
 import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./routes/user/avatar";
-import { handleVerifyUserImageRequest, verifyUserImageRequestSchema } from "./routes/user/avatar/verify";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
