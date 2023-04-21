@@ -63,8 +63,7 @@ function registerEndpoints() {
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
     
-    router.post("/api/user/avatar", withAuth, handleUploadUserAvatarRequest);
-    router.post("/api/user/avatar/verify", withAuth, withSchema(verifyUserImageRequestSchema), handleVerifyUserImageRequest);
+    router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadBikeImageRequestSchema), handleUploadUserAvatarRequest);
     
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({

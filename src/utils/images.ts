@@ -72,3 +72,28 @@ export async function deleteImage(env: Env, image: string) {
 
     return true;
 };
+
+export async function uploadImage(name: string, base64Image: string, url: string) {
+    console.log("uploadImage");
+
+    const mimeType = "image/png";
+    
+    const buffer = Buffer.from(base64Image, 'base64');
+    const uint8Array = new Uint8Array(buffer);
+    const blob = new Blob([ uint8Array ], { type: mimeType });
+
+    const body = new FormData();
+
+    body.append("file", blob, name);
+
+    const response = await fetch(url, {
+        method: "POST",
+        body
+    });
+
+    const content = await response.json() as any;
+
+    console.log("uploadImage", content);
+
+    return content;
+};
