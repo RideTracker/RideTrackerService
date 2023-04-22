@@ -56,7 +56,7 @@ function registerEndpoints() {
     
     router.post("/api/activities/create", withAuth, withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
-    router.get("/api/activities/:id/summary", withAuth, withParams, withSchema(activitySummaryRequestSchema), handleActivitySummaryRequest);
+    router.get("/api/activities/:activityId/summary", withAuth, withParams, withSchema(activitySummaryRequestSchema), handleActivitySummaryRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
