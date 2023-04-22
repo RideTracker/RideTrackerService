@@ -42,23 +42,21 @@ export async function createActivity(key: string) {
         sessions.push({
             id: `<expect uuid>(${route.legs.indexOf(leg)})`,
 
-            locations: [
-                leg.steps.map((step: any) => {
-                    return {
-                        coords: {
-                            accuracy: 1.0,
-                            altitude: 80,
-                            altitudeAccuracy: 1.0,
-                            heading: 0.0,
-                            latitude: step.start_location.lat,
-                            longitude: step.start_location.lng,
-                            speed
-                        },
+            locations: leg.steps.map((step: any) => {
+                return {
+                    coords: {
+                        accuracy: 1.0,
+                        altitude: 80,
+                        altitudeAccuracy: 1.0,
+                        heading: 0.0,
+                        latitude: step.start_location.lat,
+                        longitude: step.start_location.lng,
+                        speed
+                    },
 
-                        timestamp
-                    }
-                })
-            ],
+                    timestamp
+                }
+            }),
 
             timestamp
         });
