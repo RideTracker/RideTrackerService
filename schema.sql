@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "activity_likes" (
 DROP TABLE IF EXISTS "activity_summary";
 CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"id"	varchar(255) NOT NULL,
-	"area"	varchar(255) NOT NULL,
+	"area"	varchar(255) DEFAULT NULL,
 	"distance"	double NOT NULL,
 	"average_speed"	double NOT NULL,
 	"elevation"	double NOT NULL,

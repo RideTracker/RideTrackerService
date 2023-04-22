@@ -2,6 +2,7 @@ declare type Env = {
     [key: string]: string | undefined;
     
     DATABASE: D1Database;
+    BUCKET: R2Bucket;
     
     ENVIRONMENT: "production" | "staging";
     CLOUDFLARE_ACCOUNT_ID: string;
