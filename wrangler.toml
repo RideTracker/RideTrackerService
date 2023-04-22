@@ -26,3 +26,7 @@ ENVIRONMENT = "staging"
 binding = "DATABASE"
 database_name = "staging"
 database_id = "96c03eb6-d7d5-40e6-8032-1cb6599ac100"
+
+[[ env.staging.r2_buckets ]]
+binding = "BUCKET"
+bucket_name = "staging"
