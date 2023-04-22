@@ -30,6 +30,7 @@ import { handleCreateAvatarRequest } from "./routes/avatars/create";
 import { handleCreateAvatarColorRequest } from "./routes/avatars/avatar/color";
 import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
 import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./routes/user/avatar";
+import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "./routes/activities/[activityId]/summary";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -53,6 +54,7 @@ function registerEndpoints() {
     router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth, withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
     
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
+    router.get("/api/activities/:id/summary", withAuth, withParams, withSchema(activitySummaryRequestSchema), handleActivitySummaryRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
