@@ -26,7 +26,7 @@ export async function createActivity(key: string) {
 
     // @ts-ignore
     const response = await fetch(`https://maps.googleapis.com/maps/api/directions/json?mode=bicycling&origin=${from}&destination=${to}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_TOKEN}`);
-    const result = await response.json<any>();
+    const result = await response.json() as any;
 
     const route = result.routes[0];
 
