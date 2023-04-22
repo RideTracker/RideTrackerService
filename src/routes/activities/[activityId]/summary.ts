@@ -68,10 +68,10 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
 
         activitySummary: {
             area: activitySummary.area,
-            distance: activitySummary.distance,
-            averageSpeed: activitySummary.averageSpeed,
-            elevation: activitySummary.elevation,
-            maxSpeed: activitySummary.maxSpeed,
+            distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
+            averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
+            elevation: Math.round(activitySummary.elevation),
+            maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
             comments: activitySummary.comments
         }
     });
