@@ -5,11 +5,12 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"title"	varchar(255) DEFAULT NULL,
 	"description"	varchar(255) DEFAULT NULL,
 	"bike"	varchar(255) DEFAULT NULL,
+	"polyline" TEXT DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );
 
-INSERT INTO "activities" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,'844d20e9-a253-415e-9f5d-ae86a4c21947',1678300150558.0);
-INSERT INTO "activities" VALUES ('6ecd9429-739d-45fa-bc09-489bd20a10fd','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,NULL,1678303566794.0);
+INSERT INTO "activities" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,'844d20e9-a253-415e-9f5d-ae86a4c21947',NULL,1678300150558.0);
+INSERT INTO "activities" VALUES ('6ecd9429-739d-45fa-bc09-489bd20a10fd','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,NULL,NULL,1678303566794.0);
 
 DROP TABLE IF EXISTS "activity_comments";
 CREATE TABLE IF NOT EXISTS "activity_comments" (

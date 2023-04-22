@@ -44,6 +44,7 @@ export async function handleActivityRequest(request: Request, env: Env) {
 
         activity: {
             id: activity.id,
+            polyline: activity.polyline,
 
             user: {
                 id: acitivityAuthor.id,

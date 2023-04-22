@@ -1,3 +1,4 @@
+import { encode } from "@googlemaps/polyline-codec";
 import { createActivity } from "../../controllers/activities/createActivity";
 import { createActivitySummary } from "../../controllers/activities/summary/createActivitySummary";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
@@ -85,7 +86,15 @@ export async function handleCreateActivityRequest(request: Request, env: Env) {
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null);
+    const points = [];
+
+    for(let session of sessions) {
+        for(let location of session.locations) {
+            points.push([ location.coords.latitude, location.coords.longitude ]);
+        }
+    }
+
+    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, encode(points, 5));
 
     if(!activity)
         return Response.json({ success: false });
