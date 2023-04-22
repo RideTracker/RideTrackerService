@@ -64,12 +64,14 @@ export async function createActivity(key: string) {
         });
     }
 
-    const activity = await getResponse("POST", "/activities/create", key, {
+    const activity = await getResponse("POST", "/api/activities/create", key, {
         title: `${from} to ${to}`,
         description: null,
         bikeId: null,
         sessions
     });
+
+    console.log("activity", activity);
 
     expect(activity.success).toBe(true);
 
