@@ -4,16 +4,17 @@ import { createActivity } from "./controllers/activities/createActivity";
 
 describe("populate mock data", async () => {
     test("create users and populate content", async () => {
-        for(let index = 0; index < 1; index++) {
+        const users = [];
+        for(let index = 0; index < 5; index++) {
             const result = await createUser() as any;
 
-            for(let activityIndex = 0; activityIndex < 3; activityIndex++) {
-                const activityResult = await createActivity(result.key);
-                
-                console.log(index, activityIndex, activityResult);
-            }
-    
-            console.log(index, result);
+            users.push(result);
+        }
+
+        for(let index = 0; index < 10; index++) {
+            const activityResult = await createActivity(users[Math.floor(Math.random() * users.length)].key);
+            
+            console.log(index, activityResult);
         }
     }, { timeout: 0 });
 });
