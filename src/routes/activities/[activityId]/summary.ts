@@ -58,7 +58,7 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
 
             await Promise.all([
                 getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
-                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].length - 1].coords).then((name) => finishArea = name)
+                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].locations.length - 1].coords).then((name) => finishArea = name)
             ]);
         }   
 
