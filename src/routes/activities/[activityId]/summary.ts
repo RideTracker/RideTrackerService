@@ -46,7 +46,7 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
             if(geocoding.results.length) {
                 const geocodingResult = geocoding.results[0];
 
-                const geocodingComponent = geocodingResult.address_components.find((component: any) => component.type === "postal_town") ?? geocodingResult.address_components.find((component: any) => component.type === "political") ?? geocodingResult.address_components.find((component: any) => component.type === "country");
+                const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
             
                 area = geocodingComponent?.long_name ?? null;
             }
