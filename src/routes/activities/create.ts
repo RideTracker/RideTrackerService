@@ -87,15 +87,19 @@ export async function handleCreateActivityRequest(request: Request, env: Env) {
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const points = [];
+    const polylines = [];
 
     for(let session of sessions) {
+        const path = [];
+
         for(let location of session.locations) {
-            points.push([ location.coords.latitude, location.coords.longitude ]);
+            path.push([ location.coords.latitude, location.coords.longitude ]);
         }
+
+        polylines.push(encode(path, 5));
     }
 
-    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, encode(points, 5));
+    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, JSON.stringify(polylines));
 
     if(!activity)
         return Response.json({ success: false });
