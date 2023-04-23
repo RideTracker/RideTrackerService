@@ -7,7 +7,6 @@ export type ActivitySummary = {
     averageSpeed: number;
     elevation: number;
     maxSpeed: number;
-    comments: number;
     
     timestamp: number;
 };

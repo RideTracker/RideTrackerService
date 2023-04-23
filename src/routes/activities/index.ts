@@ -1,3 +1,4 @@
+import { getActivityCommentsCount } from "../../controllers/activities/comments/getActivityCommentsCount";
 import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
@@ -38,6 +39,8 @@ export async function handleActivityRequest(request: Request, env: Env) {
     const activityComment = await getLatestActivityComment(env.DATABASE, id);
     const activityCommentUser = (activityComment) && await getUserById(env.DATABASE, activityComment.user);
 
+    const activityComments = await getActivityCommentsCount(env.DATABASE, activity.id);
+
     const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
 
     return Response.json({
@@ -72,9 +75,10 @@ export async function handleActivityRequest(request: Request, env: Env) {
                 distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
                 averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
                 elevation: Math.round(activitySummary.elevation),
-                maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
-                comments: activitySummary.comments
+                maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10
             },
+
+            comments: activityComments,
 
             comment: activityComment && {
                 message: activityComment.message,

@@ -42,12 +42,11 @@ CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"average_speed"	double NOT NULL,
 	"elevation"	double NOT NULL,
 	"max_speed"	double NOT NULL,
-	"comments"	int NOT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")
 );
 
-INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg','Trollhättan',7.3,23.7,33.0,36.5,0,1678553188986);
+INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg','Trollhättan',7.3,23.7,33.0,36.5,1678553188986);
 
 DROP TABLE IF EXISTS "avatars";
 CREATE TABLE IF NOT EXISTS "avatars" (

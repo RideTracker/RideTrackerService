@@ -39,7 +39,6 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         let distance = 0;
         let elevation = 0;
         let maxSpeed = 0;
-        let comments = 0;
 
         if(sessions.length && sessions[0].locations.length) {
             async function getAreaName(coords: any) {
@@ -80,7 +79,7 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         const speedSum = speeds.reduce((a, b) => a + b, 0);
         const averageSpeed = (speedSum / speeds.length) || 0;
 
-        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, averageSpeed, elevation, maxSpeed, comments);
+        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, averageSpeed, elevation, maxSpeed);
         
         if(!activitySummary)
             return Response.json({ success: false });
@@ -95,8 +94,7 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
             distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
             averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
             elevation: Math.round(activitySummary.elevation),
-            maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
-            comments: activitySummary.comments
+            maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10
         }
     });
 };
