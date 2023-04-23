@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"title"	varchar(255) DEFAULT NULL,
 	"description"	varchar(255) DEFAULT NULL,
 	"bike"	varchar(255) DEFAULT NULL,
-	"polyline" TEXT DEFAULT NULL,
+	"polylines" TEXT DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );
 
