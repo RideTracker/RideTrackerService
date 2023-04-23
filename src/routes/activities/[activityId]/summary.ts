@@ -41,11 +41,15 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         let comments = 0;
 
         if(sessions.length && sessions[0].locations.length) {
-            const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, sessions[0].locations[0].coords.lat, sessions[0].locations[0].coords.lng);
-            const geocodingResult = geocoding.results[0];
-            const geocodingComponent = geocodingResult.address_components.find((component: any) => component.type === "postal_town") ?? geocodingResult.address_components.find((component: any) => component.type === "political") ?? geocodingResult.address_components.find((component: any) => component.type === "country");
-        
-            area = geocodingComponent?.long_name ?? null;
+            const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, sessions[0].locations[0].coords.latitude, sessions[0].locations[0].coords.longitude);
+
+            if(geocoding.results.length) {
+                const geocodingResult = geocoding.results[0];
+
+                const geocodingComponent = geocodingResult.address_components.find((component: any) => component.type === "postal_town") ?? geocodingResult.address_components.find((component: any) => component.type === "political") ?? geocodingResult.address_components.find((component: any) => component.type === "country");
+            
+                area = geocodingComponent?.long_name ?? null;
+            }
         }   
 
         const speeds = [];
