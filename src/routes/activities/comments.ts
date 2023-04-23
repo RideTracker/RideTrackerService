@@ -27,15 +27,16 @@ export async function handleActivityCommentsRequest(request: Request, env: Env) 
             const commentUser = commentUsers.find((user) => user?.id === comment.user);
 
             return {
+                id: comment.id,
+                parent: comment.parent,
                 message: comment.message,
+                timestamp: comment.timestamp,
 
                 user: commentUser && {
                     id: commentUser.id,
                     name: commentUser.firstname + " " + commentUser.lastname,
                     avatar: commentUser.avatar
-                },
-
-                timestamp: comment.timestamp
+                }
             }
         })
     });

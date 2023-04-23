@@ -16,13 +16,13 @@ DROP TABLE IF EXISTS "activity_comments";
 CREATE TABLE IF NOT EXISTS "activity_comments" (
 	"id"	varchar(255) NOT NULL,
 	"activity"	varchar(255) NOT NULL,
-	"user"	varchar(255) NOT NULL,
 	"parent"	varchar(255) DEFAULT NULL,
+	"user"	varchar(255) NOT NULL,
 	"message"	varchar(255) NOT NULL,
 	"timestamp"	bigint NOT NULL
 );
 
-INSERT INTO "activity_comments" VALUES ('d4b22d54-8871-442e-87d3-abc2831b0822','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,'Nice one!',1679214607615);
+INSERT INTO "activity_comments" VALUES ('d4b22d54-8871-442e-87d3-abc2831b0822','95c00e4b-607e-43d3-b871-4661ebc2cedd','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675',NULL,'Nice one!',1679214607615);
 
 DROP TABLE IF EXISTS "activity_likes";
 CREATE TABLE IF NOT EXISTS "activity_likes" (
