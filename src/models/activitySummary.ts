@@ -1,7 +1,8 @@
 export type ActivitySummary = {
     id: string;
 
-    area: string | null;
+    startArea: string | null;
+    finishArea: string | null;
     distance: number;
     averageSpeed: number;
     elevation: number;

@@ -34,22 +34,32 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
 
         const sessions = await bucket.json<Array<any>>();
 
-        let area = null;
+        let startArea = null;
+        let finishArea = null;
         let distance = 0;
         let elevation = 0;
         let maxSpeed = 0;
         let comments = 0;
 
         if(sessions.length && sessions[0].locations.length) {
-            const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, sessions[0].locations[0].coords.latitude, sessions[0].locations[0].coords.longitude);
+            async function getAreaName(coords: any) {
+                const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, coords.latitude, coords.longitude);
+    
+                if(geocoding.results.length) {
+                    const geocodingResult = geocoding.results[0];
+    
+                    const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
+                
+                    return geocodingComponent?.long_name ?? null;
+                }
 
-            if(geocoding.results.length) {
-                const geocodingResult = geocoding.results[0];
-
-                const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
-            
-                area = geocodingComponent?.long_name ?? null;
+                return null;
             }
+
+            await Promise.all([
+                getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
+                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].length - 1].coords).then((name) => finishArea = name)
+            ]);
         }   
 
         const speeds = [];
@@ -70,7 +80,7 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         const speedSum = speeds.reduce((a, b) => a + b, 0);
         const averageSpeed = (speedSum / speeds.length) || 0;
 
-        activitySummary = await createActivitySummary(env.DATABASE, activity.id, area, distance, averageSpeed, elevation, maxSpeed, comments);
+        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, averageSpeed, elevation, maxSpeed, comments);
         
         if(!activitySummary)
             return Response.json({ success: false });
@@ -80,7 +90,8 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         success: true,
 
         activitySummary: {
-            area: activitySummary.area,
+            startArea: activitySummary.startArea,
+            finishArea: activitySummary.finishArea,
             distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
             averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
             elevation: Math.round(activitySummary.elevation),

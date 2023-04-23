@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS "activity_likes" (
 DROP TABLE IF EXISTS "activity_summary";
 CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"id"	varchar(255) NOT NULL,
-	"area"	varchar(255) DEFAULT NULL,
+	"start_area"	varchar(255) DEFAULT NULL,
+	"finish_area"	varchar(255) DEFAULT NULL,
 	"distance"	double NOT NULL,
 	"average_speed"	double NOT NULL,
 	"elevation"	double NOT NULL,
@@ -46,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "activity_summary" (
 	PRIMARY KEY("id")
 );
 
-INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg',7.3,23.7,33.0,36.5,0,1678553188986);
+INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg','Trollhättan',7.3,23.7,33.0,36.5,0,1678553188986);
 
 DROP TABLE IF EXISTS "avatars";
 CREATE TABLE IF NOT EXISTS "avatars" (

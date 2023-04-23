@@ -67,7 +67,8 @@ export async function handleActivityRequest(request: Request, env: Env) {
             },
             
             summary: activitySummary && {
-                area: activitySummary.area,
+                startArea: activitySummary.startArea,
+                finishArea: activitySummary.finishArea,
                 distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
                 averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
                 elevation: Math.round(activitySummary.elevation),
