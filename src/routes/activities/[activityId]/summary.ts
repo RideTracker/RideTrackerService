@@ -5,6 +5,7 @@ import { createActivitySummary } from "../../../controllers/activities/summary/c
 import { getActivitySummaryById } from "../../../controllers/activities/summary/getActivitySummaryById";
 import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
+import { getReverseGeocoding } from "../../../controllers/maps/getReverseGeocoding";
 
 export const activitySummaryRequestSchema = {
     params: {
@@ -38,6 +39,14 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         let elevation = 0;
         let maxSpeed = 0;
         let comments = 0;
+
+        if(sessions.length && sessions[0].locations.length) {
+            const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, sessions[0].locations[0].coords.lat, sessions[0].locations[0].coords.lng);
+            const geocodingResult = geocoding.results[0];
+            const geocodingComponent = geocodingResult.address_components.find((component: any) => component.type === "postal_town") ?? geocodingResult.address_components.find((component: any) => component.type === "political") ?? geocodingResult.address_components.find((component: any) => component.type === "country");
+        
+            area = geocodingComponent?.long_name ?? null;
+        }   
 
         const speeds = [];
 
