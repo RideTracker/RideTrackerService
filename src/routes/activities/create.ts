@@ -3,6 +3,7 @@ import { createActivity } from "../../controllers/activities/createActivity";
 import { createActivitySummary } from "../../controllers/activities/summary/createActivitySummary";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { Bike } from "../../models/bike";
+import { handleActivitySummaryRequest } from "./[activityId]/summary";
 
 export const createActivityRequestSchema = {
     content: {
@@ -78,7 +79,7 @@ export const createActivityRequestSchema = {
     }
 };
 
-export async function handleCreateActivityRequest(request: Request, env: Env) {
+export async function handleCreateActivityRequest(request: Request, env: Env, context: any) {
     const { title, description, bikeId, sessions } = request.content;
 
     const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
@@ -106,6 +107,14 @@ export async function handleCreateActivityRequest(request: Request, env: Env) {
             "activity": activity.id
         }
     });
+
+    
+    context.waitUntil(handleActivitySummaryRequest({
+        key: request.key,
+        params: {
+            activityId: activity.id
+        }
+    }, env));
 
     return Response.json({
         success: true,

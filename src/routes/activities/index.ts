@@ -6,6 +6,7 @@ import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
 import { getUserById } from "../../controllers/users/getUserById";
 import { User } from "../../models/user";
+import { handleActivitySummaryRequest } from "./[activityId]/summary";
 
 export const activityRequestSchema = {
     params: {
