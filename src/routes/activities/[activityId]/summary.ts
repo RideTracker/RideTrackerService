@@ -6,10 +6,7 @@ import { getActivitySummaryById } from "../../../controllers/activities/summary/
 import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
 import { getReverseGeocoding } from "../../../controllers/maps/getReverseGeocoding";
-import { getPersonalBestDistanceActivitySummaryByUser } from "../../../controllers/activities/summary/getPersonalBestDistanceActivityByUser";
-import { getPersonalBestAverageSpeedActivityByUser } from "../../../controllers/activities/summary/getPersonalBestAverageSpeedActivityByUser";
-import { getPersonalBestElevationActivitySummaryByUser } from "../../../controllers/activities/summary/getPersonalBestElevationActivityByUser";
-import { getPersonalBestMaxSpeedActivityByUser } from "../../../controllers/activities/summary/getPersonalBestMaxSpeedActivityByUser";
+import { updatePersonalBestActivitySummary } from "../../../controllers/activities/summary/updatePersonalBestActivitySummary";
 
 export const activitySummaryRequestSchema = {
     params: {
@@ -88,48 +85,12 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         let elevationPersonalBest = null;
         let maxSpeedPersonalBest = null;
 
-        await Promise.all([
-            getPersonalBestDistanceActivitySummaryByUser(env.DATABASE, activity.user).then(async (personalBest) => {
-                if(!personalBest ||  distance > personalBest.distance) {
-                    distancePersonalBest = true;
-
-                    if(personalBest)
-                        await env.DATABASE.prepare("UPDATE activity_summary SET distance_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
-                }
-            }),
-            
-            getPersonalBestAverageSpeedActivityByUser(env.DATABASE, activity.user).then(async (personalBest) => {
-                if(!personalBest ||  averageSpeed > personalBest.averageSpeed) {
-                    averageSpeedPersonalBest = true;
-
-                    if(personalBest)
-                        await env.DATABASE.prepare("UPDATE activity_summary SET average_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
-                }
-            }),
-            
-            getPersonalBestElevationActivitySummaryByUser(env.DATABASE, activity.user).then(async (personalBest) => {
-                if(!personalBest ||  elevation > personalBest.elevation) {
-                    elevationPersonalBest = true;
-
-                    if(personalBest)
-                        await env.DATABASE.prepare("UPDATE activity_summary SET elevation_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
-                }
-            }),
-            
-            getPersonalBestMaxSpeedActivityByUser(env.DATABASE, activity.user).then(async (personalBest) => {
-                if(!personalBest ||  maxSpeed > personalBest.maxSpeed) {
-                    maxSpeedPersonalBest = true;
-
-                    if(personalBest)
-                        await env.DATABASE.prepare("UPDATE activity_summary SET max_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
-                }
-            })
-        ]);
-
         activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, distancePersonalBest, averageSpeed, averageSpeedPersonalBest, elevation, elevationPersonalBest, maxSpeed, maxSpeedPersonalBest);
-        
+
         if(!activitySummary)
             return Response.json({ success: false });
+
+        await updatePersonalBestActivitySummary(env.DATABASE, activity.user);
     }
 
     return Response.json({
