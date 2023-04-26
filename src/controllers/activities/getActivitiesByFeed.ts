@@ -64,7 +64,7 @@ export async function getActivitiesByFeed(database: D1Database, search?: string,
         return query.results ?? null;
     }
 
-    const query = await database.prepare("SELECT * FROM activities WHERE (activities.timestamp > ?1) ORDER BY " + sort).bind(timestamp).all<Activity>();
+    const query = await database.prepare("SELECT * FROM activities LEFT JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort).bind(timestamp).all<Activity>();
 
     return query.results ?? null;
 };
