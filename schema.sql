@@ -9,9 +9,6 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"timestamp"	double NOT NULL
 );
 
-INSERT INTO "activities" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,'844d20e9-a253-415e-9f5d-ae86a4c21947',NULL,1678300150558.0);
-INSERT INTO "activities" VALUES ('6ecd9429-739d-45fa-bc09-489bd20a10fd','95c00e4b-607e-43d3-b871-4661ebc2cedd',NULL,NULL,NULL,NULL,1678303566794.0);
-
 DROP TABLE IF EXISTS "activity_comments";
 CREATE TABLE IF NOT EXISTS "activity_comments" (
 	"id"	varchar(255) NOT NULL,
@@ -21,8 +18,6 @@ CREATE TABLE IF NOT EXISTS "activity_comments" (
 	"message"	varchar(255) NOT NULL,
 	"timestamp"	bigint NOT NULL
 );
-
-INSERT INTO "activity_comments" VALUES ('d4b22d54-8871-442e-87d3-abc2831b0822','95c00e4b-607e-43d3-b871-4661ebc2cedd','7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675',NULL,'Nice one!',1679214607615);
 
 DROP TABLE IF EXISTS "activity_likes";
 CREATE TABLE IF NOT EXISTS "activity_likes" (
@@ -39,14 +34,16 @@ CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"start_area"	varchar(255) DEFAULT NULL,
 	"finish_area"	varchar(255) DEFAULT NULL,
 	"distance"	double NOT NULL,
+	"distance_personal_best" boolean DEFAULT NULL,
 	"average_speed"	double NOT NULL,
+	"average_speed_personal_best" boolean DEFAULT NULL,
 	"elevation"	double NOT NULL,
+	"elevation_personal_best" boolean DEFAULT NULL,
 	"max_speed"	double NOT NULL,
+	"max_speed_personal_best" boolean DEFAULT NULL,
 	"timestamp"	bigint NOT NULL,
 	PRIMARY KEY("id")
 );
-
-INSERT INTO "activity_summary" VALUES ('7ecb7ee3-802a-407e-bf1f-d6cb0fcf6675','Vänersborg','Trollhättan',7.3,23.7,33.0,36.5,1678553188986);
 
 DROP TABLE IF EXISTS "avatars";
 CREATE TABLE IF NOT EXISTS "avatars" (

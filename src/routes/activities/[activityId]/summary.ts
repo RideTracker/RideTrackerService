@@ -6,6 +6,10 @@ import { getActivitySummaryById } from "../../../controllers/activities/summary/
 import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
 import { getReverseGeocoding } from "../../../controllers/maps/getReverseGeocoding";
+import { getPersonalBestDistanceActivitySummaryByUser } from "../../../controllers/activities/summary/getPersonalBestDistanceActivityByUser";
+import { getPersonalBestAverageSpeedActivityByUser } from "../../../controllers/activities/summary/getPersonalBestAverageSpeedActivityByUser";
+import { getPersonalBestElevationActivitySummaryByUser } from "../../../controllers/activities/summary/getPersonalBestElevationActivityByUser";
+import { getPersonalBestMaxSpeedActivityByUser } from "../../../controllers/activities/summary/getPersonalBestMaxSpeedActivityByUser";
 
 export const activitySummaryRequestSchema = {
     params: {
@@ -79,7 +83,42 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         const speedSum = speeds.reduce((a, b) => a + b, 0);
         const averageSpeed = (speedSum / speeds.length) || 0;
 
-        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, averageSpeed, elevation, maxSpeed);
+        let distancePersonalBest = null;
+        let averageSpeedPersonalBest = null;
+        let elevationPersonalBest = null;
+        let maxSpeedPersonalBest = null;
+
+        await Promise.all([
+            async () => {
+                const personalBest = await getPersonalBestDistanceActivitySummaryByUser(env.DATABASE, activity.user);
+
+                if(!personalBest ||  distance > personalBest.distance)
+                    distancePersonalBest = true;
+            },
+            
+            async () => {
+                const personalBest = await getPersonalBestAverageSpeedActivityByUser(env.DATABASE, activity.user);
+
+                if(!personalBest ||  averageSpeed > personalBest.averageSpeed)
+                    averageSpeedPersonalBest = true;
+            },
+            
+            async () => {
+                const personalBest = await getPersonalBestElevationActivitySummaryByUser(env.DATABASE, activity.user);
+
+                if(!personalBest ||  elevation > personalBest.elevation)
+                    elevationPersonalBest = true;
+            },
+            
+            async () => {
+                const personalBest = await getPersonalBestMaxSpeedActivityByUser(env.DATABASE, activity.user);
+
+                if(!personalBest ||  maxSpeed > personalBest.maxSpeed)
+                    maxSpeedPersonalBest = true;
+            }
+        ]);
+
+        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, distancePersonalBest, averageSpeed, averageSpeedPersonalBest, elevation, elevationPersonalBest, maxSpeed, maxSpeedPersonalBest);
         
         if(!activitySummary)
             return Response.json({ success: false });
@@ -91,10 +130,18 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         activitySummary: {
             startArea: activitySummary.startArea,
             finishArea: activitySummary.finishArea,
+
             distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
+            distancePersonalBest: (activitySummary.distancePersonalBest) && activitySummary.distance,
+
             averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
+            averageSpeedPersonalBest: (activitySummary.averageSpeedPersonalBest) && activitySummary.averageSpeed,
+
             elevation: Math.round(activitySummary.elevation),
-            maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10
+            elevationPersonalBest: (activitySummary.elevationPersonalBest) && activitySummary.elevation,
+
+            maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
+            maxSpeedPersonalBest: (activitySummary.maxSpeedPersonalBest) && activitySummary.maxSpeed
         }
     });
 };
