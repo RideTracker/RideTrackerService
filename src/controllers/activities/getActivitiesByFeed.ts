@@ -58,13 +58,13 @@ export async function getActivitiesByFeed(database: D1Database, search?: string,
             "  OR (LOWER(activity_summary.finish_area) LIKE '%' || LOWER(?1) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?2)" +
-            " ORDER BY " + order
+            " ORDER BY " + sort
             ).bind(search, timestamp).all<Activity>();
     
         return query.results ?? null;
     }
 
-    const query = await database.prepare("SELECT * FROM activities WHERE (activities.timestamp > ?1) ORDER BY " + order).bind(timestamp).all<Activity>();
+    const query = await database.prepare("SELECT * FROM activities WHERE (activities.timestamp > ?1) ORDER BY " + sort).bind(timestamp).all<Activity>();
 
     return query.results ?? null;
 };
