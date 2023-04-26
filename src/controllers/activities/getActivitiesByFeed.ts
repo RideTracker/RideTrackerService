@@ -3,7 +3,7 @@ import { Activity } from "../../models/activity";
 export async function getActivitiesByFeed(database: D1Database, search?: string, order?: string, timeline?: string): Promise<Activity[] | null> {
     if(search?.length) {
         const query = await database.prepare(
-            "SELECT * FROM activities" +
+            "SELECT activities.* FROM activities" +
             " INNER JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (LOWER(activities.title) LIKE '%' || LOWER(?1) || '%')" +

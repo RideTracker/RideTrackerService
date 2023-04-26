@@ -11,7 +11,7 @@ import { withAuth } from "./middlewares/auth";
 import { withStaging } from "./middlewares/staging";
 import { handleStagingVerificationRequest } from "./routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "./routes/staging/deleteUser";
-import { handleFeedRequest } from "./routes/feed";
+import { feedRequestSchema, handleFeedRequest } from "./routes/feed";
 import { activityRequestSchema, handleActivityRequest } from "./routes/activities";
 import { handleBikesRequest } from "./routes/bikes";
 import { handleActivityCommentsRequest } from "./routes/activities/comments";
@@ -46,7 +46,7 @@ function registerEndpoints() {
     router.post("/api/avatars/:avatarId/color", withStaging, withAuth, withParams, withContent, handleCreateAvatarColorRequest);
     router.post("/api/avatars/:avatarId/image", withStaging, withAuth, withParams, withContent, handleCreateAvatarImageRequest);
 
-    router.get("/api/feed?", withAuth, withParams, handleFeedRequest);
+    router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);

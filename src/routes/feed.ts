@@ -1,8 +1,8 @@
 import { getActivities } from "../controllers/activities/getActivities";
 import { getActivitiesByFeed } from "../controllers/activities/getActivitiesByFeed";
 
-const feedRequestSchema = {
-    params: {
+export const feedRequestSchema = {
+    query: {
         search: {
             type: "string",
             required: false
@@ -21,7 +21,7 @@ const feedRequestSchema = {
 };
 
 export async function handleFeedRequest(request: Request, env: Env) {
-    const { search, order, timeline } = request.params;
+    const { search, order, timeline } = request.query;
 
     const activities = await getActivitiesByFeed(env.DATABASE, search, order, timeline);
 
