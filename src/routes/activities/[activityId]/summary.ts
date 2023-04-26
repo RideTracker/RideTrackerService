@@ -92,29 +92,45 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
             async () => {
                 const personalBest = await getPersonalBestDistanceActivitySummaryByUser(env.DATABASE, activity.user);
 
-                if(!personalBest ||  distance > personalBest.distance)
+                if(!personalBest ||  distance > personalBest.distance) {
                     distancePersonalBest = true;
+
+                    if(personalBest)
+                        await env.DATABASE.prepare("UPDATE activity_summary SET distance_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                }
             },
             
             async () => {
                 const personalBest = await getPersonalBestAverageSpeedActivityByUser(env.DATABASE, activity.user);
 
-                if(!personalBest ||  averageSpeed > personalBest.averageSpeed)
+                if(!personalBest ||  averageSpeed > personalBest.averageSpeed) {
                     averageSpeedPersonalBest = true;
+
+                    if(personalBest)
+                        await env.DATABASE.prepare("UPDATE activity_summary SET average_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                }
             },
             
             async () => {
                 const personalBest = await getPersonalBestElevationActivitySummaryByUser(env.DATABASE, activity.user);
 
-                if(!personalBest ||  elevation > personalBest.elevation)
+                if(!personalBest ||  elevation > personalBest.elevation) {
                     elevationPersonalBest = true;
+
+                    if(personalBest)
+                        await env.DATABASE.prepare("UPDATE activity_summary SET elevation_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                }
             },
             
             async () => {
                 const personalBest = await getPersonalBestMaxSpeedActivityByUser(env.DATABASE, activity.user);
 
-                if(!personalBest ||  maxSpeed > personalBest.maxSpeed)
+                if(!personalBest ||  maxSpeed > personalBest.maxSpeed) {
                     maxSpeedPersonalBest = true;
+
+                    if(personalBest)
+                        await env.DATABASE.prepare("UPDATE activity_summary SET max_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                }
             }
         ]);
 
@@ -132,16 +148,16 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
             finishArea: activitySummary.finishArea,
 
             distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
-            distancePersonalBest: (activitySummary.distancePersonalBest) && activitySummary.distance,
+            distancePersonalBest: (activitySummary.distancePersonalBest) && activitySummary.distancePersonalBest,
 
             averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
-            averageSpeedPersonalBest: (activitySummary.averageSpeedPersonalBest) && activitySummary.averageSpeed,
+            averageSpeedPersonalBest: (activitySummary.averageSpeedPersonalBest) && activitySummary.averageSpeedPersonalBest,
 
             elevation: Math.round(activitySummary.elevation),
-            elevationPersonalBest: (activitySummary.elevationPersonalBest) && activitySummary.elevation,
+            elevationPersonalBest: (activitySummary.elevationPersonalBest) && activitySummary.elevationPersonalBest,
 
             maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
-            maxSpeedPersonalBest: (activitySummary.maxSpeedPersonalBest) && activitySummary.maxSpeed
+            maxSpeedPersonalBest: (activitySummary.maxSpeedPersonalBest) && activitySummary.maxSpeedPersonalBest
         }
     });
 };

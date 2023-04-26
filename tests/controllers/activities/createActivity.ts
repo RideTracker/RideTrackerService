@@ -30,6 +30,9 @@ export async function createActivity(key: string) {
 
     const route = result.routes[0];
 
+    if(!route)
+        return;
+
     const now = Date.now();
     const twelveMonthsAgo = now - 31536000000; // 31536000000 milliseconds = 1 year
     const timestamp = Math.floor(Math.random() * (now - twelveMonthsAgo)) + twelveMonthsAgo;
