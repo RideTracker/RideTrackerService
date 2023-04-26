@@ -47,8 +47,8 @@ export async function getActivitiesByFeed(database: D1Database, search?: string,
     if(search?.length) {
         const query = await database.prepare(
             "SELECT activities.* FROM activities" +
-            " INNER JOIN activity_summary ON activities.id = activity_summary.id" +
-            " INNER JOIN users ON activities.user = users.id" +
+            " LEFT JOIN activity_summary ON activities.id = activity_summary.id" +
+            " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (" +
             "  (LOWER(activities.title) LIKE '%' || LOWER(?1) || '%')" +
