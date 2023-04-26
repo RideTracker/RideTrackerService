@@ -29,7 +29,7 @@ function getSortByOrder(order?: string) {
             return "activity_summary.average_speed DESC";
 
         case "highest_speed":
-            return "activity_summary.highest_speed DESC";
+            return "activity_summary.max_speed DESC";
             
         case "elevation":
             return "activity_summary.elevation DESC";
