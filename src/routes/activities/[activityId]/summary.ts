@@ -89,39 +89,39 @@ export async function handleActivitySummaryRequest(request: Request, env: Env) {
         let maxSpeedPersonalBest = null;
 
         await Promise.all([
-            getPersonalBestDistanceActivitySummaryByUser(env.DATABASE, activity.user).then((personalBest) => {
+            getPersonalBestDistanceActivitySummaryByUser(env.DATABASE, activity.user).then(async (personalBest) => {
                 if(!personalBest ||  distance > personalBest.distance) {
                     distancePersonalBest = true;
 
                     if(personalBest)
-                        env.DATABASE.prepare("UPDATE activity_summary SET distance_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                        await env.DATABASE.prepare("UPDATE activity_summary SET distance_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
                 }
             }),
             
-            getPersonalBestAverageSpeedActivityByUser(env.DATABASE, activity.user).then((personalBest) => {
+            getPersonalBestAverageSpeedActivityByUser(env.DATABASE, activity.user).then(async (personalBest) => {
                 if(!personalBest ||  averageSpeed > personalBest.averageSpeed) {
                     averageSpeedPersonalBest = true;
 
                     if(personalBest)
-                        env.DATABASE.prepare("UPDATE activity_summary SET average_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                        await env.DATABASE.prepare("UPDATE activity_summary SET average_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
                 }
             }),
             
-            getPersonalBestElevationActivitySummaryByUser(env.DATABASE, activity.user).then((personalBest) => {
+            getPersonalBestElevationActivitySummaryByUser(env.DATABASE, activity.user).then(async (personalBest) => {
                 if(!personalBest ||  elevation > personalBest.elevation) {
                     elevationPersonalBest = true;
 
                     if(personalBest)
-                        env.DATABASE.prepare("UPDATE activity_summary SET elevation_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                        await env.DATABASE.prepare("UPDATE activity_summary SET elevation_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
                 }
             }),
             
-            getPersonalBestMaxSpeedActivityByUser(env.DATABASE, activity.user).then((personalBest) => {
+            getPersonalBestMaxSpeedActivityByUser(env.DATABASE, activity.user).then(async (personalBest) => {
                 if(!personalBest ||  maxSpeed > personalBest.maxSpeed) {
                     maxSpeedPersonalBest = true;
 
                     if(personalBest)
-                        env.DATABASE.prepare("UPDATE activity_summary SET max_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
+                        await env.DATABASE.prepare("UPDATE activity_summary SET max_speed_personal_best = NULL WHERE id = ?").bind(personalBest.id).run();
                 }
             })
         ]);
