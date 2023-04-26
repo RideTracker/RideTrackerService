@@ -46,7 +46,7 @@ function registerEndpoints() {
     router.post("/api/avatars/:avatarId/color", withStaging, withAuth, withParams, withContent, handleCreateAvatarColorRequest);
     router.post("/api/avatars/:avatarId/image", withStaging, withAuth, withParams, withContent, handleCreateAvatarImageRequest);
 
-    router.get("/api/feed", withAuth, handleFeedRequest);
+    router.get("/api/feed?", withAuth, withParams, handleFeedRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
