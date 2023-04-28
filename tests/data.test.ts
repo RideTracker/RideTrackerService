@@ -11,7 +11,7 @@ describe("populate mock data", async () => {
             users.push(result);
         }
 
-        for(let index = 0; index < 10; index++) {
+        for(let index = 0; index < 15; index++) {
             const activityResult = await createActivity(users[Math.floor(Math.random() * users.length)].key);
             
             console.log(index, activityResult);
