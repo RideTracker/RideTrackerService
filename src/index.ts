@@ -32,9 +32,13 @@ import { handleCreateAvatarImageRequest } from "./routes/avatars/avatar/image";
 import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./routes/user/avatar";
 import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "./routes/activities/[activityId]/summary";
 import { createActivityRequestSchema, handleCreateActivityRequest } from "./routes/activities/create";
+import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "./routes/activities/comments/summary";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
+
+    // TODO: withContent and withParams should be executed in withSchema, when the schema requires them
+    // TODO: this will clean up this file at least
 
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
@@ -59,6 +63,7 @@ function registerEndpoints() {
     router.get("/api/activities/:activityId/summary", withAuth, withParams, withSchema(activitySummaryRequestSchema), handleActivitySummaryRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
+    router.get("/api/activities/:activityId/comments/summary", withAuth, withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
