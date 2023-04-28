@@ -20,7 +20,7 @@ export async function handleActivityCommentsSummaryRequest(request: Request, env
 
     const commentUsers = await Promise.all(comments.map((comment) => getUserById(env.DATABASE, comment.user)));
 
-    return {
+    return Response.json({
         success: true,
 
         comments: comments.map((comment) => {
@@ -39,5 +39,5 @@ export async function handleActivityCommentsSummaryRequest(request: Request, env
                 }
             }
         })
-    }
+    });
 };
