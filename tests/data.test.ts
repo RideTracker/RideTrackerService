@@ -33,6 +33,12 @@ describe("populate mock data", async () => {
             const commentResult = await createActivityComment(users[Math.floor(Math.random() * users.length)].key, activity);
             
             console.log(index, commentResult);
-        };
+
+            for(let replyIndex = 0, count = Math.floor(Math.random() * 3); replyIndex < count; replyIndex++) {
+                const replyResult = await createActivityComment(users[Math.floor(Math.random() * users.length)].key, activity, commentResult.comment.id);
+                
+                console.log(index, replyResult);
+            }
+        }
     }, { timeout: 0 });
 });
