@@ -1,3 +1,4 @@
+import { getActivityCommentsCount } from "../../../controllers/activities/comments/getActivityCommentsCount";
 import { getActivityCommentsSummary } from "../../../controllers/activities/comments/getActivityCommentsSummary";
 import { getUserById } from "../../../controllers/users/getUserById";
 
@@ -18,10 +19,14 @@ export async function handleActivityCommentsSummaryRequest(request: Request, env
     if(!comments)
         return Response.json({ success: false });
 
+    const count = await getActivityCommentsCount(env.DATABASE, activityId);
+
     const commentUsers = await Promise.all(comments.map((comment) => getUserById(env.DATABASE, comment.user)));
 
     return Response.json({
         success: true,
+
+        commentsCount: count,
 
         comments: comments.map((comment) => {
             const commentUser = commentUsers.find((user) => user?.id === comment.user);
