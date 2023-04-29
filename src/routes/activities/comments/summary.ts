@@ -31,6 +31,7 @@ export async function handleActivityCommentsSummaryRequest(request: Request, env
                 parent: comment.parent,
                 message: comment.message,
                 timestamp: comment.timestamp,
+                comments_count: comment.comments_count,
 
                 user: commentUser && {
                     id: commentUser.id,
