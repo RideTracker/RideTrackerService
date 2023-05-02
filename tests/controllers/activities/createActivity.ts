@@ -49,10 +49,15 @@ export async function createActivity(key: string) {
         });
     
         // @ts-ignore
-        const response = await fetch(`https://maps.googleapis.com/maps/api/elevation/json?locations=${encode(coordinates, 5)}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_TOKEN}`);
+        const response = await fetch(`https://maps.googleapis.com/maps/api/elevation/json?locations=enc:${encode(coordinates, 5)}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_TOKEN}`);
         const result = await response.json() as any;
 
         const altitudes = result.results;
+
+        if(!result.results.length)
+            console.error(result);
+
+        console.log("expected", coordinates.length, "received", altitudes.length);
 
 
         const speed = (15 + Math.floor(Math.random() * 10)) * 0.278;
@@ -64,7 +69,7 @@ export async function createActivity(key: string) {
                 return {
                     coords: {
                         accuracy: 1.0,
-                        altitude: altitudes[index],
+                        altitude: altitudes[index].elevation,
                         altitudeAccuracy: 1.0,
                         heading: 0.0,
                         latitude: step.start_location.lat,
