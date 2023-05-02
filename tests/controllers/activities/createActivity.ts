@@ -1,5 +1,6 @@
 import { expect } from "vitest";
 import { getResponse } from "../../utils/response";
+import { encode } from "@googlemaps/polyline-codec";
 
 const places = [
     "Göteborg",
@@ -40,16 +41,30 @@ export async function createActivity(key: string) {
     const sessions = [];
 
     for(let leg of route.legs) {
+        const coordinates = leg.steps.slice(0, Math.min(512, leg.steps.length)).map((step: any) => {
+            return [
+                step.start_location.lat, 
+                step.start_location.lng
+            ];
+        });
+    
+        // @ts-ignore
+        const response = await fetch(`https://maps.googleapis.com/maps/api/elevation/json?locations=${encode(coordinates, 5)}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_TOKEN}`);
+        const result = await response.json() as any;
+
+        const altitudes = result.results;
+
+
         const speed = (15 + Math.floor(Math.random() * 10)) * 0.278;
 
         sessions.push({
             id: `<expect uuid>(${route.legs.indexOf(leg)})`,
 
-            locations: leg.steps.map((step: any) => {
+            locations: leg.steps.map((step: any, index: number) => {
                 return {
                     coords: {
                         accuracy: 1.0,
-                        altitude: 80,
+                        altitude: altitudes[index],
                         altitudeAccuracy: 1.0,
                         heading: 0.0,
                         latitude: step.start_location.lat,

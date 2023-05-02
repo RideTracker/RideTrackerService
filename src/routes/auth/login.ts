@@ -33,7 +33,8 @@ export async function handleAuthLoginRequest(request: Request, env: Env) {
     if(userVerification === null)
         return Response.json({ success: false, message: "Something went wrong." });
 
-    await sendUserVerificationEmail(user, userVerification);
+    if(!user.email.endsWith("ridetracker.app"))
+        await sendUserVerificationEmail(user, userVerification);
 
     return Response.json({ success: true, verification: userVerification.id });
 };
