@@ -21,9 +21,9 @@ export const feedRequestSchema = {
 };
 
 export async function handleFeedRequest(request: Request, env: Env) {
-    const { search, order, timeline } = request.query;
+    const { search, order, timeline, offset } = request.query;
 
-    const activities = await getActivitiesByFeed(env.DATABASE, search, order, timeline);
+    const activities = await getActivitiesByFeed(env.DATABASE, offset, search, order, timeline);
 
     if(!activities)
         return Response.json({ success: false });

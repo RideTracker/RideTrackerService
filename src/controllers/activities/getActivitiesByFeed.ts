@@ -40,7 +40,7 @@ function getSortByOrder(order?: string) {
     }
 };
 
-export async function getActivitiesByFeed(database: D1Database, search?: string, order?: string, timeline?: string): Promise<Activity[] | null> {
+export async function getActivitiesByFeed(database: D1Database, offset: number, search?: string, order?: string, timeline?: string): Promise<Activity[] | null> {
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
     
@@ -58,13 +58,13 @@ export async function getActivitiesByFeed(database: D1Database, search?: string,
             "  OR (LOWER(activity_summary.finish_area) LIKE '%' || LOWER(?1) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?2)" +
-            " ORDER BY " + sort
-            ).bind(search, timestamp).all<Activity>();
+            " ORDER BY " + sort + " OFFSET ?3"
+            ).bind(search, timestamp, offset).all<Activity>();
     
         return query.results ?? null;
     }
 
-    const query = await database.prepare("SELECT * FROM activities LEFT JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort).bind(timestamp).all<Activity>();
+    const query = await database.prepare("SELECT * FROM activities LEFT JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
     return query.results ?? null;
 };
