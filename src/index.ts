@@ -113,6 +113,7 @@ export default {
             console.log(`Warning, request took ${elapsed}ms to execute`, request);
         
         response.headers.set("Access-Control-Allow-Origin", "*");
+        response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
 
         return response;
     }
