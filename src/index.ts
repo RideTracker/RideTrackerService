@@ -40,6 +40,8 @@ function registerEndpoints() {
     // TODO: withContent and withParams should be executed in withSchema, when the schema requires them
     // TODO: this will clean up this file at least
 
+    router.options("*", (request) => Response.json({ success: true }));
+
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
