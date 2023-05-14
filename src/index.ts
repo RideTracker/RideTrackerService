@@ -105,12 +105,14 @@ export default {
     async fetch(request: any, env: any) {
         const timestamp = Date.now();
 
-        const response = router.handle(request, env);
+        const response = await router.handle(request, env);
 
         const elapsed = Date.now() - timestamp;
 
         if(elapsed >= 9)
             console.log(`Warning, request took ${elapsed}ms to execute`, request);
+        
+        response.headers.set("Access-Control-Allow-Origin", "*");
 
         return response;
     }
