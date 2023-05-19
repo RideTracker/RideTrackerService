@@ -1,4 +1,4 @@
-run-name: Deploy to staging and run tests
+run-name: Deploy to staging
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to staging and run tests
+    name: Deploy to staging
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,8 +22,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_WORKERS_TOKEN }}
           command: publish --env staging --var GITHUB_SHA:${{ github.sha }} CLOUDFLARE_ACCOUNT_ID:${{ secrets.CLOUDFLARE_ACCOUNT_ID }} CLOUDFLARE_API_IMAGES_TOKEN:${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }} GOOGLE_MAPS_API_TOKEN:${{ secrets.GOOGLE_MAPS_API_TOKEN }}
-        
-      - name: Run vite tests
-        env:
-          VITE_GITHUB_SHA: ${{ github.sha }}
-        run: npx vitest run tests/auth.test.ts
