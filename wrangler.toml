@@ -17,7 +17,7 @@ database_id = "4cb96598-71ce-47f5-b556-9ef1bfca42a1"
 
 [[ env.production.r2_buckets ]]
 binding = "BUCKET"
-bucket_name = "staging"
+bucket_name = "ridetracker-production"
 
 [env.staging.vars]
 ENVIRONMENT = "staging"
