@@ -17,7 +17,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+
+      - name: Setup node and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          registry-url: "https://npm.pkg.github.com"
 
       # Skip post-install scripts here, as a malicious script could steal NODE_AUTH_TOKEN.
       - name: Install dependencies
