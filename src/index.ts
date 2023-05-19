@@ -33,6 +33,7 @@ import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./r
 import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "./routes/activities/[activityId]/summary";
 import { createActivityRequestSchema, handleCreateActivityRequest } from "./routes/activities/create";
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "./routes/activities/comments/summary";
+import { PingResponse } from "@ridetracker/ridetrackerclient/dist/controllers/ping";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
