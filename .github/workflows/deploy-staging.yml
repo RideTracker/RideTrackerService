@@ -14,3 +14,10 @@ jobs:
     with:
       environment: staging
       
+  tests:
+    name: Run tests
+    uses: ./.github/workflows/run-live-tests.yml
+    secrets: inherit
+    with:
+      SERVICE_API: https://staging.service.ridetracker.app
+      

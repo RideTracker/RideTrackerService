@@ -1,0 +1,40 @@
+run-name: Run tests
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      SERVICE_API:
+        required: true
+        type: string
+
+jobs:
+  test:
+    name: Run live tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ridetracker'
+
+      - name: Authenticate with GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
+      # Skip post-install scripts here, as a malicious script could steal NODE_AUTH_TOKEN.
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # `npm rebuild` will run all those post-install scripts for us.
+      - name: Run post-install scripts
+        run: "npm rebuild && npm run prepare --if-present"
+        shell: bash
+        
+      - name: Run endpoint tests
+        env:
+          VITE_SERVICE_API: ${{ input.SERVICE_API }}
+          VITE_GITHUB_SHA: ${{ github.sha }}
+        run: npx vitest run tests/endpoint.test.ts
