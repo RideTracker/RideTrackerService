@@ -6,23 +6,27 @@ on:
     branches:
       - master
 
-permissions:
-  contents: read
-  packages: read
-
 jobs:
   deploy:
     name: Deploy to staging
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ridetracker'
 
-      - name: Authenticate with GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ github.token }}" > ~/.npmrc
-
-      - name: Install dependencies
-        run: npm install
+      - run: npm ci
+      - run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
       - name: Publish using wrangler
         uses: cloudflare/wrangler-action@2.0.0
