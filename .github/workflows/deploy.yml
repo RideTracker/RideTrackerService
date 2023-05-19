@@ -1,0 +1,42 @@
+run-name: Deploy to Cloudflare
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ridetracker'
+
+      - name: Authenticate with GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
+      # Skip post-install scripts here, as a malicious script could steal NODE_AUTH_TOKEN.
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # `npm rebuild` will run all those post-install scripts for us.
+      - name: Run post-install scripts
+        run: "npm rebuild && npm run prepare --if-present"
+        shell: bash
+
+      - name: Publish using wrangler
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_WORKERS_TOKEN }}
+          command: publish --env ${{ inputs.environment }} --var GITHUB_SHA:${{ github.sha }} CLOUDFLARE_ACCOUNT_ID:${{ secrets.CLOUDFLARE_ACCOUNT_ID }} CLOUDFLARE_API_IMAGES_TOKEN:${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }} GOOGLE_MAPS_API_TOKEN:${{ secrets.GOOGLE_MAPS_API_TOKEN }}

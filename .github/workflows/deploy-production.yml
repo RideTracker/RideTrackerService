@@ -2,23 +2,14 @@ run-name: Deploy to production
 
 on:
   workflow_dispatch:
-  workflow_call:
   release:
     types: [published]
 
 jobs:
   deploy:
     name: Deploy to production
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Publish using wrangler
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_WORKERS_TOKEN }}
-          command: publish --env production --var GITHUB_SHA:${{ github.sha }} CLOUDFLARE_ACCOUNT_ID:${{ secrets.CLOUDFLARE_ACCOUNT_ID }} CLOUDFLARE_API_IMAGES_TOKEN:${{ secrets.CLOUDFLARE_API_IMAGES_TOKEN }} GOOGLE_MAPS_API_TOKEN:${{ secrets.GOOGLE_MAPS_API_TOKEN }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+    with:
+      environment: production
+      
