@@ -35,6 +35,6 @@ jobs:
         
       - name: Run endpoint tests
         env:
-          VITE_SERVICE_API: ${{ input.SERVICE_API }}
+          VITE_SERVICE_API: ${{ inputs.SERVICE_API }}
           VITE_GITHUB_SHA: ${{ github.sha }}
         run: npx vitest run tests/endpoint.test.ts
