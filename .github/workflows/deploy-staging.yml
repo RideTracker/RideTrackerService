@@ -1,4 +1,4 @@
-run-name: Deploy to staging and run tests
+run-name: Deploy to staging
 
 on:
   workflow_dispatch:
