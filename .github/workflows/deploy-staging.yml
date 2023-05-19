@@ -16,6 +16,7 @@ jobs:
       
   tests:
     name: Run tests
+    needs: deploy
     uses: ./.github/workflows/run-live-tests.yml
     secrets: inherit
     with:
