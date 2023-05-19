@@ -37,4 +37,4 @@ jobs:
         env:
           VITE_SERVICE_API: ${{ inputs.SERVICE_API }}
           VITE_GITHUB_SHA: ${{ github.sha }}
-        run: npx vitest run tests/endpoint.test.ts
+        run: npx vitest run tests/endpoints.test.ts
