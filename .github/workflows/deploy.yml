@@ -5,10 +5,7 @@ on:
     inputs:
       environment:
         required: true
-        type: choice
-        options:
-          - production
-          - staging
+        type: string
 
 jobs:
   deploy:
