@@ -1,5 +1,4 @@
-import { getUserById } from "../controllers/users/getUserById";
-import { getUserKeyByCode } from "../controllers/users/keys/getUserKeyByCode";
+import { getTokenByKey } from "../controllers/tokens/getTokenByKey";
 
 export async function withAuth(request: Request, env: Env, context: any) {
     const authorization = request.headers.get("Authorization").split(' ');
@@ -7,12 +6,10 @@ export async function withAuth(request: Request, env: Env, context: any) {
     if(authorization[0] !== "Bearer" || authorization.length !== 2)
        return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
 
-    if(!(env.ENVIRONMENT === "staging" && authorization[1] === "iamcool")) {
-        const userKey = await getUserKeyByCode(env.DATABASE, authorization[1]);
-    
-        if(userKey === null)
-           return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
-    
-        request.key = userKey;
-    }
+    const token = await getTokenByKey(env.DATABASE, authorization[1]);
+
+    if(token === null)
+        return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+
+    request.key = token;
 };

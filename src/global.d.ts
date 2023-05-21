@@ -18,6 +18,7 @@ declare type Request = {
     
     key: {
         id: string;
+        key: string;
         user: string;
         timestamp: number;
     };

@@ -1,5 +1,5 @@
+import { createToken } from "../../../controllers/tokens/createToken";
 import { getUserById } from "../../../controllers/users/getUserById";
-import { createUserKey } from "../../../controllers/users/keys/createUserKey";
 import { deleteUserVerification } from "../../../controllers/users/verifications/deleteUserVerification";
 import { getUserVerification } from "../../../controllers/users/verifications/getUserVerification";
 
@@ -37,7 +37,10 @@ export async function handleAuthLoginVerificationRequest(request: Request, env: 
     if(user === null)
         return Response.json({ success: false, message: "User no longer exists." });
 
-    const userKey = await createUserKey(env.DATABASE, user);
+    const token = await createToken(env.DATABASE, crypto.randomUUID(), user.id);
 
-    return Response.json({ success: true, key: userKey.id });
+    if(token === null)
+        return Response.json({ success: false, message: "Something went wrong." });
+
+    return Response.json({ success: true, key: token.key });
 };
