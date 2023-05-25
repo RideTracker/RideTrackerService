@@ -34,6 +34,7 @@ import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "./ro
 import { createActivityRequestSchema, handleCreateActivityRequest } from "./routes/activities/create";
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "./routes/activities/comments/summary";
 import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "./routes/auth/login/verification/[verificationId]/code";
+import { triggerAlarm } from "./controllers/alarms/triggerAlarm";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -106,20 +107,30 @@ const router = registerEndpoints();
 console.log("Listening to requests...");
 
 export default {
-    async fetch(request: any, env: any) {
-        const timestamp = Date.now();
-
-        const response = await router.handle(request, env);
-
-        const elapsed = Date.now() - timestamp;
-
-        if(elapsed >= 9)
-            console.log(`Warning, request took ${elapsed}ms to execute`, request);
-        
-        response.headers.set("Access-Control-Allow-Origin", "*");
-        response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-        response.headers.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-
-        return response;
+    async fetch(request: any, env: any, context: any) {
+        try {
+            const timestamp = Date.now();
+    
+            const response = await router.handle(request, env);
+    
+            const elapsed = Date.now() - timestamp;
+    
+            if(elapsed >= 9)
+                console.log(`Warning, request took ${elapsed}ms to execute`, request);
+            
+            response.headers.set("Access-Control-Allow-Origin", "*");
+            response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+            response.headers.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    
+            return response;
+        }
+        catch(error) {
+            context.waitUntil(triggerAlarm(env, "Uncaught Request Error Alarm", `An uncaught error has occured during the processing of request:\n\t${request.method} ${request.url}\n\tRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+            
+            return new Response(undefined, {
+                status: 500,
+                statusText: "Internal Server Error"
+            })
+        }
     }
 };

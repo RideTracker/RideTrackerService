@@ -22,6 +22,7 @@
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
     "@googlemaps/polyline-codec": "^1.0.28",
+    "@ridetracker/discordwebhooksclient": "^0.9.0",
     "@ridetracker/ridetrackerclient": "^0.9.6",
     "canvas": "^2.11.2",
     "geolib": "^3.3.3",

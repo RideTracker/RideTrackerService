@@ -8,6 +8,9 @@ declare type Env = {
     CLOUDFLARE_ACCOUNT_ID: string;
     CLOUDFLARE_API_IMAGES_TOKEN: string;
 
+    DISCORD_WEBHOOKS_CLIENT_ID: string;
+    DISCORD_WEBHOOKS_CLIENT_TOKEN: string;
+
     GOOGLE_MAPS_API_TOKEN: string;
 
     GITHUB_SHA: string | undefined;
