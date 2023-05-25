@@ -5,6 +5,7 @@
     "@cloudflare/workers-types": "^4.20230404.0",
     "@types/itty-router-extras": "^0.4.0",
     "better-sqlite3": "^8.0.1",
+    "dotenv": "^16.0.3",
     "lorem-ipsum": "^2.0.8",
     "typescript": "^5.0.3",
     "vitest": "^0.30.0",
@@ -21,7 +22,7 @@
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
     "@googlemaps/polyline-codec": "^1.0.28",
-    "@ridetracker/ridetrackerclient": "^0.9.4",
+    "@ridetracker/ridetrackerclient": "^0.9.6",
     "canvas": "^2.11.2",
     "geolib": "^3.3.3",
     "itty-router": "^3.0.12",

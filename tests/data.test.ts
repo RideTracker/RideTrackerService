@@ -1,9 +1,9 @@
-import { beforeAll, describe, test } from "vitest";
+import * as dotenv from "dotenv";
+dotenv.config();
+
+import { describe, test } from "vitest";
 import fs from "fs";
-import { createUser } from "./controllers/users/createUser";
-import { createActivity } from "./controllers/activities/createActivity";
-import { createActivityComment } from "./controllers/activities/comments/createActivityComment";
-import Client, { registerUser } from "@ridetracker/ridetrackerclient";
+import Client, { getVerificationCode, registerUser, verifyLogin } from "@ridetracker/ridetrackerclient";
 
 const persons = JSON.parse(fs.readFileSync("./tests/data/persons.json", "utf-8"));
 
@@ -17,13 +17,21 @@ describe("populate mock data", async () => {
             const firstname = persons.names[Math.floor(Math.random() * persons.names.length)].split(' ')[0];
             const lastname = persons.names[Math.floor(Math.random() * persons.names.length)].split(' ')[1];
 
-            const user = await registerUser(client, firstname, lastname, `${firstname}.${lastname}+mock@ridetracker.app`.toLowerCase(), "test");
+            const userResult = await registerUser(client, firstname, lastname, `${firstname.toLowerCase()}${lastname.toLowerCase()}+mock@ridetracker.app`, "test");
 
-            
+            throw new Error(JSON.stringify(userResult));
+
+            const verificationCodeResult = await getVerificationCode(client, userResult.verification);
+            const verificationResult = await verifyLogin(client, userResult.verification, verificationCodeResult.code);
+
+            if(!verificationResult)
+                throw new Error("Failed to create user.");
+
+            tokens.push(verificationResult.key);
         }
     });
 
-    test("create users and populate content", async () => {
+    /*test("create users and populate content", async () => {
         const users = [];
 
         for(let index = 0; index < 5; index++) {
@@ -60,5 +68,5 @@ describe("populate mock data", async () => {
                 console.log(index, replyResult);
             }
         }
-    }, { timeout: 0 });
+    }, { timeout: 0 });*/
 });
