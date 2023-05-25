@@ -33,7 +33,7 @@ import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "./r
 import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "./routes/activities/[activityId]/summary";
 import { createActivityRequestSchema, handleCreateActivityRequest } from "./routes/activities/create";
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "./routes/activities/comments/summary";
-import { PingResponse } from "@ridetracker/ridetrackerclient/dist/controllers/ping";
+import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "./routes/auth/login/verification/[verificationId]/code";
 
 function registerEndpoints() {
     const router = ThrowableRouter();
@@ -45,6 +45,7 @@ function registerEndpoints() {
 
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
+    router.post("/api/auth/login/verification/:verificationId/code", withStaging, withParams, withSchema(authLoginVerificationCodeSchema), handleAuthLoginVerificationCodeRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
     

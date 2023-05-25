@@ -21,7 +21,7 @@
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
     "@googlemaps/polyline-codec": "^1.0.28",
-    "@ridetracker/ridetrackerclient": "^0.9.1",
+    "@ridetracker/ridetrackerclient": "^0.9.4",
     "canvas": "^2.11.2",
     "geolib": "^3.3.3",
     "itty-router": "^3.0.12",
