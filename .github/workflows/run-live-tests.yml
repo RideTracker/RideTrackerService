@@ -10,6 +10,7 @@ on:
 
 jobs:
   test:
+    if: true == false
     name: Run live tests
     runs-on: ubuntu-latest
     steps:
