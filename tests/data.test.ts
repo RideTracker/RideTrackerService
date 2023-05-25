@@ -19,9 +19,8 @@ describe("populate mock data", async () => {
 
             const userResult = await registerUser(client, firstname, lastname, `${firstname.toLowerCase()}${lastname.toLowerCase()}+mock@ridetracker.app`, "test");
 
-            throw new Error(JSON.stringify(userResult));
-
             const verificationCodeResult = await getVerificationCode(client, userResult.verification);
+
             const verificationResult = await verifyLogin(client, userResult.verification, verificationCodeResult.code);
 
             if(!verificationResult)
