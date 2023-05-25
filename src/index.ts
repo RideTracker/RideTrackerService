@@ -125,7 +125,7 @@ export default {
             return response;
         }
         catch(error) {
-            context.waitUntil(triggerAlarm(env, "Uncaught Request Error Alarm", `An uncaught error has occured during the processing of request:\n \n${request.method} ${request.url}\n \n${error}\n \nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+            context.waitUntil(triggerAlarm(env, "Uncaught Request Error Alarm", `An uncaught error has occured during the processing of request:\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\`\`\`\n${error}\n\`\`\`\n \nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
             
             return new Response(undefined, {
                 status: 500,
