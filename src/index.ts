@@ -106,31 +106,40 @@ const router = registerEndpoints();
 
 console.log("Listening to requests...");
 
+async function handleRequest(request: any, env: any, context: any) {
+    const timestamp = Date.now();
+
+    const response: Response = await router.handle(request, env);
+
+    if(!response) {
+        
+        return new Response(undefined, {
+            status: 404,
+            statusText: "File Not Found"
+        })
+    }
+
+    const elapsed = Date.now() - timestamp;
+
+    if(elapsed >= 9)
+        console.log(`Warning, request took ${elapsed}ms to execute`, request);
+
+    return response;
+}
+
 export default {
     async fetch(request: any, env: any, context: any) {
         try {
-            const timestamp = Date.now();
+            const response = await handleRequest(request, env, context);
 
-            const response = await router.handle(request, env);
-
-            if(!response) {
-                context.waitUntil(triggerAlarm(env, "Uncaught Route Alarm", `An uncaught route has occured during the processing of request.\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
-                
-                return new Response(undefined, {
-                    status: 404,
-                    statusText: "File Not Found"
-                })
+            if(response.status >= 200 && response.status <= 299) { 
+                response.headers.set("Access-Control-Allow-Origin", "*");
+                response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+                response.headers.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             }
-    
-            const elapsed = Date.now() - timestamp;
-    
-            if(elapsed >= 9)
-                console.log(`Warning, request took ${elapsed}ms to execute`, request);
+            else
+                context.waitUntil(triggerAlarm(env, "Non-successful Response Status Code Alarm", `A route has returned a non-succesfull status code in the response.\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\`\`\`\n${response.status} ${response.statusText}\n\`\`\`\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
             
-            response.headers.set("Access-Control-Allow-Origin", "*");
-            response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-            response.headers.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    
             return response;
         }
         catch(error) {
