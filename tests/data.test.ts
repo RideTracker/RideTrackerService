@@ -1,9 +1,10 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { describe, test } from "vitest";
+import { describe, test, expect } from "vitest";
 import fs from "fs";
-import Client, { getVerificationCode, registerUser, verifyLogin } from "@ridetracker/ridetrackerclient";
+import Client, { createActivity, getVerificationCode, registerUser, verifyLogin } from "@ridetracker/ridetrackerclient";
+import { createMockedSessions } from "./controllers/createMockedSessions";
 
 const persons = JSON.parse(fs.readFileSync("./tests/data/persons.json", "utf-8"));
 
@@ -18,17 +19,33 @@ describe("populate mock data", async () => {
             const lastname = persons.names[Math.floor(Math.random() * persons.names.length)].split(' ')[1];
 
             const userResult = await registerUser(client, firstname, lastname, `${firstname.toLowerCase()}${lastname.toLowerCase()}+mock@ridetracker.app`, "test");
-
+            expect(userResult.success).toBe(true);
+            
             const verificationCodeResult = await getVerificationCode(client, userResult.verification);
+            expect(verificationCodeResult.success).toBe(true);
 
             const verificationResult = await verifyLogin(client, userResult.verification, verificationCodeResult.code);
-
-            if(!verificationResult)
-                throw new Error("Failed to create user.");
+            expect(verificationResult.success).toBe(true);
 
             tokens.push(verificationResult.key);
         }
-    });
+    }, 60 * 1000);
+
+    test("Create activities", async () => {
+        for(let index = 0; index < 10; index++) {
+            const token = tokens[Math.floor(Math.random() * tokens.length)];
+
+            const client = new Client(process.env.VITEST_SERVICE_API_URL, token);
+
+            const sessions = await createMockedSessions();
+
+            expect(sessions).toBeTruthy();
+
+            const activityResult = await createActivity(client, sessions);
+
+            expect(activityResult.success).toBe(true);
+        }
+    }, 60 * 1000);
 
     /*test("create users and populate content", async () => {
         const users = [];
