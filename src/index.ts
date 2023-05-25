@@ -42,7 +42,7 @@ function registerEndpoints() {
     // TODO: withContent and withParams should be executed in withSchema, when the schema requires them
     // TODO: this will clean up this file at least
 
-    router.options("*", (request) => Response.json({ success: true }));
+    router.options("*", () => new Response(undefined, { status: 200, statusText: "OK" }));
 
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
@@ -110,8 +110,17 @@ export default {
     async fetch(request: any, env: any, context: any) {
         try {
             const timestamp = Date.now();
-    
+
             const response = await router.handle(request, env);
+
+            if(!response) {
+                context.waitUntil(triggerAlarm(env, "Uncaught Route Alarm", `An uncaught route has occured during the processing of request.\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+                
+                return new Response(undefined, {
+                    status: 404,
+                    statusText: "File Not Found"
+                })
+            }
     
             const elapsed = Date.now() - timestamp;
     
@@ -125,7 +134,7 @@ export default {
             return response;
         }
         catch(error) {
-            context.waitUntil(triggerAlarm(env, "Uncaught Request Error Alarm", `An uncaught error has occured during the processing of request:\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\`\`\`\n${error}\n\`\`\`\n \nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+            context.waitUntil(triggerAlarm(env, "Uncaught Error Alarm", `An uncaught error has occured during the processing of request.\n \n\`\`\`\n${request.method} ${request.url}\n\`\`\`\`\`\`\n${error}\n\`\`\`\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
             
             return new Response(undefined, {
                 status: 500,
