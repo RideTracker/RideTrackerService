@@ -80,7 +80,8 @@ function registerEndpoints() {
     
     router.get("/api/ping", withContent, async (request: Request, env: Env) => {
         return Response.json({
-            ping: "pong"
+            ping: "pong",
+            success: true
         });
     });
 
