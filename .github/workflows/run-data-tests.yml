@@ -1,0 +1,35 @@
+run-name: Run tests
+
+on: workflow_dispatch
+
+jobs:
+  test:
+    name: Run data tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@ridetracker'
+
+      - name: Authenticate with GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
+
+      # Skip post-install scripts here, as a malicious script could steal NODE_AUTH_TOKEN.
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # `npm rebuild` will run all those post-install scripts for us.
+      - name: Run post-install scripts
+        run: "npm rebuild && npm run prepare --if-present"
+        shell: bash
+        
+      - name: Run data tests
+        env:
+          VITEST_SERVICE_API_URL: ${{ secrets.VITEST_SERVICE_API_URL }}
+          VITEST_SERVICE_API_TOKEN: ${{ secrets.VITEST_SERVICE_API_TOKEN }}
+          VITEST_GOOGLE_MAPS_API_TOKEN: ${{ secrets.VITEST_GOOGLE_MAPS_API_TOKEN }}
+        run: npx vitest run tests/data.test.ts
