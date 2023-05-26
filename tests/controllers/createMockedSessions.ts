@@ -44,7 +44,7 @@ export async function createMockedSessions() {
                 step.start_location.lng
             ];
         });
-    
+
         // @ts-ignore
         const response = await fetch(`https://maps.googleapis.com/maps/api/elevation/json?locations=enc:${encode(coordinates, 5)}&key=${process.env.VITEST_GOOGLE_MAPS_API_TOKEN}`);
         const result = await response.json() as any;
@@ -63,7 +63,7 @@ export async function createMockedSessions() {
                 return {
                     coords: {
                         accuracy: 1.0,
-                        altitude: altitudes[Math.min(index, 100)].elevation,
+                        altitude: altitudes[index].elevation,
                         altitudeAccuracy: 1.0,
                         heading: 0.0,
                         latitude: step.start_location.lat,
