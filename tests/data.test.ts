@@ -3,13 +3,25 @@ dotenv.config();
 
 import { describe, test, expect } from "vitest";
 import fs from "fs";
-import Client, { createActivity, getVerificationCode, registerUser, verifyLogin } from "@ridetracker/ridetrackerclient";
+import Client, { createActivity, createActivityComment, getVerificationCode, ping, registerUser, verifyLogin } from "@ridetracker/ridetrackerclient";
 import { createMockedSessions } from "./controllers/createMockedSessions";
+import createMockedComment from "./controllers/createMockedComment";
 
 const persons = JSON.parse(fs.readFileSync("./tests/data/persons.json", "utf-8"));
 
-describe("populate mock data", async () => {
+describe("Expect active services", () => {
+    test("Service API", async () => {
+        const client = new Client(process.env.VITEST_SERVICE_API_URL, process.env.VITEST_SERVICE_API_TOKEN);
+
+        const pingResult = await ping(client);
+        expect(pingResult.success).toBe(true);
+    });
+});
+
+describe("Populate mock data", async () => {
     let tokens: string[] = [];
+    let activities: string[] = [];
+    let activityComments: string[] = [];
 
     test("Create users", async () => {
         const client = new Client(process.env.VITEST_SERVICE_API_URL, process.env.VITEST_SERVICE_API_TOKEN);
@@ -38,12 +50,39 @@ describe("populate mock data", async () => {
             const client = new Client(process.env.VITEST_SERVICE_API_URL, token);
 
             const sessions = await createMockedSessions();
-
             expect(sessions).toBeTruthy();
 
             const activityResult = await createActivity(client, sessions);
-
             expect(activityResult.success).toBe(true);
+
+            activities.push(activityResult.activity.id);
+        }
+    }, 60 * 1000);
+
+    test("Create activity comments", async () => {
+        for(let activity of activities) {
+            for(let index = 0; index < Math.max(1, Math.ceil(Math.random() * 3)); index++) {
+                const token = tokens[Math.floor(Math.random() * tokens.length)];
+
+                const client = new Client(process.env.VITEST_SERVICE_API_URL, token);
+                
+                const activityCommentResult = await createActivityComment(client, activity, createMockedComment());
+                expect(activityCommentResult.success).toBe(true);
+            }
+        }
+    }, 60 * 1000);
+
+    test("Create activity child comments", async () => {
+        for(let index = 0; index < 10; index++) {
+            const token = tokens[Math.floor(Math.random() * tokens.length)];
+
+            const client = new Client(process.env.VITEST_SERVICE_API_URL, token);
+
+            const activity = activities[Math.floor(Math.random() * activities.length)];
+            const parent = activityComments[Math.floor(Math.random() * activityComments.length)];
+
+            const activityCommentResult = await createActivityComment(client, activity, createMockedComment(), parent);
+            expect(activityCommentResult.success).toBe(true);
         }
     }, 60 * 1000);
 
