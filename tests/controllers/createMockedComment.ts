@@ -18,13 +18,13 @@ export default function createMockedComment(): string {
 
     switch(type) {
         case "word":
-            return lorem.generateWords((Math.random() * 5) + 1);
+            return lorem.generateWords(Math.floor(Math.random() * 5) + 1);
 
         default:
         case "sentence":
             return lorem.generateSentences(1);
 
         case "paragraph":
-            return lorem.generateSentences((Math.random() * 5) + 1);
+            return lorem.generateSentences(Math.floor(Math.random() * 5) + 1);
     }
 };

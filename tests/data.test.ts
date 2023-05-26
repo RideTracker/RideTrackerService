@@ -68,6 +68,8 @@ describe("Populate mock data", async () => {
                 
                 const activityCommentResult = await createActivityComment(client, activity, createMockedComment());
                 expect(activityCommentResult.success).toBe(true);
+
+                activityComments.push(activityCommentResult.comment.id);
             }
         }
     }, 60 * 1000);
