@@ -4,7 +4,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",
     "@types/itty-router-extras": "^0.4.0",
-    "better-sqlite3": "^8.0.1",
+    "better-sqlite3": "^8.4.0",
     "dotenv": "^16.0.3",
     "lorem-ipsum": "^2.0.8",
     "typescript": "^5.0.3",
