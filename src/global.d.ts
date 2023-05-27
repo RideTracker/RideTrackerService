@@ -4,7 +4,7 @@ declare type Env = {
     DATABASE: D1Database;
     BUCKET: R2Bucket;
     
-    ENVIRONMENT: "production" | "staging";
+    ENVIRONMENT: "production" | "staging" | "dev";
     CLOUDFLARE_ACCOUNT_ID: string;
     CLOUDFLARE_API_IMAGES_TOKEN: string;
 

@@ -115,6 +115,8 @@ CREATE TABLE "tokens" (
 	PRIMARY KEY("id")
 );
 
+INSERT INTO "tokens" VALUES ('devs', 'devs', NULL, 0);
+
 DROP TABLE IF EXISTS "user_verifications";
 CREATE TABLE "user_verifications" (
 	"id"	varchar(255) NOT NULL,

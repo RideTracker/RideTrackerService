@@ -21,11 +21,8 @@ export async function createMockedSessions() {
     
         route = result.routes[0];
     
-        if(route) {
-            console.log({ from, to });
-            
+        if(route)
             break;
-        }
     }
 
     if(!route)
@@ -38,7 +35,7 @@ export async function createMockedSessions() {
     const sessions = [];
 
     for(let leg of route.legs) {
-        const coordinates = leg.steps.slice(0, Math.min(512, leg.steps.length)).map((step: any) => {
+        const coordinates = leg.steps.slice(0, Math.min(500, leg.steps.length)).map((step: any) => {
             return [
                 step.start_location.lat, 
                 step.start_location.lng
@@ -65,7 +62,7 @@ export async function createMockedSessions() {
                 return {
                     coords: {
                         accuracy: 1.0,
-                        altitude: altitudes[Math.floor((index / leg.steps.length) * altitudes.length)].elevation,
+                        altitude: altitudes[Math.floor((index / leg.steps.length) * (altitudes.length - 1))].elevation,
                         altitudeAccuracy: 1.0,
                         heading: 0.0,
                         latitude: step.start_location.lat,
