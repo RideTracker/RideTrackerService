@@ -26,7 +26,7 @@ export async function handleFeedRequest(request: Request, env: Env) {
     const activities = await getActivitiesByFeed(env.DATABASE, offset, search, order, timeline);
 
     if(!activities)
-        return Response.json({ success: false });
+        return new Response(undefined, { status: 404, statusText: "Not Found" })
 
     return Response.json({
         success: true,
