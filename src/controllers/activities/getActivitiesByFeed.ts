@@ -40,7 +40,7 @@ function getSortByOrder(order?: string) {
     }
 };
 
-export async function getActivitiesByFeed(database: D1Database, offset: number, search?: string, order?: string, timeline?: string): Promise<Activity[] | null> {
+export async function getActivitiesByFeed(database: D1Database, offset: number, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
     
@@ -61,10 +61,10 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
             " ORDER BY " + sort + " LIMIT 5 OFFSET ?3"
             ).bind(search, timestamp, offset).all<Activity>();
     
-        return query.results ?? null;
+        return query.results ?? [];
     }
 
     const query = await database.prepare("SELECT * FROM activities LEFT JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
-    return query.results ?? null;
+    return query.results ?? [];
 };

@@ -1,16 +1,18 @@
 import { ActivitySummary } from "../../../models/activitySummary";
 import { getActivitySummaryById } from "./getActivitySummaryById";
 
-async function updatePersonalBestActivitySummaryColumn(database: D1Database, user: string, column: string) {
-    await database.prepare("UPDATE activity_summary SET " + column + "_personal_best = NULL WHERE " + column + "_personal_best IS NULL AND activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE user = ?1)").bind(user).run();
-    await database.prepare("UPDATE activity_summary SET " + column + "_personal_best = 1 WHERE activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE activities.user = ?1 ORDER BY activity_summary." + column + " DESC LIMIT 1)").bind(user).run();
+function updatePersonalBestActivitySummaryColumn(database: D1Database, user: string, column: string) {
+    return [
+        database.prepare("UPDATE activity_summary SET " + column + "_personal_best = NULL WHERE " + column + "_personal_best IS NULL AND activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE user = ?1)").bind(user),
+        database.prepare("UPDATE activity_summary SET " + column + "_personal_best = 1 WHERE activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE activities.user = ?1 ORDER BY activity_summary." + column + " DESC LIMIT 1)").bind(user)
+    ];
 };
 
 export async function updatePersonalBestActivitySummary(database: D1Database, user: string): Promise<void> {
-    await Promise.all([
-        updatePersonalBestActivitySummaryColumn(database, user, "distance"),
-        updatePersonalBestActivitySummaryColumn(database, user, "max_speed"),
-        updatePersonalBestActivitySummaryColumn(database, user, "average_speed"),
-        updatePersonalBestActivitySummaryColumn(database, user, "elevation")
+    await database.batch([
+        ...updatePersonalBestActivitySummaryColumn(database, user, "distance"),
+        ...updatePersonalBestActivitySummaryColumn(database, user, "max_speed"),
+        ...updatePersonalBestActivitySummaryColumn(database, user, "average_speed"),
+        ...updatePersonalBestActivitySummaryColumn(database, user, "elevation")
     ]);
 };

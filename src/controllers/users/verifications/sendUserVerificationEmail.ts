@@ -2,7 +2,7 @@ import { User } from "../../../models/user";
 import { UserVerification } from "../../../models/userVerification";
 
 export async function sendUserVerificationEmail(user: User, userVerification: UserVerification): Promise<any> {
-    const request = new Request("https://api.mailchannels.net/tx/v1/send", {
+    return await fetch("https://api.mailchannels.net/tx/v1/send", {
         "method": "POST",
         "headers": {
             "content-type": "application/json",
@@ -31,6 +31,4 @@ export async function sendUserVerificationEmail(user: User, userVerification: Us
             ]
         })
     });
-
-    return await fetch(request);
 };

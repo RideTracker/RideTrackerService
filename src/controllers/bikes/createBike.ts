@@ -1,7 +1,7 @@
 import { Bike } from "../../models/bike";
 import { getBikeById } from "./getBikeById";
 
-export async function createBike(database: D1Database, user: string, name: string): Promise<Bike | null> {
+export async function createBike(database: D1Database, user: string, name: string): Promise<Bike> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 

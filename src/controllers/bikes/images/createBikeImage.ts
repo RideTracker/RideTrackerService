@@ -1,7 +1,7 @@
 import { BikeImage } from "../../../models/bikeImage";
 import { getBikeImageById } from "./getBikeImageById";
 
-export async function createBikeImage(database: D1Database, bike: string, image: string): Promise<BikeImage | null> {
+export async function createBikeImage(database: D1Database, bike: string, image: string): Promise<BikeImage> {
     const timestamp = Date.now();
 
     await database.prepare("INSERT INTO bike_images (id, bike, timestamp) VALUES (?, ?, ?)").bind(image, bike, timestamp).run();

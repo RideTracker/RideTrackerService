@@ -10,7 +10,7 @@ export async function generateUserVerificationCode(): Promise<string> {
     return String(randomArray[0] % 1000000).padStart(6, '0');
 };
 
-export async function createUserVerification(database: D1Database, user: User): Promise<UserVerification | null> {
+export async function createUserVerification(database: D1Database, user: User): Promise<UserVerification> {
     const id = crypto.randomUUID();
     const code = await generateUserVerificationCode();
     const timestamp = Date.now();

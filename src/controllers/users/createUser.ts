@@ -1,7 +1,7 @@
 import { User } from "../../models/user";
 import { getUserById } from "./getUserById";
 
-export async function createUser(database: D1Database, firstname: string, lastname: string, email: string, password: string): Promise<User | null> {
+export async function createUser(database: D1Database, firstname: string, lastname: string, email: string, password: string): Promise<User> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 

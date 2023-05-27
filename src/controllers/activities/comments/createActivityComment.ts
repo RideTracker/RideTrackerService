@@ -1,7 +1,7 @@
 import { ActivityComment } from "../../../models/activityComment";
 import { getActivityCommentById } from "./getActivityCommentById";
 
-export async function createActivityComment(database: D1Database, activity: string, user: string, parent: string | null, message: string): Promise<ActivityComment | null> {
+export async function createActivityComment(database: D1Database, activity: string, user: string, parent: string | null, message: string): Promise<ActivityComment> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 

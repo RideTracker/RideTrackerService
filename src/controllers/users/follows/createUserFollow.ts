@@ -3,7 +3,7 @@ import { UserFollow } from "../../../models/userFollow";
 import { getUserById } from "./../getUserById";
 import { getUserFollowById } from "./getUserFollowById";
 
-export async function createUserFollow(database: D1Database, user: string, follow: string): Promise<UserFollow | null> {
+export async function createUserFollow(database: D1Database, user: string, follow: string): Promise<UserFollow> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 

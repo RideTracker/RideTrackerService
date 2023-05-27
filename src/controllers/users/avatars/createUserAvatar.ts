@@ -1,7 +1,7 @@
 import { UserAvatar } from "../../../models/userAvatar";
 import { getUserAvatarById } from "./getUserAvatarById";
 
-export async function createUserAvatar(database: D1Database, user: string, image: string, combination: string): Promise<UserAvatar | null> {
+export async function createUserAvatar(database: D1Database, user: string, image: string, combination: string): Promise<UserAvatar> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 

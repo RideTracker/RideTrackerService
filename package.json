@@ -2,7 +2,7 @@
   "name": "test-service",
   "version": "0.0.0",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230404.0",
+    "@cloudflare/workers-types": "^4.20230518.0",
     "@types/itty-router-extras": "^0.4.0",
     "better-sqlite3": "^8.0.1",
     "dotenv": "^16.0.3",
