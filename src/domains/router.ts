@@ -24,10 +24,6 @@ import { handleProfileRequest, profileRequestSchema } from "../routes/profiles";
 import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "../routes/profiles/activities";
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "../routes/profiles/bikes";
 import { handleBikeRequest, bikeRequestSchema } from "../routes/bikes/index";
-import { handleAvatarsRequest } from "../routes/avatars";
-import { handleCreateAvatarRequest } from "../routes/avatars/create";
-import { handleCreateAvatarColorRequest } from "../routes/avatars/avatar/color";
-import { handleCreateAvatarImageRequest } from "../routes/avatars/avatar/image";
 import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "../routes/user/avatar";
 import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "../routes/activities/[activityId]/summary";
 import { createActivityRequestSchema, handleCreateActivityRequest } from "../routes/activities/create";
@@ -48,11 +44,6 @@ export default function createRouter() {
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
     
-    router.get("/api/avatars", withAuth, handleAvatarsRequest);
-    router.post("/api/avatars", withStaging, withAuth, withContent, handleCreateAvatarRequest);
-    router.post("/api/avatars/:avatarId/color", withStaging, withAuth, withParams, withContent, handleCreateAvatarColorRequest);
-    router.post("/api/avatars/:avatarId/image", withStaging, withAuth, withParams, withContent, handleCreateAvatarImageRequest);
-
     router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
