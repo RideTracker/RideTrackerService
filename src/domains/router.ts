@@ -83,7 +83,7 @@ export default function createRouter() {
 
     router.get("/staging/user", withStaging, async (request: Request, env: Env) => {
         return Response.json({
-            key: await env.DATABASE.prepare("SELECT * FROM tokens").first<string>("token")
+            key: await env.DATABASE.prepare("SELECT * FROM tokens WHERE user IS NOT NULL").first<string>("key")
         });
     });
 
