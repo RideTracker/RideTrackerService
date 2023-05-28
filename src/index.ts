@@ -26,7 +26,7 @@ export default {
                     const text = await response.text();
 
                     await triggerAlarm(env, "Unsuccessful Status Code Alarm", `A response has returned an unsuccessfull status code.\n \n\`\`\`\n${response.status} ${response.statusText}\n\`\`\`${(text.length)?(`\`\`\`\n${text}\n\`\`\``):("")}\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`);
-             
+
                     resolve();
                 }));
             }
