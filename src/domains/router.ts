@@ -81,8 +81,9 @@ export default function createRouter() {
         return Response.json({ sha: env.GITHUB_SHA });
     });
 
-    router.get("/staging/user", withStaging, async (request: Request, env: Env) => {
+    router.get("/api/auth/random", withStaging, async (request: Request, env: Env) => {
         return Response.json({
+            success: true,
             key: await env.DATABASE.prepare("SELECT * FROM tokens WHERE user IS NOT NULL").first<string>("key")
         });
     });
