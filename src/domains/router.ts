@@ -42,7 +42,7 @@ export default function createRouter() {
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.get("/api/auth/login/verify/:verificationId/code", withStaging, withParams, withSchema(authLoginVerificationCodeSchema), handleAuthLoginVerificationCodeRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
-    router.post("/api/auth/renew", withContent, withAuth, handleAuthRenewRequest);
+    router.post("/api/auth/renew", withAuth, handleAuthRenewRequest);
     
     router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
     
