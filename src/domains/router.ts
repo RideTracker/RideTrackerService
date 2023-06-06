@@ -1,4 +1,3 @@
-import { Router } from "itty-router";
 import { ThrowableRouter, withContent, withParams } from "itty-router-extras";
 
 import { withSchema } from "../middlewares/schema";
@@ -29,6 +28,7 @@ import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "../r
 import { createActivityRequestSchema, handleCreateActivityRequest } from "../routes/activities/create";
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "../routes/activities/comments/summary";
 import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "../routes/auth/login/verification/[verificationId]/code";
+import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -45,6 +45,8 @@ export default function createRouter() {
     router.post("/api/auth/renew", withAuth, handleAuthRenewRequest);
     
     router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
+
+    router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
