@@ -10,7 +10,11 @@ export async function getMapsSearchPredictions(env: Env, search: string): Promis
         method: "GET"
     });
 
+    console.log("google maps: " + response.status + " " + response.statusText);
+
     const result = await response.json<PlacesQueryAutocompleteResponse>();
+
+    console.log("error: " + result.error_message);
 
     return result;
 };
