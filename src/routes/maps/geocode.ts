@@ -23,7 +23,7 @@ export async function handleMapsGeocodeRequest(request: Request, env: Env) {
         places: result.results.map((result) => {
             return {
                 address: result.formatted_address,
-
+                placeId: result.geometry.place_id,
                 location: {
                     latitude: result.geometry.location.lat,
                     longitude: result.geometry.location.lng
