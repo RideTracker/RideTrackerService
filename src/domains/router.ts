@@ -29,6 +29,7 @@ import { createActivityRequestSchema, handleCreateActivityRequest } from "../rou
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "../routes/activities/comments/summary";
 import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "../routes/auth/login/verification/[verificationId]/code";
 import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search";
+import { handleMapsGeocodeRequest, mapsGeocodeSchema } from "../routes/maps/geocode";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -46,6 +47,7 @@ export default function createRouter() {
     
     router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
 
+    router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
     router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);

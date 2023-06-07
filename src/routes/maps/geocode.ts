@@ -1,6 +1,6 @@
 import { getPlaceGeocoding } from "../../controllers/maps/getPlaceGeocoding";
 
-export const mapsSearchSchema = {
+export const mapsGeocodeSchema = {
     query: {
         placeId: {
             type: "string",
