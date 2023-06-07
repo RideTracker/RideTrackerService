@@ -10,9 +10,9 @@ export const mapsSearchSchema = {
 };
 
 export async function handleMapsSearchRequest(request: Request, env: Env) {
-    const { query } = request.query;
+    const { search } = request.query;
 
-    const result = await getMapsSearchPredictions(env, query);
+    const result = await getMapsSearchPredictions(env, search);
 
     if(result.status !== "OK")
         return Response.json({ success: false });
