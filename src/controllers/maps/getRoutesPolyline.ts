@@ -5,7 +5,7 @@ export async function getRoutesPolyline(googleMapsApiToken: string, waypoints: {
         method: "POST",
         headers: {
             "X-Goog-Api-Key": googleMapsApiToken,
-            "X-Goog-FieldMask": "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline"
+            "X-Goog-FieldMask": "routes.duration,routes.distanceMeters,routes.polyline,routes.legs.polyline,routes.legs.steps.polyline"
         },
         body: JSON.stringify({
             origin: {
