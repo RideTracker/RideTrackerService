@@ -50,7 +50,7 @@ export default function createRouter() {
 
     router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
     router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
-    router.get("/api/maps/routes", withAuth, withSchema(mapsRouteSchema), handleMapsRouteRequest);
+    router.post("/api/maps/routes", withAuth, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
