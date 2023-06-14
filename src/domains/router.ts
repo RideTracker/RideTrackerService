@@ -30,6 +30,7 @@ import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryReque
 import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "../routes/auth/login/verification/[verificationId]/code";
 import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search";
 import { handleMapsGeocodeRequest, mapsGeocodeSchema } from "../routes/maps/geocode";
+import { handleMapsRouteRequest, mapsRouteSchema } from "../routes/maps/route";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -49,6 +50,7 @@ export default function createRouter() {
 
     router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
     router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
+    router.get("/api/maps/routes", withAuth, withSchema(mapsRouteSchema), handleMapsRouteRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
