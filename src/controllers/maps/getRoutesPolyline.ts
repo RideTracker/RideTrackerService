@@ -28,5 +28,7 @@ export async function getRoutesPolyline(googleMapsApiToken: string, waypoints: {
 
     const result = await response.json<RoutesPoylineResponse>();
 
+    console.log(JSON.stringify(result));
+
     return result;
 };
