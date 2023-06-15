@@ -20,7 +20,7 @@ export async function getRoutesPolyline(googleMapsApiToken: string, waypoints: {
                 }
             },
 
-            intermediates: waypoints.slice(1, waypoints.length - 2).map((waypoint) => {
+            intermediates: waypoints.slice(1, waypoints.length - 1).map((waypoint) => {
                 return {
                     location: {
                         latLng: waypoint
