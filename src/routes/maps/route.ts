@@ -37,8 +37,12 @@ export async function handleMapsRouteRequest(request: Request, env: Env) {
     return Response.json({
         success: true,
         
-        polylines: result.routes.map((route) => {
-            return route.polyline.encodedPolyline;
+        routes: result.routes.map((route) => {
+            return {
+                polyline: route.polyline.encodedPolyline,
+                distance: route.distanceMeters,
+                duration: route.duration
+            };
         })
     });
 };
