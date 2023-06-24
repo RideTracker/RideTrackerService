@@ -41,7 +41,7 @@ database_id = "4cb96598-71ce-47f5-b556-9ef1bfca42a1"
 binding = "BUCKET"
 bucket_name = "ridetracker-production"
 
-[[ env.production.durable_objects ]]
+[env.production.durable_objects]
 bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
@@ -58,7 +58,7 @@ database_id = "361813f2-1a83-4c3d-9df1-204fc7093b6f"
 binding = "BUCKET"
 bucket_name = "ridetracker-staging"
 
-[[ env.staging.durable_objects ]]
+[env.staging.durable_objects]
 bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
