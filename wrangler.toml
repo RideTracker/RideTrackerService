@@ -24,7 +24,7 @@ binding = "BUCKET"
 bucket_name = "ridetracker-dev"
 preview_bucket_name = "ridetracker-dev"
 
-[[ durable_objects ]]
+[durable_objects]
 bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
