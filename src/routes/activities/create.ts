@@ -124,7 +124,7 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
 
     context.waitUntil(durableObject.fetch("", {
         body: JSON.stringify({
-            id: activity.id
+            activityId: activity.id
         })
     }));
 

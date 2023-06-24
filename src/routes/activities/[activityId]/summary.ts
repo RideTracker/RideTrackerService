@@ -1,12 +1,5 @@
-import { getDistance } from "geolib";
-import { createActivity } from "../../../controllers/activities/createActivity";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
-import { createActivitySummary } from "../../../controllers/activities/summary/createActivitySummary";
 import { getActivitySummaryById } from "../../../controllers/activities/summary/getActivitySummaryById";
-import { getBikeById } from "../../../controllers/bikes/getBikeById";
-import { Bike } from "../../../models/bike";
-import { getReverseGeocoding } from "../../../controllers/maps/getReverseGeocoding";
-import { updatePersonalBestActivitySummary } from "../../../controllers/activities/summary/updatePersonalBestActivitySummary";
 
 export const activitySummaryRequestSchema = {
     params: {
@@ -17,7 +10,7 @@ export const activitySummaryRequestSchema = {
     }
 };
 
-export async function handleActivitySummaryRequest(request: RequestWithKey, env: Env) {
+export async function handleActivitySummaryRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
     const { activityId } = request.params;
 
     const activity = await getActivityById(env.DATABASE, activityId);
@@ -28,69 +21,21 @@ export async function handleActivitySummaryRequest(request: RequestWithKey, env:
     let activitySummary = await getActivitySummaryById(env.DATABASE, activity.id);
 
     if(!activitySummary) {
-        const bucket = await env.BUCKET.get(`activities/${activity.id}.json`);
-
-        if(!bucket)
-            return Response.json({ success: false });
-
-        const sessions = await bucket.json<Array<any>>();
-
-        let startArea = null;
-        let finishArea = null;
-        let distance = 0;
-        let elevation = 0;
-        let maxSpeed = 0;
-
-        if(sessions.length && sessions[0].locations.length) {
-            async function getAreaName(coords: any) {
-                const geocoding = await getReverseGeocoding(env.GOOGLE_MAPS_API_TOKEN, coords.latitude, coords.longitude);
+        const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
+        const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
     
-                if(geocoding.results.length) {
-                    const geocodingResult = geocoding.results[0];
-    
-                    const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
-                
-                    return geocodingComponent?.long_name ?? null;
-                }
+        context.waitUntil(durableObject.fetch("", {
+            body: JSON.stringify({
+                activityId: activity.id
+            })
+        }));
 
-                return null;
-            }
-
-            await Promise.all([
-                getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
-                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].locations.length - 1].coords).then((name) => finishArea = name)
-            ]);
-        }   
-
-        const speeds = [];
-
-        for(let session of sessions) {
-            for(let index = 1; index < session.locations.length; index++) {
-                distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords, 1);
-
-                speeds.push(session.locations[index].coords.speed);
-
-                elevation += Math.max(0, session.locations[index].coords.altitude -session.locations[index - 1].coords.altitude);
-
-                if(session.locations[index].coords.speed > maxSpeed)
-                    maxSpeed = session.locations[index].coords.speed;
-            }
-        }
-
-        const speedSum = speeds.reduce((a, b) => a + b, 0);
-        const averageSpeed = (speedSum / speeds.length) || 0;
-
-        let distancePersonalBest = null;
-        let averageSpeedPersonalBest = null;
-        let elevationPersonalBest = null;
-        let maxSpeedPersonalBest = null;
-
-        activitySummary = await createActivitySummary(env.DATABASE, activity.id, startArea, finishArea, distance, distancePersonalBest, averageSpeed, averageSpeedPersonalBest, elevation, elevationPersonalBest, maxSpeed, maxSpeedPersonalBest);
-
-        if(!activitySummary)
-            return Response.json({ success: false });
-
-        await updatePersonalBestActivitySummary(env.DATABASE, activity.user);
+        return Response.json({
+            success: true
+        }, {
+            status: 102,
+            statusText: "Processing"
+        });
     }
 
     return Response.json({

@@ -1,5 +1,10 @@
+import { getDistance } from "geolib";
+import { getActivityById } from "./controllers/activities/getActivityById";
 import { triggerAlarm } from "./controllers/alarms/triggerAlarm";
+import { getReverseGeocoding } from "./controllers/maps/getReverseGeocoding";
 import createRouter from "./domains/router";
+import { createActivitySummary } from "./controllers/activities/summary/createActivitySummary";
+import { updatePersonalBestActivitySummary } from "./controllers/activities/summary/updatePersonalBestActivitySummary";
 
 const router = createRouter();
 
@@ -61,24 +66,92 @@ export default {
 
 export class ActivityDurableObject {
     state: DurableObjectState;
+    env: Env;
 
     constructor(state: DurableObjectState, env: Env) {
         this.state = state;
+        this.env = env;
     };
 
     async fetch(request: Request) {
-        const body = await request.json() as {
-            id?: string;
+        const { activityId } = await request.json() as {
+            activityId?: string;
         };
 
-        if(!body.id)
+        if(!activityId)
             return Response.json({ success: false });
 
-        console.log("recieved id: " + body.id);
+        const activity = await getActivityById(this.env.DATABASE, activityId);
+
+        if(!activity)
+            return Response.json({ success: false });
+
+        const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
+
+        if(!bucket)
+            return Response.json({ success: false });
+
+        const sessions = await bucket.json<Array<any>>();
+
+        let startArea = null;
+        let finishArea = null;
+        let distance = 0;
+        let elevation = 0;
+        let maxSpeed = 0;
+
+        if(sessions.length && sessions[0].locations.length) {
+            const getAreaName = async (coords: any) => {
+                const geocoding = await getReverseGeocoding(this.env.GOOGLE_MAPS_API_TOKEN, coords.latitude, coords.longitude);
+    
+                if(geocoding.results.length) {
+                    const geocodingResult = geocoding.results[0];
+    
+                    const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
+                
+                    return geocodingComponent?.long_name ?? null;
+                }
+
+                return null;
+            }
+
+            await Promise.all([
+                getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
+                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].locations.length - 1].coords).then((name) => finishArea = name)
+            ]);
+        }   
+
+        const speeds = [];
+
+        for(let session of sessions) {
+            for(let index = 1; index < session.locations.length; index++) {
+                distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords, 1);
+
+                speeds.push(session.locations[index].coords.speed);
+
+                elevation += Math.max(0, session.locations[index].coords.altitude -session.locations[index - 1].coords.altitude);
+
+                if(session.locations[index].coords.speed > maxSpeed)
+                    maxSpeed = session.locations[index].coords.speed;
+            }
+        }
+
+        const speedSum = speeds.reduce((a, b) => a + b, 0);
+        const averageSpeed = (speedSum / speeds.length) || 0;
+
+        let distancePersonalBest = null;
+        let averageSpeedPersonalBest = null;
+        let elevationPersonalBest = null;
+        let maxSpeedPersonalBest = null;
+
+        const activitySummary = await createActivitySummary(this.env.DATABASE, activity.id, startArea, finishArea, distance, distancePersonalBest, averageSpeed, averageSpeedPersonalBest, elevation, elevationPersonalBest, maxSpeed, maxSpeedPersonalBest);
+
+        if(!activitySummary)
+            return Response.json({ success: false });
+
+        await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);
 
         return Response.json({
-            hello: "world",
-            activity: body.id
+            success: true
         });
     };
 };
