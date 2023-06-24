@@ -4,9 +4,6 @@ compatibility_date = "2023-04-07"
 usage_model = "bundled"
 node_compat = true
 
-[triggers]
-crons = [ ]
-
 [vars]
 ENVIRONMENT = "dev"
 
