@@ -1,7 +1,7 @@
 import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
 import { getBikeSummaryById } from "../controllers/bikes/summary/getBikeSummaryById";
 
-export async function handleBikesRequest(request: Request, env: Env) {
+export async function handleBikesRequest(request: RequestWithKey, env: Env) {
     const bikes = await getBikesByUser(env.DATABASE, request.key.user);
 
     if(!bikes)

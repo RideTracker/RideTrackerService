@@ -1,7 +1,7 @@
 export function withSchema(schema: any) {
     const entries = Object.keys(schema);
 
-    return (request: Request) => {
+    return (request: RequestWithKey) => {
         for(let key of entries) {
             if(request[key] == undefined)
                 return Response.json({ message: `Bad schema validation, missing ${key} body.` }, { status: 400 });

@@ -20,7 +20,7 @@ export const feedRequestSchema = {
     }  
 };
 
-export async function handleFeedRequest(request: Request, env: Env) {
+export async function handleFeedRequest(request: RequestWithKey, env: Env) {
     const { search, order, timeline, offset } = request.query;
 
     const activities = await getActivitiesByFeed(env.DATABASE, offset, search, order, timeline);

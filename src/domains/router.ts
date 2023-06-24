@@ -73,7 +73,7 @@ export default function createRouter() {
     
     router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
     
-    router.get("/api/ping", withContent, async (request: Request, env: Env) => {
+    router.get("/api/ping", withContent, async (request: RequestWithKey, env: Env) => {
         return Response.json({
             ping: "pong",
             success: true
@@ -83,11 +83,11 @@ export default function createRouter() {
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
 
-    router.get("/staging/github", withStaging, async (request: Request, env: Env) => {
+    router.get("/staging/github", withStaging, async (request: RequestWithKey, env: Env) => {
         return Response.json({ sha: env.GITHUB_SHA });
     });
 
-    router.get("/api/auth/random", withStaging, async (request: Request, env: Env) => {
+    router.get("/api/auth/random", withStaging, async (request: RequestWithKey, env: Env) => {
         return Response.json({
             success: true,
             key: await env.DATABASE.prepare("SELECT * FROM tokens WHERE user IS NOT NULL").first<string>("key")

@@ -18,7 +18,7 @@ export const activityRequestSchema = {
     }
 };
 
-export async function handleActivityRequest(request: Request, env: Env) {
+export async function handleActivityRequest(request: RequestWithKey, env: Env) {
     const { id } = request.params;
 
     const activity = await getActivityById(env.DATABASE, id);

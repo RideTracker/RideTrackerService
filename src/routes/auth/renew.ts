@@ -2,7 +2,7 @@ import { createToken } from "../../controllers/tokens/createToken";
 import { deleteToken } from "../../controllers/tokens/deleteToken";
 import { getUserById } from "../../controllers/users/getUserById";
 
-export async function handleAuthRenewRequest(request: Request, env: Env) {
+export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) {
     await deleteToken(env.DATABASE, request.key.id);
 
     const user = await getUserById(env.DATABASE, request.key.user);

@@ -10,7 +10,7 @@ export const bikeRequestSchema = {
     }
 };
 
-export async function handleBikeRequest(request: Request, env: Env) {
+export async function handleBikeRequest(request: RequestWithKey, env: Env) {
     const { bikeId } = request.params;
 
     const bike = await getBikeById(env.DATABASE, bikeId);

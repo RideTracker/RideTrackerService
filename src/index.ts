@@ -58,3 +58,27 @@ export default {
         }
     }
 };
+
+export class ActivityDurableObject {
+    state: DurableObjectState;
+
+    constructor(state: DurableObjectState, env: Env) {
+        this.state = state;
+    };
+
+    async fetch(request: Request) {
+        const body = await request.json() as {
+            id?: string;
+        };
+
+        if(!body.id)
+            return Response.json({ success: false });
+
+        console.log("recieved id: " + body.id);
+
+        return Response.json({
+            hello: "world",
+            activity: body.id
+        });
+    };
+};

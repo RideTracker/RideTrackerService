@@ -79,7 +79,7 @@ export const createActivityRequestSchema = {
     }
 };
 
-export async function handleCreateActivityRequest(request: Request, env: Env) {
+export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
     const { title, description, bikeId, sessions } = request.content;
 
     const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
@@ -112,12 +112,21 @@ export async function handleCreateActivityRequest(request: Request, env: Env) {
         }
     });
     
-    await handleActivitySummaryRequest({
+    /*await handleActivitySummaryRequest({
         key: request.key,
         params: {
             activityId: activity.id
         }
-    }, env);
+    }, env);*/
+
+    const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
+    const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
+
+    context.waitUntil(durableObject.fetch("", {
+        body: JSON.stringify({
+            id: activity.id
+        })
+    }));
 
     return Response.json({
         success: true,

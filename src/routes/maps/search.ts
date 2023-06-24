@@ -9,7 +9,7 @@ export const mapsSearchSchema = {
     }  
 };
 
-export async function handleMapsSearchRequest(request: Request, env: Env) {
+export async function handleMapsSearchRequest(request: RequestWithKey, env: Env) {
     const { search } = request.query;
 
     const result = await getMapsSearchPredictions(env, search);

@@ -30,7 +30,7 @@ export const activityCreateCommentRequestSchema = {
     }
 };
 
-export async function handleActivityCreateCommentRequest(request: Request, env: Env) {
+export async function handleActivityCreateCommentRequest(request: RequestWithKey, env: Env) {
     const { id } = request.params;
     const { parent, message } = request.content;
 

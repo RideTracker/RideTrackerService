@@ -3,6 +3,7 @@ declare type Env = {
     
     DATABASE: D1Database;
     BUCKET: R2Bucket;
+    ACTIVITY_DURABLE_OBJECT: DurableObjectNamespace;
     
     ENVIRONMENT: "production" | "staging" | "dev";
     CLOUDFLARE_ACCOUNT_ID: string;
@@ -16,8 +17,8 @@ declare type Env = {
     GITHUB_SHA: string | undefined;
 };
 
-declare type Request = {
-    [key: string]: any | undefined;
+declare type RequestWithKey = Request & {
+    [key: string]: any;
     
     key: {
         id: string;

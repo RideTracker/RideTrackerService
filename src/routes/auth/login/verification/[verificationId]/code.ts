@@ -9,7 +9,7 @@ export const authLoginVerificationCodeSchema = {
     }
 };
 
-export async function handleAuthLoginVerificationCodeRequest(request: Request, env: Env) {
+export async function handleAuthLoginVerificationCodeRequest(request: RequestWithKey, env: Env) {
     const { verificationId } = request.params;
 
     const userVerification = await getUserVerification(env.DATABASE, verificationId);

@@ -9,7 +9,7 @@ export const mapsGeocodeSchema = {
     }  
 };
 
-export async function handleMapsGeocodeRequest(request: Request, env: Env) {
+export async function handleMapsGeocodeRequest(request: RequestWithKey, env: Env) {
     const { placeId } = request.query;
 
     const result = await getPlaceGeocoding(env.GOOGLE_MAPS_API_TOKEN, placeId);

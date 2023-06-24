@@ -1,6 +1,6 @@
 import { getTokenByKey } from "../controllers/tokens/getTokenByKey";
 
-export async function withAuth(request: Request, env: Env, context: any) {
+export async function withAuth(request: RequestWithKey, env: Env, context: any) {
     const authorization = request.headers.get("Authorization").split(' ');
 
     if(authorization[0] !== "Bearer" || authorization.length !== 2)

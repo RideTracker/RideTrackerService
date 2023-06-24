@@ -10,6 +10,10 @@ crons = [ ]
 [vars]
 ENVIRONMENT = "dev"
 
+[[migrations]]
+tag = "v1"
+new_classes = [ "ActivityDurableObject" ]
+
 [[ d1_databases ]]
 binding = "DATABASE"
 database_name = "ridetracker-dev"
@@ -19,6 +23,16 @@ database_id = "d61712e5-61d4-44c5-9e31-4573cdd9b3eb"
 binding = "BUCKET"
 bucket_name = "ridetracker-dev"
 preview_bucket_name = "ridetracker-dev"
+
+[[ durable_objects ]]
+bindings = [
+    { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
+]
+
+[[ env.production ]]
+durable_objects.bindings = [
+    { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
+]
 
 [env.production.vars]
 ENVIRONMENT = "production"
@@ -31,6 +45,11 @@ database_id = "4cb96598-71ce-47f5-b556-9ef1bfca42a1"
 [[ env.production.r2_buckets ]]
 binding = "BUCKET"
 bucket_name = "ridetracker-production"
+
+[[ env.staging ]]
+durable_objects.bindings = [
+    { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
+]
 
 [env.staging.vars]
 ENVIRONMENT = "staging"

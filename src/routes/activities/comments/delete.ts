@@ -18,7 +18,7 @@ export const activityDeleteCommentRequestSchema = {
     }
 };
 
-export async function handleActivityDeleteCommentRequest(request: Request, env: Env) {
+export async function handleActivityDeleteCommentRequest(request: RequestWithKey, env: Env) {
     const { activityId, commentId } = request.params;
 
     const activity = await getActivityById(env.DATABASE, activityId);

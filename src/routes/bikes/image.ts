@@ -11,7 +11,7 @@ export const uploadBikeImageRequestSchema = {
     }
 };
 
-export async function handleUploadBikeImageRequest(request: Request, env: Env) {
+export async function handleUploadBikeImageRequest(request: RequestWithKey, env: Env) {
     const { bikeId } = request.params;
 
     const bike = await getBikeById(env.DATABASE, bikeId);

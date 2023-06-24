@@ -17,7 +17,7 @@ export const activitySummaryRequestSchema = {
     }
 };
 
-export async function handleActivitySummaryRequest(request: Request, env: Env) {
+export async function handleActivitySummaryRequest(request: RequestWithKey, env: Env) {
     const { activityId } = request.params;
 
     const activity = await getActivityById(env.DATABASE, activityId);

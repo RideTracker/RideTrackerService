@@ -19,7 +19,7 @@ export const profileActivitiesRequestSchema = {
     }
 };
 
-export async function handleProfileActivitiesRequest(request: Request, env: Env) {
+export async function handleProfileActivitiesRequest(request: RequestWithKey, env: Env) {
     const { userId } = request.params;
     const { offset } = request.content;
 

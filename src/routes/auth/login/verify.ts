@@ -17,7 +17,7 @@ export const authLoginVerificationSchema = {
     }
 };
 
-export async function handleAuthLoginVerificationRequest(request: Request, env: Env) {
+export async function handleAuthLoginVerificationRequest(request: RequestWithKey, env: Env) {
     const { id, code } = request.content;
 
     const userVerification = await getUserVerification(env.DATABASE, id);

@@ -11,7 +11,7 @@ export const activityCommentSummaryRequestSchema = {
     }
 };
 
-export async function handleActivityCommentsSummaryRequest(request: Request, env: Env) {
+export async function handleActivityCommentsSummaryRequest(request: RequestWithKey, env: Env) {
     const { activityId } = request.params;
 
     const comments = await getActivityCommentsSummary(env.DATABASE, activityId);

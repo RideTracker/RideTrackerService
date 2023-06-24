@@ -11,7 +11,7 @@ export const profileRequestSchema = {
     }
 };
 
-export async function handleProfileRequest(request: Request, env: Env) {
+export async function handleProfileRequest(request: RequestWithKey, env: Env) {
     const { userId } = request.params;
 
     const user = await getUserById(env.DATABASE, userId);

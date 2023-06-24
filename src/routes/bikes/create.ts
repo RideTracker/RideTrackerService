@@ -9,7 +9,7 @@ export const createBikeRequestSchema = {
     }
 };
 
-export async function handleCreateBikeRequest(request: Request, env: Env) {
+export async function handleCreateBikeRequest(request: RequestWithKey, env: Env) {
     const { name } = request.content;
 
     const bike = await createBike(env.DATABASE, request.key.user, name);

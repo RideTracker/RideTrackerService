@@ -24,7 +24,7 @@ export const activityEditCommentRequestSchema = {
     }
 };
 
-export async function handleActivityEditCommentRequest(request: Request, env: Env) {
+export async function handleActivityEditCommentRequest(request: RequestWithKey, env: Env) {
     const { activityId, commentId } = request.params;
     const { message } = request.content;
 

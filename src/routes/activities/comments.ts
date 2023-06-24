@@ -8,7 +8,7 @@ import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSumma
 import { getUserById } from "../../controllers/users/getUserById";
 import { User } from "../../models/user";
 
-export async function handleActivityCommentsRequest(request: Request, env: Env) {
+export async function handleActivityCommentsRequest(request: RequestWithKey, env: Env) {
     const { id } = request.params;
 
     const comments = await getActivityComments(env.DATABASE, id);

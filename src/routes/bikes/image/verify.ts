@@ -17,7 +17,7 @@ export const verifyBikeImageRequestSchema = {
     }
 };
 
-export async function handleVerifyBikeImageRequest(request: Request, env: Env) {
+export async function handleVerifyBikeImageRequest(request: RequestWithKey, env: Env) {
     const { bikeId, imageId } = request.params;
 
     const bike = await getBikeById(env.DATABASE, bikeId);

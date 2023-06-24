@@ -26,7 +26,7 @@ export const mapsRouteSchema = {
     }  
 };
 
-export async function handleMapsRouteRequest(request: Request, env: Env) {
+export async function handleMapsRouteRequest(request: RequestWithKey, env: Env) {
     const { waypoints } = request.content;
 
     const result = await getRoutesPolyline(env.GOOGLE_MAPS_API_TOKEN, waypoints);

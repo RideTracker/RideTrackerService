@@ -15,7 +15,7 @@ export const uploadUserImageRequestSchema = {
         }
     }
 };
-export async function handleUploadUserAvatarRequest(request: Request, env: Env) {
+export async function handleUploadUserAvatarRequest(request: RequestWithKey, env: Env) {
     const { image, combination } = request.content;
 
     const directUpload = await getDirectUploadUrl(env, {
