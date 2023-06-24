@@ -122,7 +122,8 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
     const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
 
-    context.waitUntil(durableObject.fetch("/activity", {
+    context.waitUntil(durableObject.fetch(request.url, {
+        method: "POST",
         body: JSON.stringify({
             activityId: activity.id
         })

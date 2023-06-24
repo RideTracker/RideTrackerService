@@ -23,8 +23,9 @@ export async function handleActivitySummaryRequest(request: RequestWithKey, env:
     if(!activitySummary) {
         const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
         const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
-    
-        context.waitUntil(durableObject.fetch("", {
+
+        context.waitUntil(durableObject.fetch(request.url, {
+            method: "POST",
             body: JSON.stringify({
                 activityId: activity.id
             })
