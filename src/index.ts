@@ -28,9 +28,7 @@ export default {
 
             if(response.status < 200 || response.status > 299) { 
                 context.waitUntil(new Promise<void>(async (resolve) => {
-                    const text = await response.text();
-
-                    await triggerAlarm(env, "Unsuccessful Status Code Alarm", `A response has returned an unsuccessfull status code.\n \n\`\`\`\n${response.status} ${response.statusText}\n\`\`\`${(text.length)?(`\`\`\`\n${text}\n\`\`\``):("")}\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`);
+                    await triggerAlarm(env, "Unsuccessful Status Code Alarm", `A response has returned an unsuccessfull status code.\n \n\`\`\`\n${response.status} ${response.statusText}\n\`\`\`${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`);
 
                     resolve();
                 }));
