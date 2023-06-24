@@ -9,7 +9,7 @@ import { updatePersonalBestActivitySummary } from "./controllers/activities/summ
 const router = createRouter();
 
 async function getRequest(request: any, env: any, context: any) {
-    const response: Response = await router.handle(request, env);
+    const response: Response = await router.handle(request, env, context);
 
     if(!response) {
         return new Response(undefined, {
