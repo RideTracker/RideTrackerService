@@ -5,6 +5,8 @@ import { getReverseGeocoding } from "./controllers/maps/getReverseGeocoding";
 import createRouter from "./domains/router";
 import { createActivitySummary } from "./controllers/activities/summary/createActivitySummary";
 import { updatePersonalBestActivitySummary } from "./controllers/activities/summary/updatePersonalBestActivitySummary";
+import { getActivitySummaryById } from "./controllers/activities/summary/getActivitySummaryById";
+import { getActivitiesWithoutSummary } from "./controllers/activities/getActivitiesWithoutSummary";
 
 const router = createRouter();
 
@@ -22,7 +24,30 @@ async function getRequest(request: any, env: any, context: any) {
 }
 
 export default {
-    async fetch(request: any, env: any, context: any) {
+    async scheduled(controller: ScheduledController, env: Env, context: EventContext<Env, string, null>) {
+        switch(controller.cron) {
+            // every hour
+            case "0 * * * *": {
+                const activities = await getActivitiesWithoutSummary(env.DATABASE);
+                
+                const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
+                const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
+
+                activities.forEach((activity) => {
+                    context.waitUntil(durableObject.fetch("https://service.ridetracker.app/scheduled", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            activityId: activity.id
+                        })
+                    }));
+                });
+
+                break;
+            }
+        }
+    },
+
+    async fetch(request: Request, env: Env, context: EventContext<Env, string, null>) {
         try {
             const response = await getRequest(request, env, context);
 
@@ -83,6 +108,9 @@ export class ActivityDurableObject {
 
         if(!activity)
             return Response.json({ success: false });
+
+        if(await getActivitySummaryById(this.env.DATABASE, activity.id))
+            return Response.json({ success: true });
 
         const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
 

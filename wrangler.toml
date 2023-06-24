@@ -29,6 +29,9 @@ bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
 
+[triggers]
+crons = [ "0 * * * *" ]
+
 [env.production.vars]
 ENVIRONMENT = "production"
 
@@ -46,6 +49,9 @@ bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
 
+[env.production.triggers]
+crons = [ "0 * * * *" ]
+
 [env.staging.vars]
 ENVIRONMENT = "staging"
 
@@ -62,3 +68,6 @@ bucket_name = "ridetracker-staging"
 bindings = [
     { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
 ]
+
+[env.staging.triggers]
+crons = [ "0 * * * *" ]
