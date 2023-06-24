@@ -64,7 +64,7 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT * FROM activities LEFT JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
+    const query = await database.prepare("SELECT * FROM activities INNER JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
     return query.results ?? [];
 };
