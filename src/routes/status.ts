@@ -18,6 +18,6 @@ export async function handleStatusRequest(request: RequestWithKey, env: Env, con
         success: true,
 
         status: featureFlags.status,
-        supersededBy: featureFlags.platforms[device]?.supersededBy ?? null
+        supersededBy: featureFlags.platforms?.[device]?.supersededBy ?? null
     });
 };

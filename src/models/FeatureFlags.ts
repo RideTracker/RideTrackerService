@@ -5,7 +5,7 @@ export type VersionDeviceFeatureFlags = {
 export type VersionFeatureFlags = {
     status: "SUPPORTED" | "UNSUPPORTED" | "DEPRECATED";
 
-    platforms: {
+    platforms?: {
         [key: string]: VersionDeviceFeatureFlags;
     };
 };
