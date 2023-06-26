@@ -61,7 +61,7 @@ export default {
             }
 
             const featureFlags = await env.FEATURE_FLAGS.get<FeatureFlags | null>(`${userAgent.client}`, {
-                cacheTtl: 3600,
+                cacheTtl: 300,
                 type: "json"
             });
 
