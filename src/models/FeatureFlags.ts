@@ -1,9 +1,13 @@
-export type VersionFeatureFlags = {
-    uses: string;
-    
-    status: "SUPPORTED" | "UNSUPPORTED" | "DEPRECATED";
-    
+export type VersionDeviceFeatureFlags = {
     supersededBy?: string;
+};
+
+export type VersionFeatureFlags = {
+    status: "SUPPORTED" | "UNSUPPORTED" | "DEPRECATED";
+
+    platforms: {
+        [key: string]: VersionDeviceFeatureFlags;
+    };
 };
 
 export type FeatureFlags = {

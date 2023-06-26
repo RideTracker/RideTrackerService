@@ -31,6 +31,7 @@ import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest
 import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search";
 import { handleMapsGeocodeRequest, mapsGeocodeSchema } from "../routes/maps/geocode";
 import { handleMapsRouteRequest, mapsRouteSchema } from "../routes/maps/route";
+import { handleStatusRequest, statusRequestSchema } from "../routes/status";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -47,6 +48,7 @@ export default function createRouter() {
     router.post("/api/auth/renew", withAuth, handleAuthRenewRequest);
     
     router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
+    router.get("/api/status", withAuth, withParams, withSchema(statusRequestSchema), handleStatusRequest);
 
     router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
     router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
