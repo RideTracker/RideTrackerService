@@ -68,7 +68,7 @@ export default {
             const versionFeatureFlags = featureFlags?.versions[userAgent.version.toString()];
 
             if(!versionFeatureFlags) {
-                context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+                context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent.client}-${userAgent.version.toString()}\n\`\`\`\`\`\`\n${JSON.stringify(featureFlags, null, 4)}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
                 
                 return new Response(undefined, {
                     status: 400,
