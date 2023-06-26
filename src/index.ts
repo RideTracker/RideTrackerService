@@ -23,6 +23,8 @@ async function getRequest(request: any, env: any, context: any) {
     return response;
 }
 
+const acceptedAgents = [ "RideTrackerService", "RideTrackerApp" ];
+
 export default {
     async scheduled(controller: ScheduledController, env: Env, context: EventContext<Env, string, null>) {
         switch(controller.cron) {
@@ -49,6 +51,24 @@ export default {
 
     async fetch(request: Request, env: Env, context: EventContext<Env, string, null>) {
         try {
+            const userAgent = request.headers.get("User-Agent");
+
+            if(!userAgent || !userAgent.match(/\w+\-([0-9]+)\.([0-9]+)\.([0-9]+)/)) {
+                return new Response(undefined, {
+                    status: 400,
+                    statusText: "Bad Request"
+                });
+            }
+
+            if(!acceptedAgents.includes(userAgent.substring(0, userAgent.indexOf('-')))) {
+                context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+                
+                return new Response(undefined, {
+                    status: 403,
+                    statusText: "Forbidden"
+                });
+            }
+
             const response = await getRequest(request, env, context);
 
             if(response.status < 200 || response.status > 299) { 
