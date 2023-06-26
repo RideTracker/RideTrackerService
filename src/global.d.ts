@@ -4,6 +4,7 @@ declare type Env = {
     DATABASE: D1Database;
     BUCKET: R2Bucket;
     ACTIVITY_DURABLE_OBJECT: DurableObjectNamespace;
+    FEATURE_FLAGS: KVNamespace;
     
     ENVIRONMENT: "production" | "staging" | "dev";
     CLOUDFLARE_ACCOUNT_ID: string;

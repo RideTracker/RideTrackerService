@@ -7,11 +7,13 @@ import { createActivitySummary } from "./controllers/activities/summary/createAc
 import { updatePersonalBestActivitySummary } from "./controllers/activities/summary/updatePersonalBestActivitySummary";
 import { getActivitySummaryById } from "./controllers/activities/summary/getActivitySummaryById";
 import { getActivitiesWithoutSummary } from "./controllers/activities/getActivitiesWithoutSummary";
+import getUserAgentGroups from "./controllers/getUserAgentGroups";
+import { FeatureFlags, VersionFeatureFlags } from "./models/FeatureFlags";
 
 const router = createRouter();
 
-async function getRequest(request: any, env: any, context: any) {
-    const response: Response = await router.handle(request, env, context);
+async function getRequest(request: Request, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
+    const response: Response = await router.handle(request, env, context, featureFlags);
 
     if(!response) {
         return new Response(undefined, {
@@ -22,8 +24,6 @@ async function getRequest(request: any, env: any, context: any) {
 
     return response;
 }
-
-const acceptedAgents = [ "RideTrackerService", "RideTrackerApp" ];
 
 export default {
     async scheduled(controller: ScheduledController, env: Env, context: EventContext<Env, string, null>) {
@@ -51,25 +51,36 @@ export default {
 
     async fetch(request: Request, env: Env, context: EventContext<Env, string, null>) {
         try {
-            const userAgent = request.headers.get("User-Agent");
+            const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
 
-            if(!userAgent || !userAgent.match(/\w+\-([0-9]+)\.([0-9]+)\.([0-9]+)/)) {
+            if(!userAgent) {
                 return new Response(undefined, {
                     status: 400,
                     statusText: "Bad Request"
                 });
             }
 
-            if(!acceptedAgents.includes(userAgent.substring(0, userAgent.indexOf('-')))) {
+            const featureFlags = await env.FEATURE_FLAGS.get<FeatureFlags | null>(`${userAgent.client}`, "json");
+
+            if(!featureFlags) {
                 context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
                 
                 return new Response(undefined, {
-                    status: 403,
-                    statusText: "Forbidden"
+                    status: 400,
+                    statusText: "Bad Request"
                 });
             }
 
-            const response = await getRequest(request, env, context);
+            const versionFeatureFlags = featureFlags.versions[userAgent.version.toString()];
+
+            if(versionFeatureFlags.status === "UNSUPPORTED") {
+                return new Response(undefined, {
+                    status: 410,
+                    statusText: "Gone"
+                });
+            }
+
+            const response = await getRequest(request, env, context, versionFeatureFlags);
 
             if(response.status < 200 || response.status > 299) { 
                 context.waitUntil(new Promise<void>(async (resolve) => {
