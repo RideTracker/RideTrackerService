@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
-import Client from "@ridetracker/ridetrackerclient";
-import ping from "@ridetracker/ridetrackerclient/dist/controllers/ping";
+import Client, { ping } from "@ridetracker/ridetrackerclient";
+
+import { name, version } from "./../package.json";
 
 // @ts-ignore
 const SERVICE_API = import.meta.env.VITE_SERVICE_API;
@@ -30,7 +31,7 @@ if(import.meta.env.VITE_GITHUB_SHA) {
 
 describe("client", () => {
     test("ping", async () => {
-        const client = new Client(SERVICE_API);
+        const client = new Client(`${name}-${version}`, SERVICE_API);
 
         const pingResponse = await ping(client);
 
