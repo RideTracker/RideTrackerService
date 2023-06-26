@@ -65,7 +65,9 @@ export default {
                 type: "json"
             });
 
-            if(!featureFlags) {
+            const versionFeatureFlags = featureFlags?.versions[userAgent.version.toString()];
+
+            if(!versionFeatureFlags) {
                 context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
                 
                 return new Response(undefined, {
@@ -73,8 +75,6 @@ export default {
                     statusText: "Bad Request"
                 });
             }
-
-            const versionFeatureFlags = featureFlags.versions[userAgent.version.toString()];
 
             if(versionFeatureFlags.status === "UNSUPPORTED") {
                 return new Response(undefined, {
