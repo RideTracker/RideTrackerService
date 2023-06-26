@@ -60,7 +60,10 @@ export default {
                 });
             }
 
-            const featureFlags = await env.FEATURE_FLAGS.get<FeatureFlags | null>(`${userAgent.client}`, "json");
+            const featureFlags = await env.FEATURE_FLAGS.get<FeatureFlags | null>(`${userAgent.client}`, {
+                cacheTtl: 3600,
+                type: "json"
+            });
 
             if(!featureFlags) {
                 context.waitUntil(triggerAlarm(env, "User Agent Alarm", `An unrecognized user agent was detected.\n \n\`\`\`\n${userAgent}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
