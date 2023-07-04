@@ -46,25 +46,24 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
     
     if(search?.length) {
         const query = await database.prepare(
-            "SELECT start_area AS startArea, finish_area AS finishArea, activities.* FROM activities" +
-            " LEFT JOIN activity_summary ON activities.id = activity_summary.id" +
+            "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (" +
             "  (LOWER(activities.title) LIKE '%' || LOWER(?1) || '%')" +
             "  OR (LOWER(activities.description) LIKE '%' || LOWER(?1) || '%')" +
             "  OR (LOWER(users.firstname) || ' ' || LOWER(users.lastname) LIKE '%' || LOWER(?1) || '%')" +
-            "  OR (LOWER(activity_summary.start_area) LIKE '%' || LOWER(?1) || '%')" +
-            "  OR (LOWER(activity_summary.finish_area) LIKE '%' || LOWER(?1) || '%')" +
+            "  OR (LOWER(activities.start_area) LIKE '%' || LOWER(?1) || '%')" +
+            "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?1) || '%')" +
             " ) AND" +
-            " (activities.timestamp > ?2)" +
+            " (activities.timestamp > ?2) AND activities.status = 'processed'" +
             " ORDER BY " + sort + " LIMIT 5 OFFSET ?3"
             ).bind(search, timestamp, offset).all<Activity>();
     
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT start_area AS startArea, finish_area AS finishArea, activities.* FROM activities INNER JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
+    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE activities.status = 'processed' activities.timestamp > ?1 ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
     return query.results ?? [];
 };

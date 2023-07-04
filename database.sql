@@ -103,5 +103,6 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"polylines"	TEXT DEFAULT NULL,
 	"start_area"	TEXT DEFAULT NULL,
 	"finish_area"	TEXT DEFAULT NULL,
+	"status"	TEXT DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );

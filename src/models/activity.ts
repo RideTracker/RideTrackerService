@@ -7,5 +7,6 @@ export type Activity = {
     polylines: string | null;
     startArea: string | null;
     finishArea: string | null;
+    status: string;
     timestamp: number;
 };

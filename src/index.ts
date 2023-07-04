@@ -11,6 +11,7 @@ import getUserAgentGroups from "./controllers/getUserAgentGroups";
 import { FeatureFlags, VersionFeatureFlags } from "./models/FeatureFlags";
 import { updateActivityAreas } from "./controllers/activities/updateActivityAreas";
 import { getActivitySummaryCount } from "./controllers/activities/summary/getActivitySummaryCount";
+import { updateActivityStatus } from "./controllers/activities/updateActivityStatus";
 
 const router = createRouter();
 
@@ -210,6 +211,8 @@ export class ActivityDurableObject {
             ]);
 
             await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);
+
+            await updateActivityStatus(this.env.DATABASE, activity.id, "processed");
 
             return Response.json({
                 success: true
