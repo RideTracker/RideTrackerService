@@ -133,6 +133,8 @@ export class ActivityDurableObject {
 
     async fetch(request: Request) {
         try {
+            await triggerAlarm(this.env, "Alarm", `${request.method} ${request.url}`);
+            
             const { activityId } = await request.json() as {
                 activityId?: string;
             };

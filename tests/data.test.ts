@@ -45,32 +45,8 @@ describe("Populate mock data", async () => {
         }
     }, 60 * 1000);
 
-    test("Create user avatars", async () => {
-        expect(tokens.length).toBeTruthy();
-
-        for(let token of tokens) {
-            const client = new Client(`${name}-${version}`, process.env.VITEST_SERVICE_API_URL, token);
-
-            const response = await fetch("https://staging.avatar-service.ridetracker.app/api/avatars/render/random", {
-                method: "GET",
-                headers: {
-                    Accept: "application/json",
-                    Authorization: `Bearer ${client.token}`
-                }
-            });
-
-            const result = await response.json() as any;
-            expect(result.success).toBe(true);
-
-            const userAvatarResult = await uploadUserAvatar(client, result.base64Image, "{}");
-            expect(userAvatarResult.success).toBe(true);
-
-            userAvatars.push(userAvatarResult.userAvatar.id);
-        }
-    }, 60 * 1000);
-
     test("Create activities", async () => {
-        expect(userAvatars.length).toBeTruthy();
+        expect(tokens.length).toBeTruthy();
 
         for(let index = 0; index < 10; index++) {
             const token = tokens[Math.floor(Math.random() * tokens.length)];
@@ -117,6 +93,30 @@ describe("Populate mock data", async () => {
 
             const activityCommentResult = await createActivityComment(client, activity, createMockedComment(), parent);
             expect(activityCommentResult.success).toBe(true);
+        }
+    }, 60 * 1000);
+
+    test("Create user avatars", async () => {
+        expect(tokens.length).toBeTruthy();
+
+        for(let token of tokens) {
+            const client = new Client(`${name}-${version}`, process.env.VITEST_SERVICE_API_URL, token);
+
+            const response = await fetch("https://staging.avatar-service.ridetracker.app/api/avatars/render/random", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${client.token}`
+                }
+            });
+
+            const result = await response.json() as any;
+            expect(result.success).toBe(true);
+
+            const userAvatarResult = await uploadUserAvatar(client, result.base64Image, "{}");
+            expect(userAvatarResult.success).toBe(true);
+
+            userAvatars.push(userAvatarResult.userAvatar.id);
         }
     }, 60 * 1000);
 });
