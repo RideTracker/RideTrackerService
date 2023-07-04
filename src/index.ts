@@ -102,8 +102,8 @@ export default {
         }
         catch(error: any) {
             if(error instanceof Error) {
-                if(error.message.startsWith("D1_") && error.cause instanceof Error) {
-                    context.waitUntil(triggerAlarm(env, "D1 Error Alarm", `An error was thrown by D1 during execution.\n \n\`\`\`\n${error.message}\n\`\`\`\`\`\`\n${error.cause.message}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
+                if(error.message.startsWith("D1_")) {
+                    context.waitUntil(triggerAlarm(env, "D1 Error Alarm", `An error was thrown by D1 during execution.\n \n\`\`\`\n${error.message}\n\`\`\`\n${request.method} ${request.url}\nRemote Address: || ${request.headers.get("CF-Connecting-IP")} ||`));
                 
                     return new Response(undefined, {
                         status: 502,
@@ -132,85 +132,106 @@ export class ActivityDurableObject {
     };
 
     async fetch(request: Request) {
-        const { activityId } = await request.json() as {
-            activityId?: string;
-        };
+        try {
+            const { activityId } = await request.json() as {
+                activityId?: string;
+            };
 
-        if(!activityId)
-            return Response.json({ success: false });
+            if(!activityId)
+                return Response.json({ success: false });
 
-        const activity = await getActivityById(this.env.DATABASE, activityId);
+            const activity = await getActivityById(this.env.DATABASE, activityId);
 
-        if(!activity)
-            return Response.json({ success: false });
+            if(!activity)
+                return Response.json({ success: false });
 
-        if(await getActivitySummaryById(this.env.DATABASE, activity.id))
-            return Response.json({ success: true });
+            if(await getActivitySummaryById(this.env.DATABASE, activity.id))
+                return Response.json({ success: true });
 
-        const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
+            const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
 
-        if(!bucket)
-            return Response.json({ success: false });
+            if(!bucket)
+                return Response.json({ success: false });
 
-        const sessions = await bucket.json<Array<any>>();
+            const sessions = await bucket.json<Array<any>>();
 
-        let startArea = null;
-        let finishArea = null;
-        let distance = 0;
-        let elevation = 0;
-        let maxSpeed = 0;
+            let startArea = null;
+            let finishArea = null;
+            let distance = 0;
+            let elevation = 0;
+            let maxSpeed = 0;
 
-        if(sessions.length && sessions[0].locations.length) {
-            const getAreaName = async (coords: any) => {
-                const geocoding = await getReverseGeocoding(this.env.GOOGLE_MAPS_API_TOKEN, coords.latitude, coords.longitude);
-    
-                if(geocoding.results.length) {
-                    const geocodingResult = geocoding.results[0];
-    
-                    const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
-                
-                    return geocodingComponent?.long_name ?? null;
+            if(sessions.length && sessions[0].locations.length) {
+                const getAreaName = async (coords: any) => {
+                    const geocoding = await getReverseGeocoding(this.env.GOOGLE_MAPS_API_TOKEN, coords.latitude, coords.longitude);
+        
+                    if(geocoding.results.length) {
+                        const geocodingResult = geocoding.results[0];
+        
+                        const geocodingComponent = geocodingResult.address_components.find((component: any) => component.types.includes("postal_town")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("political")) ?? geocodingResult.address_components.find((component: any) => component.types.includes("country"));
+                    
+                        return geocodingComponent?.long_name ?? null;
+                    }
+
+                    return null;
                 }
 
-                return null;
+                await Promise.all([
+                    getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
+                    getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].locations.length - 1].coords).then((name) => finishArea = name)
+                ]);
+            }   
+
+            const speeds = [];
+
+            for(let session of sessions) {
+                for(let index = 1; index < session.locations.length; index++) {
+                    distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords, 1);
+
+                    speeds.push(session.locations[index].coords.speed);
+
+                    elevation += Math.max(0, session.locations[index].coords.altitude -session.locations[index - 1].coords.altitude);
+
+                    if(session.locations[index].coords.speed > maxSpeed)
+                        maxSpeed = session.locations[index].coords.speed;
+                }
             }
 
-            await Promise.all([
-                getAreaName(sessions[0].locations[0].coords).then((name) => startArea = name),
-                getAreaName(sessions[sessions.length - 1].locations[sessions[sessions.length - 1].locations.length - 1].coords).then((name) => finishArea = name)
+            const speedSum = speeds.reduce((a, b) => a + b, 0);
+            const averageSpeed = (speedSum / speeds.length) || 0;
+
+            await Promise.allSettled([
+                createActivitySummary(this.env.DATABASE, activity.id, "distance", distance),
+                createActivitySummary(this.env.DATABASE, activity.id, "average_speed", averageSpeed),
+                createActivitySummary(this.env.DATABASE, activity.id, "elevation", elevation),
+                createActivitySummary(this.env.DATABASE, activity.id, "max_speed", maxSpeed),
+                updateActivityAreas(this.env.DATABASE, activity.id, startArea, finishArea)
             ]);
-        }   
 
-        const speeds = [];
+            await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);
 
-        for(let session of sessions) {
-            for(let index = 1; index < session.locations.length; index++) {
-                distance += getDistance(session.locations[index - 1].coords, session.locations[index].coords, 1);
-
-                speeds.push(session.locations[index].coords.speed);
-
-                elevation += Math.max(0, session.locations[index].coords.altitude -session.locations[index - 1].coords.altitude);
-
-                if(session.locations[index].coords.speed > maxSpeed)
-                    maxSpeed = session.locations[index].coords.speed;
-            }
+            return Response.json({
+                success: true
+            });
         }
+        catch(error: any) {
+            if(error instanceof Error) {
+                if(error.message.startsWith("D1_")) {
+                    this.state.waitUntil(triggerAlarm(this.env, "D1 Error Alarm", `An error was thrown by D1 during a durable object execution.\n \n\`\`\`\n${error.message}\n\`\`\`\n${request.method} ${request.url}`));
+                
+                    return new Response(undefined, {
+                        status: 502,
+                        statusText: "Bad Gateway"
+                    });
+                }
+            }
 
-        const speedSum = speeds.reduce((a, b) => a + b, 0);
-        const averageSpeed = (speedSum / speeds.length) || 0;
-
-        await Promise.allSettled([
-            createActivitySummary(this.env.DATABASE, activity.id, "distance", distance),
-            createActivitySummary(this.env.DATABASE, activity.id, "average_speed", averageSpeed),
-            createActivitySummary(this.env.DATABASE, activity.id, "elevation", elevation),
-            createActivitySummary(this.env.DATABASE, activity.id, "max_speed", maxSpeed),
-            updateActivityAreas(this.env.DATABASE, activity.id, startArea, finishArea)
-        ]);
-
-        await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);
-
-        return Response.json({
-            success: true
-        });
+            this.state.waitUntil(triggerAlarm(this.env, "Uncaught Error Alarm", `An uncaught error was thrown during a durable object execution.\n \n\`\`\`\n${error}\n\`\`\`\n${request.method} ${request.url}`));
+            
+            return new Response(undefined, {
+                status: 500,
+                statusText: "Internal Server Error"
+            });
+        }
     };
 };
