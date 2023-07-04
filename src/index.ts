@@ -201,7 +201,7 @@ export class ActivityDurableObject {
             const speedSum = speeds.reduce((a, b) => a + b, 0);
             const averageSpeed = (speedSum / speeds.length) || 0;
 
-            await Promise.allSettled([
+            await Promise.all([
                 createActivitySummary(this.env.DATABASE, activity.id, "distance", distance),
                 createActivitySummary(this.env.DATABASE, activity.id, "average_speed", averageSpeed),
                 createActivitySummary(this.env.DATABASE, activity.id, "elevation", elevation),
