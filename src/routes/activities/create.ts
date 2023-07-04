@@ -119,19 +119,15 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         }
     }, env);*/
 
-    console.log("call durable object");
-
     const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
-    console.log("id from name " + durableObjectId);
-
     const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
 
-    await durableObject.fetch(request.url, {
+    context.waitUntil(durableObject.fetch(request.url, {
         method: "POST",
         body: JSON.stringify({
             activityId: activity.id
         })
-    });
+    }));
 
     return Response.json({
         success: true,

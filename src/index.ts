@@ -10,6 +10,7 @@ import { getActivitiesWithoutSummary } from "./controllers/activities/getActivit
 import getUserAgentGroups from "./controllers/getUserAgentGroups";
 import { FeatureFlags, VersionFeatureFlags } from "./models/FeatureFlags";
 import { updateActivityAreas } from "./controllers/activities/updateActivityAreas";
+import { getActivitySummaryCount } from "./controllers/activities/summary/getActivitySummaryCount";
 
 const router = createRouter();
 
@@ -133,8 +134,6 @@ export class ActivityDurableObject {
 
     async fetch(request: Request) {
         try {
-            await triggerAlarm(this.env, "Alarm", `${request.method} ${request.url}`);
-            
             const { activityId } = await request.json() as {
                 activityId?: string;
             };
@@ -147,7 +146,7 @@ export class ActivityDurableObject {
             if(!activity)
                 return Response.json({ success: false });
 
-            if(await getActivitySummaryById(this.env.DATABASE, activity.id))
+            if(await getActivitySummaryCount(this.env.DATABASE, activity.id))
                 return Response.json({ success: true });
 
             const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
