@@ -4,6 +4,7 @@ import { createActivitySummary } from "../../controllers/activities/summary/crea
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { Bike } from "../../models/bike";
 import { handleActivitySummaryRequest } from "./[activityId]/summary";
+import { triggerAlarm } from "../../controllers/alarms/triggerAlarm";
 
 export const createActivityRequestSchema = {
     content: {
@@ -127,6 +128,10 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         body: JSON.stringify({
             activityId: activity.id
         })
+    }).then(async (response) => {
+        const result = await response.text();
+
+        return triggerAlarm(env, "do", result);
     }));
 
     return Response.json({
