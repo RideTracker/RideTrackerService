@@ -9,6 +9,7 @@ import { getActivitySummaryById } from "./controllers/activities/summary/getActi
 import { getActivitiesWithoutSummary } from "./controllers/activities/getActivitiesWithoutSummary";
 import getUserAgentGroups from "./controllers/getUserAgentGroups";
 import { FeatureFlags, VersionFeatureFlags } from "./models/FeatureFlags";
+import { updateActivityAreas } from "./controllers/activities/updateActivityAreas";
 
 const router = createRouter();
 
@@ -198,15 +199,13 @@ export class ActivityDurableObject {
         const speedSum = speeds.reduce((a, b) => a + b, 0);
         const averageSpeed = (speedSum / speeds.length) || 0;
 
-        let distancePersonalBest = null;
-        let averageSpeedPersonalBest = null;
-        let elevationPersonalBest = null;
-        let maxSpeedPersonalBest = null;
-
-        const activitySummary = await createActivitySummary(this.env.DATABASE, activity.id, startArea, finishArea, distance, distancePersonalBest, averageSpeed, averageSpeedPersonalBest, elevation, elevationPersonalBest, maxSpeed, maxSpeedPersonalBest);
-
-        if(!activitySummary)
-            return Response.json({ success: false });
+        await Promise.allSettled([
+            createActivitySummary(this.env.DATABASE, activity.id, "distance", distance),
+            createActivitySummary(this.env.DATABASE, activity.id, "average_speed", averageSpeed),
+            createActivitySummary(this.env.DATABASE, activity.id, "elevation", elevation),
+            createActivitySummary(this.env.DATABASE, activity.id, "max_speed", maxSpeed),
+            updateActivityAreas(this.env.DATABASE, activity.id, startArea, finishArea)
+        ]);
 
         await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);
 

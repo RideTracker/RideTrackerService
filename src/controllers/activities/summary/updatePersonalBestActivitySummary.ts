@@ -3,8 +3,8 @@ import { getActivitySummaryById } from "./getActivitySummaryById";
 
 function updatePersonalBestActivitySummaryColumn(database: D1Database, user: string, column: string) {
     return [
-        database.prepare("UPDATE activity_summary SET " + column + "_personal_best = NULL WHERE " + column + "_personal_best IS NULL AND activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE user = ?1)").bind(user),
-        database.prepare("UPDATE activity_summary SET " + column + "_personal_best = 1 WHERE activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE activities.user = ?1 ORDER BY activity_summary." + column + " DESC LIMIT 1)").bind(user)
+        database.prepare("UPDATE activity_summary SET personal_best = NULL WHERE key = ?2 AND activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE user = ?1)").bind(user, column),
+        database.prepare("UPDATE activity_summary SET personal_best = 1 WHERE key = ?2 AND activity_summary.id = (SELECT activities.id FROM activities JOIN activity_summary ON activities.id = activity_summary.id WHERE activities.user = ?1 ORDER BY value DESC LIMIT 1)").bind(user, column)
     ];
 };
 

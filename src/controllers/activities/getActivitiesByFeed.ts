@@ -46,7 +46,7 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
     
     if(search?.length) {
         const query = await database.prepare(
-            "SELECT activities.* FROM activities" +
+            "SELECT start_area AS startArea, finish_area AS finishArea, activities.* FROM activities" +
             " LEFT JOIN activity_summary ON activities.id = activity_summary.id" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
@@ -64,7 +64,7 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT * FROM activities INNER JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
+    const query = await database.prepare("SELECT start_area AS startArea, finish_area AS finishArea, activities.* FROM activities INNER JOIN activity_summary ON activities.id = activity_summary.id WHERE (activities.timestamp > ?1) ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
     return query.results ?? [];
 };

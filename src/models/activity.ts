@@ -5,5 +5,7 @@ export type Activity = {
     description: string | null;
     bike: string | null;
     polylines: string | null;
+    startArea: string | null;
+    finishArea: string | null;
     timestamp: number;
 };

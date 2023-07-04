@@ -69,22 +69,13 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
                 }
             },
             
-            summary: activitySummary && {
-                startArea: activitySummary.startArea,
-                finishArea: activitySummary.finishArea,
-
-                distance: Math.round((activitySummary.distance / 1000) * 10) / 10,
-                distancePersonalBest: (activitySummary.distance) && activitySummary.distancePersonalBest,
-
-                averageSpeed: Math.round((activitySummary.averageSpeed * 3.6) * 10) / 10,
-                averageSpeedPersonalBest: (activitySummary.averageSpeed) && activitySummary.averageSpeedPersonalBest,
-
-                elevation: Math.round(activitySummary.elevation),
-                elevationPersonalBest: (activitySummary.elevation) && activitySummary.elevationPersonalBest,
-
-                maxSpeed: Math.round((activitySummary.maxSpeed * 3.6) * 10) / 10,
-                maxSpeedPersonalBest: (activitySummary.maxSpeed) && activitySummary.maxSpeedPersonalBest
-            },
+            summary: activitySummary.map((activitySummary) => {
+                return {
+                    key: activitySummary.key,
+                    value: activitySummary.value,
+                    personalBest: activitySummary.personalBest
+                };
+            }),
 
             comments: activityComments,
 
