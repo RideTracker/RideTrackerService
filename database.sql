@@ -91,8 +91,7 @@ CREATE TABLE IF NOT EXISTS "activity_summary" (
 	"key"	varchar(255) NOT NULL,
 	"value"	double NOT NULL,
 	"personal_best"	boolean NOT NULL,
-	"timestamp"	bigint NOT NULL,
-	PRIMARY KEY("id")
+	"timestamp"	bigint NOT NULL
 );
 DROP TABLE IF EXISTS "activities";
 CREATE TABLE IF NOT EXISTS "activities" (
