@@ -63,7 +63,7 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE activities.status = 'processed' activities.timestamp > ?1 ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
+    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE activities.status = 'processed' AND activities.timestamp > ?1 ORDER BY " + sort + " LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
 
     return query.results ?? [];
 };
