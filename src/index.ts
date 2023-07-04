@@ -147,7 +147,7 @@ export class ActivityDurableObject {
                 return Response.json({ success: false });
 
             if((await getActivitySummaryCount(this.env.DATABASE, activity.id)) > 0)
-                return Response.json({ success: true });
+                return Response.json({ success: true, exists: true });
 
             const bucket = await this.env.BUCKET.get(`activities/${activity.id}.json`);
 
