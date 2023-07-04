@@ -129,9 +129,11 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
             activityId: activity.id
         })
     }).then(async (response) => {
-        const result = await response.text();
+        if(!response.ok) {
+            const text = await response.json();
 
-        return triggerAlarm(env, "do", result);
+            return triggerAlarm(env, "Activity Processing Failed Alarm", "```\n" + JSON.stringify(text, null, 4) + "\n```");
+        }
     }));
 
     return Response.json({
