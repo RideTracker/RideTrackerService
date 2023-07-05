@@ -32,6 +32,7 @@ import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search
 import { handleMapsGeocodeRequest, mapsGeocodeSchema } from "../routes/maps/geocode";
 import { handleMapsRouteRequest, mapsRouteSchema } from "../routes/maps/route";
 import { handleStatusRequest, statusRequestSchema } from "../routes/status";
+import { Token } from "../models/token";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -90,9 +91,14 @@ export default function createRouter() {
     });
 
     router.get("/api/auth/random", withStaging, async (request: RequestWithKey, env: Env) => {
+        const token = await env.DATABASE.prepare("SELECT tokens.*, users.email FROM tokens LEFT JOIN users ON users.id = tokens.user WHERE user IS NOT NULL LIMIT 1").first<Token>();
+
         return Response.json({
             success: true,
-            key: await env.DATABASE.prepare("SELECT * FROM tokens WHERE user IS NOT NULL").first<string>("key")
+            email: token.email,
+            token: {
+                key: token.key
+            }
         });
     });
 
