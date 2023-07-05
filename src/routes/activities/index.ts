@@ -49,6 +49,8 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
         activity: {
             id: activity.id,
             polylines: activity.polylines && JSON.parse(activity.polylines),
+            startArea: activity.startArea,
+            finishArea: activity.finishArea,
 
             user: {
                 id: acitivityAuthor.id,
