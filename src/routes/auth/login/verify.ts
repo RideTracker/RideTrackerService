@@ -37,7 +37,10 @@ export async function handleAuthLoginVerificationRequest(request: RequestWithKey
     if(user === null)
         return Response.json({ success: false, message: "User no longer exists." });
 
-    const token = await createToken(env.DATABASE, crypto.randomUUID(), user.id);
+    const keyArray = new Uint8Array(64);
+    crypto.getRandomValues(keyArray);
+    const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');
+    const token = await createToken(env.DATABASE, btoa(key), user.id);
 
     if(token === null)
         return Response.json({ success: false, message: "Something went wrong." });
