@@ -45,5 +45,10 @@ export async function handleAuthLoginVerificationRequest(request: RequestWithKey
     if(token === null)
         return Response.json({ success: false, message: "Something went wrong." });
 
-    return Response.json({ success: true, key: token.key });
+    return Response.json({
+        success: true,
+        token: {
+            key: token.key
+        }
+    });
 };

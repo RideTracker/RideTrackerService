@@ -1,20 +1,67 @@
 import { getTokenByKey } from "../controllers/tokens/getTokenByKey";
 
 export async function withAuth(request: RequestWithKey, env: Env, context: any) {
-    const authorization = request.headers.get("Authorization");
+    const authorizationHeader = request.headers.get("Authorization");
     
-    if(!authorization)
+    if(!authorizationHeader)
        return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
 
-    const sections = authorization.split(' ');
+    const sections = authorizationHeader.split(' ');
 
-    if(sections[0] !== "Bearer" || sections.length !== 2)
+    if(sections.length !== 2)
        return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
 
-    const token = await getTokenByKey(env.DATABASE, sections[1]);
+    const type = sections[0];
+    const authorization = sections[1];
 
-    if(token === null)
-        return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+    switch(type) {
+        case "Basic": {
+            const authorizationToken = authorization.split(':');
 
-    request.key = token;
+            if(authorizationToken.length !== 2)
+                return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+
+            const email = authorizationToken[0];
+            const key = authorizationToken[1];
+
+            const token = await getTokenByKey(env.DATABASE, key);
+
+            if(token === null)
+                return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+
+            if(!token.user)
+                return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+       
+            if(token.email !== email)
+                return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+                
+            request.key = {
+                id: token.id,
+                key: token.key,
+                user: token.user,
+                timestamp: token.timestamp
+            };
+
+            break;
+        }
+
+        case "Bearer": {
+            const token = await getTokenByKey(env.DATABASE, authorization);
+
+            if(token.user)
+                return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+
+            request.key = {
+                id: token.id,
+                key: token.key,
+                user: "",
+                timestamp: token.timestamp
+            };
+
+            break;
+        }
+
+        default:
+            return Response.json({ success: false }, { status: 401, statusText: "Unauthorized" });
+    }
 };

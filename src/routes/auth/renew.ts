@@ -20,7 +20,9 @@ export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) 
         
     return Response.json({
         success: true,
-        key: token.key,
+        token: {
+            key: token.key
+        },
         user: {
             id: user.id,
             name: user.firstname + " " + user.lastname,
