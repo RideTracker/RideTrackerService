@@ -7,11 +7,6 @@ export const uploadUserImageRequestSchema = {
         image: {
             type: "string",
             required: true
-        },
-
-        combination: {
-            type: "object",
-            required: true
         }
     }
 };
@@ -31,7 +26,7 @@ export async function handleUploadUserAvatarRequest(request: RequestWithKey, env
     if(!upload.success)
         return Response.json({ success: false });
 
-    const userAvatar = await createUserAvatar(env.DATABASE, request.key.user, directUpload.id, JSON.stringify(combination));
+    const userAvatar = await createUserAvatar(env.DATABASE, request.key.user, directUpload.id);
 
     if(!userAvatar)
         return Response.json({ success: false });
