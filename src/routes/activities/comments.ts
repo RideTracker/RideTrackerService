@@ -4,7 +4,7 @@ import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
+import { getBikeSummaryById } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getUserById } from "../../controllers/users/getUserById";
 import { User } from "../../models/user";
 

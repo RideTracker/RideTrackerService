@@ -1,6 +1,6 @@
+import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikePrimaryImage } from "../../controllers/bikes/images/getBikePrimaryImage";
-import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
 
 export const bikeRequestSchema = {
     params: {
@@ -19,8 +19,9 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
     if(!bike)
         return Response.json({ success: false });
 
-    const bikeSummary = (bike) && await getBikeSummaryById(env.DATABASE, bike.id);
-    const bikeImage = (bike) && await getBikePrimaryImage(env.DATABASE, bike.id);
+    const bikeSummary = await getActivitySummaryByBike(env.DATABASE, bike.id);
+
+    const bikeImage = await getBikePrimaryImage(env.DATABASE, bike.id);
 
     return Response.json({
         success: true,
@@ -31,11 +32,12 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
             model: bike.model,
             image: bikeImage?.image,
 
-            summary: bikeSummary && {
-                rides: bikeSummary.rides,
-                distance: bikeSummary.distance,
-                elevation: bikeSummary.elevation
-            }
+            summary: bikeSummary.map((bikeSummary) => {
+                return {
+                    key: bikeSummary.key,
+                    value: bikeSummary.value
+                };
+            })
         }
     });
 };
