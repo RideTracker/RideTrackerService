@@ -106,3 +106,10 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"status"	TEXT DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );
+DROP TABLE IF EXISTS "messages";
+CREATE TABLE IF NOT EXISTS "messages" (
+	"id"	varchar(255) NOT NULL,
+	"user"	varchar(255) NOT NULL,
+	"message"	TEXT DEFAULT NULL,
+	"timestamp"	double NOT NULL
+);
