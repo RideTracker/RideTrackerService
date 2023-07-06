@@ -56,7 +56,7 @@ export default function createRouter() {
     router.post("/api/maps/routes", withAuth, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
-    router.post("/api/bikes", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
+    router.post("/api/bikes/create", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
     router.get("/api/bikes/:bikeId", withAuth, withSchema(bikeRequestSchema), handleBikeRequest);
     router.post("/api/bikes/:bikeId/images", withAuth, withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
     router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth, withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
