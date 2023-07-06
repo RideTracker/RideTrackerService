@@ -21,7 +21,7 @@ export async function handleBikesRequest(request: RequestWithKey, env: Env) {
 
         bikes: bikes.map((bike) => {
             const bikeSummary = bikeSummaries.find((summary) => summary?.id === bike.id);
-            const bikeImage = bikeImages.find((image) => image?.id === bike.id);
+            const bikeImage = bikeImages.find((image) => image?.bike === bike.id);
 
             return {
                 id: bike.id,
