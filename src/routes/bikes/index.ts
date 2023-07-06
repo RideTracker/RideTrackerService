@@ -1,3 +1,4 @@
+import { getActivityCountByBike } from "../../controllers/activities/getActivityCountByBike";
 import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikePrimaryImage } from "../../controllers/bikes/images/getBikePrimaryImage";
@@ -20,7 +21,7 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
         return Response.json({ success: false });
 
     const bikeSummary = await getActivitySummaryByBike(env.DATABASE, bike.id);
-
+    const bikeActivityCount = await getActivityCountByBike(env.DATABASE, bike.id);
     const bikeImage = await getBikePrimaryImage(env.DATABASE, bike.id);
 
     return Response.json({
@@ -31,6 +32,8 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
             name: bike.name,
             model: bike.model,
             image: bikeImage?.image,
+
+            activities: bikeActivityCount,
 
             summary: bikeSummary.map((bikeSummary) => {
                 return {
