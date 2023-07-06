@@ -2,12 +2,10 @@ import { getActivityCommentsCount } from "../../controllers/activities/comments/
 import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
+import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { getBikeSummaryById } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getUserById } from "../../controllers/users/getUserById";
-import { User } from "../../models/user";
-import { handleActivitySummaryRequest } from "./[activityId]/summary";
 
 export const activityRequestSchema = {
     params: {
@@ -31,9 +29,6 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
     if(!acitivityAuthor)
         return Response.json({ success: false });
 
-    const activityBike = (activity.bike) && await getBikeById(env.DATABASE, activity.bike);
-    const activityBikeSummary = (activityBike) && await getBikeSummaryById(env.DATABASE, activityBike.id);
-
     const activitySummary = await getActivitySummaryById(env.DATABASE, id);
 
     const activityComment = await getLatestActivityComment(env.DATABASE, id);
@@ -51,24 +46,12 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
             polylines: activity.polylines && JSON.parse(activity.polylines),
             startArea: activity.startArea,
             finishArea: activity.finishArea,
+            bike: activity.bike,
 
             user: {
                 id: acitivityAuthor.id,
                 name: acitivityAuthor.firstname + " " + acitivityAuthor.lastname,
                 avatar: acitivityAuthor.avatar
-            },
-
-            bike: activityBike && {
-                id: activityBike.id,
-                name: activityBike.name,
-                model: activityBike.model,
-                image: activityBike.image,
-
-                summary: activityBikeSummary && {
-                    rides: activityBikeSummary.rides,
-                    distance: activityBikeSummary.distance,
-                    elevation: activityBikeSummary.elevation
-                }
             },
             
             summary: activitySummary.map((activitySummary) => {

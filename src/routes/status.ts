@@ -1,5 +1,3 @@
-import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
-import { getBikeSummaryById } from "../controllers/activities/summary/getActivitySummaryByBike";
 import { VersionFeatureFlags } from "../models/FeatureFlags";
 
 export const statusRequestSchema = {

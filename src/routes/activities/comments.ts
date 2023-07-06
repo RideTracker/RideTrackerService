@@ -1,12 +1,5 @@
 import { getActivityComments } from "../../controllers/activities/comments/getActivityComments";
-import { getLatestActivityComment } from "../../controllers/activities/comments/getLatestActivityComment";
-import { getActivityById } from "../../controllers/activities/getActivityById";
-import { getActivityLikeByUser } from "../../controllers/activities/likes/getActivityLikeByUser";
-import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
-import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { getBikeSummaryById } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getUserById } from "../../controllers/users/getUserById";
-import { User } from "../../models/user";
 
 export async function handleActivityCommentsRequest(request: RequestWithKey, env: Env) {
     const { id } = request.params;
