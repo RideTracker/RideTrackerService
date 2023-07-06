@@ -76,11 +76,11 @@ export async function deleteImage(env: Env, image: string) {
 export async function uploadImage(name: string, base64Image: string, url: string) {
     console.log("uploadImage");
 
-    const mimeType = "image/png";
-    
-    const buffer = Buffer.from(base64Image.split(';base64,')[1], 'base64');
+    const base64Sections = base64Image.split(';base64,');
+
+    const buffer = Buffer.from(base64Sections[1], 'base64');
     const uint8Array = new Uint8Array(buffer);
-    const blob = new Blob([ uint8Array ], { type: mimeType });
+    const blob = new Blob([ uint8Array ], { type: base64Sections[0].split(':')[1] });
 
     const body = new FormData();
 
