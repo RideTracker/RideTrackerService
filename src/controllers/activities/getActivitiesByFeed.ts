@@ -23,20 +23,20 @@ function getTimestampByTimeline(timeline?: string) {
 function getSortByOrder(order?: string) {
     switch(order) {
         case "distance":
-            return "activity_summary.distance DESC";
+            return "SELECT activity_summary.value FROM activity_summary WHERE activity_summary.key = 'distance' AND activity_summary.id = activities.id";
 
         case "average_speed":
-            return "activity_summary.average_speed DESC";
+            return "SELECT activity_summary.value FROM activity_summary WHERE activity_summary.key = 'average_speed' AND activity_summary.id = activities.id";
 
         case "highest_speed":
-            return "activity_summary.max_speed DESC";
+            return "SELECT activity_summary.value FROM activity_summary WHERE activity_summary.key = 'max_speed' AND activity_summary.id = activities.id";
             
         case "elevation":
-            return "activity_summary.elevation DESC";
+            return "SELECT activity_summary.value FROM activity_summary WHERE activity_summary.key = 'elevation' AND activity_summary.id = activities.id";
 
         case "activity":
         default:
-            return "activities.timestamp DESC";
+            return "activities.timestamp";
     }
 };
 
@@ -57,7 +57,7 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
             "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?1) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?2) AND activities.status = 'processed'" +
-            " ORDER BY " + sort + " LIMIT 5 OFFSET ?3"
+            " ORDER BY (" + sort + ") DESC LIMIT 5 OFFSET ?3"
             ).bind(search, timestamp, offset).all<Activity>();
     
         return query.results ?? [];
