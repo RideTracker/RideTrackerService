@@ -1,4 +1,5 @@
 import { createBike } from "../../controllers/bikes/createBike";
+import getFormattedBikeModel from "../../controllers/bikes/getFormattedBikeModel";
 import { createBikeImage } from "../../controllers/bikes/images/createBikeImage";
 import { getUserById } from "../../controllers/users/getUserById";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
@@ -38,7 +39,7 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
     if(!name?.length) {
         const user = await getUserById(env.DATABASE, request.key.user);
 
-        name = `${user.firstname}'${(user.firstname.endsWith('s'))?(""):("s")} bike`;
+        name = `${user.firstname}'${(user.firstname.endsWith('s'))?(""):("s")} ${getFormattedBikeModel(model).toLowerCase()}`;
     }
 
     const bike = await createBike(env.DATABASE, request.key.user, name, model);
