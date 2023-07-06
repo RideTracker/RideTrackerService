@@ -1,7 +1,9 @@
+import { createToken } from "../../controllers/tokens/createToken";
 import { createUser } from "../../controllers/users/createUser";
 import { getUserByEmail } from "../../controllers/users/getUserByEmail";
 import { createUserVerification } from "../../controllers/users/verifications/createUserVerification";
 import { sendUserVerificationEmail } from "../../controllers/users/verifications/sendUserVerificationEmail";
+import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { encryptPassword } from "../../utils/encryption";
 
 export const authRegisterSchema = {
@@ -28,7 +30,7 @@ export const authRegisterSchema = {
     }
 };
 
-export async function handleAuthRegisterRequest(request: RequestWithKey, env: Env) {
+export async function handleAuthRegisterRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
     const { firstname, lastname, email, password } = request.content;
 
     if(firstname.length < 2 || firstname.length > 128)
@@ -51,6 +53,23 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
     if(user === null)
         return Response.json({ success: false, message: "Something went wrong!" });
 
+    if(featureFlags.disableUserEmailVerification) {
+        const keyArray = new Uint8Array(64);
+        crypto.getRandomValues(keyArray);
+        const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');
+        const token = await createToken(env.DATABASE, btoa(key), user.id);
+    
+        if(token === null)
+            return Response.json({ success: false, message: "Something went wrong." });
+    
+        return Response.json({
+            success: true,
+            token: {
+                key: token.key
+            }
+        });
+    }
+
     const userVerification = await createUserVerification(env.DATABASE, user);
 
     if(userVerification === null)
@@ -59,5 +78,8 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
     if(!user.email.endsWith("ridetracker.app"))
         await sendUserVerificationEmail(user, userVerification);
 
-    return Response.json({ success: true, verification: userVerification.id });
+    return Response.json({
+        success: true,
+        verification: userVerification.id
+    });
 };

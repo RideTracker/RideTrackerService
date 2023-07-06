@@ -4,6 +4,8 @@ export type VersionDeviceFeatureFlags = {
 
 export type VersionFeatureFlags = {
     status: "SUPPORTED" | "UNSUPPORTED" | "DEPRECATED";
+    
+    disableUserEmailVerification?: boolean;
 
     platforms?: {
         [key: string]: VersionDeviceFeatureFlags;

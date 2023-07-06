@@ -25,7 +25,7 @@ export async function sendMessageEmail(user: User, message: string): Promise<any
             "content": [
                 {
                     "type": "text/plain",
-                    "value": `${message}\n\nThis was sent from ${user.firstname} ${user.lastname} from ${user.email}.`,
+                    "value": `${message}\n\nThis was sent by ${user.firstname} ${user.lastname} from ${user.email}.`,
                 }
             ]
         })
