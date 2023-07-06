@@ -35,16 +35,16 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
     if(images.length > 6)
         return Response.json({ success: false });
 
-    const bike = await createBike(env.DATABASE, request.key.user, name, model);
-
-    if(!bike)
-        return Response.json({ success: false });
-
     if(!name?.length) {
         const user = await getUserById(env.DATABASE, request.key.user);
 
         name = `${user.firstname}'${(user.firstname.endsWith('s'))?(""):("s")} bike`;
     }
+
+    const bike = await createBike(env.DATABASE, request.key.user, name, model);
+
+    if(!bike)
+        return Response.json({ success: false });
         
     if(images.length) {
         const directUpload = await getDirectUploadUrl(env, {
