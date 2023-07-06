@@ -27,7 +27,7 @@ export const createBikeRequestSchema = {
     }
 };
 
-export async function handleCreateBikeRequest(request: RequestWithKey, env: Env) {
+export async function handleCreateBikeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
     const { name, model, images } = request.content;
 
     if(images.length > 6)
@@ -38,27 +38,46 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env)
     if(!bike)
         return Response.json({ success: false });
 
-    await Promise.allSettled(images.map((base64: string, index: number) => {
-        return new Promise(async (resolve, reject) => {
-            const directUpload = await getDirectUploadUrl(env, {
-                type: "bike",
-                user: request.key.user,
-                bike: bike.id
-            });
-    
-            if(!directUpload)
-                return reject({ success: false });
-
-            const upload = await uploadImage("Avatar.png", base64, directUpload.url);
-
-            if(!upload.success)
-                return reject({ success: false });
         
-            await createBikeImage(env.DATABASE, bike.id, directUpload.id, index);
-
-            resolve(void 0);
+    if(images.length) {
+        const directUpload = await getDirectUploadUrl(env, {
+            type: "bike",
+            user: request.key.user,
+            bike: bike.id
         });
-    }));
+
+        if(!directUpload)
+            return Response.json({ success: false });
+
+        const upload = await uploadImage("Bike.png", images[0], directUpload.url);
+
+        if(!upload.success)
+            return Response.json({ success: false });
+
+        await createBikeImage(env.DATABASE, bike.id, directUpload.id, 0);
+
+        images.shift();
+
+        if(images.length) {
+            context.waitUntil(Promise.all(images.map(async (image: string, index: number) => {
+                const directUpload = await getDirectUploadUrl(env, {
+                    type: "bike",
+                    user: request.key.user,
+                    bike: bike.id
+                });
+
+                if(!directUpload)
+                    return;
+
+                const upload = await uploadImage("Bike.png", image, directUpload.url);
+
+                if(!upload.success)
+                    return;
+
+                await createBikeImage(env.DATABASE, bike.id, directUpload.id, 1 + index);
+            })));
+        }
+    }
 
     return Response.json({
         success: true,

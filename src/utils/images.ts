@@ -93,7 +93,7 @@ export async function uploadImage(name: string, base64Image: string, url: string
 
     const content = await response.text();
 
-    console.log("uploadImage", content);
+    console.log("content", content);
 
     return JSON.parse(content);
 };
