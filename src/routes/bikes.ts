@@ -1,5 +1,5 @@
 import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
-import { getBikeImageById } from "../controllers/bikes/images/getBikeImageById";
+import { getBikePrimaryImage } from "../controllers/bikes/images/getBikePrimaryImage";
 import { getBikeSummaryById } from "../controllers/bikes/summary/getBikeSummaryById";
 
 export async function handleBikesRequest(request: RequestWithKey, env: Env) {
@@ -13,7 +13,7 @@ export async function handleBikesRequest(request: RequestWithKey, env: Env) {
     }));
     
     const bikeImages = await Promise.all(bikes.map((bike) => {
-        return getBikeImageById(env.DATABASE, bike.id);
+        return getBikePrimaryImage(env.DATABASE, bike.id);
     }));
 
     return Response.json({
