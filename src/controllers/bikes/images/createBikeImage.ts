@@ -5,7 +5,7 @@ export async function createBikeImage(database: D1Database, bike: string, image:
     const id = crypto.randomUUID();;
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO bike_images (id, bike, image, timestamp) VALUES (?, ?, ?, ?, ?)").bind(id, bike, image, index, timestamp).run();
+    await database.prepare("INSERT INTO bike_images (id, bike, image, index, timestamp) VALUES (?, ?, ?, ?, ?)").bind(id, bike, image, index, timestamp).run();
 
     return await getBikeImageById(database, id);
 };
