@@ -3,7 +3,5 @@ export type Bike = {
     user: string;
     name: string;
     model: string;
-    image: string;
-
     timestamp: number;
 };

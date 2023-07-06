@@ -1,4 +1,5 @@
 import { getBikeById } from "../../controllers/bikes/getBikeById";
+import { getBikeImageById } from "../../controllers/bikes/images/getBikeImageById";
 import { getBikeSummaryById } from "../../controllers/bikes/summary/getBikeSummaryById";
 
 export const bikeRequestSchema = {
@@ -19,6 +20,7 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
         return Response.json({ success: false });
 
     const bikeSummary = (bike) && await getBikeSummaryById(env.DATABASE, bike.id);
+    const bikeImage = (bike) && await getBikeImageById(env.DATABASE, bike.id);
 
     return Response.json({
         success: true,
@@ -27,7 +29,7 @@ export async function handleBikeRequest(request: RequestWithKey, env: Env) {
             id: bike.id,
             name: bike.name,
             model: bike.model,
-            image: bike.image,
+            image: bikeImage?.image,
 
             summary: bikeSummary && {
                 rides: bikeSummary.rides,

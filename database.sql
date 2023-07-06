@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS "bikes" (
 	"user"	varchar(255) NOT NULL,
 	"name"	varchar(255) NOT NULL,
 	"model"	varchar(255) NOT NULL,
-	"image"	varchar(255) NOT NULL,
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")
 );

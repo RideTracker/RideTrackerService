@@ -1,4 +1,5 @@
 import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
+import { getBikeImageById } from "../controllers/bikes/images/getBikeImageById";
 import { getBikeSummaryById } from "../controllers/bikes/summary/getBikeSummaryById";
 
 export async function handleBikesRequest(request: RequestWithKey, env: Env) {
@@ -10,18 +11,23 @@ export async function handleBikesRequest(request: RequestWithKey, env: Env) {
     const bikeSummaries = await Promise.all(bikes.map((bike) => {
         return getBikeSummaryById(env.DATABASE, bike.id);
     }));
+    
+    const bikeImages = await Promise.all(bikes.map((bike) => {
+        return getBikeImageById(env.DATABASE, bike.id);
+    }));
 
     return Response.json({
         success: true,
 
         bikes: bikes.map((bike) => {
             const bikeSummary = bikeSummaries.find((summary) => summary?.id === bike.id);
+            const bikeImage = bikeImages.find((image) => image?.id === bike.id);
 
             return {
                 id: bike.id,
                 name: bike.name,
                 model: bike.model,
-                image: bike.image,
+                image: bikeImage?.image,
     
                 summary: bikeSummary && {
                     rides: bikeSummary.rides,
