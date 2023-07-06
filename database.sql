@@ -38,6 +38,8 @@ DROP TABLE IF EXISTS "bike_images";
 CREATE TABLE IF NOT EXISTS "bike_images" (
 	"id"	varchar(255) NOT NULL,
 	"bike"	varchar(255) NOT NULL,
+    "image" varchar(255) NOT NULL,
+	"index"	bigint NOT NULL,
 	"timestamp"	bigint NOT NULL DEFAULT '0',
 	PRIMARY KEY("id")
 );

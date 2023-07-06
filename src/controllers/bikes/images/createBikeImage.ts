@@ -1,10 +1,11 @@
 import { BikeImage } from "../../../models/bikeImage";
 import { getBikeImageById } from "./getBikeImageById";
 
-export async function createBikeImage(database: D1Database, bike: string, image: string): Promise<BikeImage> {
+export async function createBikeImage(database: D1Database, bike: string, image: string, index: number): Promise<BikeImage> {
+    const id = crypto.randomUUID();;
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO bike_images (id, bike, timestamp) VALUES (?, ?, ?)").bind(image, bike, timestamp).run();
+    await database.prepare("INSERT INTO bike_images (id, bike, image, timestamp) VALUES (?, ?, ?, ?, ?)").bind(id, bike, image, index, timestamp).run();
 
-    return await getBikeImageById(database, image);
+    return await getBikeImageById(database, id);
 };
