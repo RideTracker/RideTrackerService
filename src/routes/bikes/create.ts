@@ -1,5 +1,6 @@
 import { createBike } from "../../controllers/bikes/createBike";
 import { createBikeImage } from "../../controllers/bikes/images/createBikeImage";
+import { getUserById } from "../../controllers/users/getUserById";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 
 export const createBikeRequestSchema = {
@@ -28,7 +29,8 @@ export const createBikeRequestSchema = {
 };
 
 export async function handleCreateBikeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
-    const { name, model, images } = request.content;
+    let { name } = request.content;
+    const { model, images } = request.content;
 
     if(images.length > 6)
         return Response.json({ success: false });
@@ -38,6 +40,11 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
     if(!bike)
         return Response.json({ success: false });
 
+    if(!name?.length) {
+        const user = await getUserById(env.DATABASE, request.key.user);
+
+        name = `${user.firstname}'${(user.firstname.endsWith('s'))?(""):("s")} bike`;
+    }
         
     if(images.length) {
         const directUpload = await getDirectUploadUrl(env, {
