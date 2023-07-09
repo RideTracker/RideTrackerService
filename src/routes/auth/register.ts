@@ -66,6 +66,11 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
             success: true,
             token: {
                 key: token.key
+            },
+            user: {
+                id: user.id,
+                name: user.firstname + " " + user.lastname,
+                avatar: user.avatar
             }
         });
     }
