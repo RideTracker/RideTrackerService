@@ -37,6 +37,9 @@ export async function handleAuthLoginVerificationRequest(request: RequestWithKey
     if(user === null)
         return Response.json({ success: false, message: "User no longer exists." });
 
+    if(user.status === "DELETING")
+        return Response.json({ success: false, message: "User is being deleted." });
+
     const keyArray = new Uint8Array(64);
     crypto.getRandomValues(keyArray);
     const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');

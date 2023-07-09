@@ -1,3 +1,5 @@
+import { UserStatus } from "./UserStatus";
+
 export type User = {
     id: string;
     
@@ -8,6 +10,7 @@ export type User = {
     lastname: string;
 
     avatar: string;
+    status: UserStatus;
     
     timestamp: number;
 };

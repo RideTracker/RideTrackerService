@@ -34,6 +34,7 @@ import { handleMapsRouteRequest, mapsRouteSchema } from "../routes/maps/route";
 import { handleStatusRequest, statusRequestSchema } from "../routes/status";
 import { Token } from "../models/token";
 import { createMessageRequestSchema, handleCreateMessageRequest } from "../routes/message";
+import { handleUserDeletionRequest } from "../routes/user/delete";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -76,6 +77,7 @@ export default function createRouter() {
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
     
     router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
+    router.delete("/api/user/delete", withAuth, handleUserDeletionRequest);
 
     router.post("/api/message", withAuth, withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);
     

@@ -10,6 +10,9 @@ export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) 
     if(!user)
         return Response.json({ success: false });
 
+    if(user.status === "DELETING")
+        return Response.json({ success: false });
+
     const keyArray = new Uint8Array(64);
     crypto.getRandomValues(keyArray);
     const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');

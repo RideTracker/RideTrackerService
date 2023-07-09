@@ -27,6 +27,9 @@ export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, 
     if(user === null)
         return Response.json({ success: false, message: "This email is not registered to anyone." });
 
+    if(user.status === "DELETING")
+        return Response.json({ success: false, message: "Your account is being processed to be deleted upon your request."});
+
     if(!(await verifyPassword(password, user.password)))
         return Response.json({ success: false, message: "Your credentials do not match." });
 

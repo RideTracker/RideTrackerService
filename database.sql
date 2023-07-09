@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"firstname"	varchar(255) NOT NULL,
 	"lastname"	varchar(255) NOT NULL,
 	"avatar"	varchar(255) DEFAULT NULL,
+	"status"	varchar(255) NOT NULL,
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")
 );
