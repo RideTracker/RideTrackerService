@@ -4,6 +4,7 @@ import { sendUserVerificationEmail } from "../../controllers/users/verifications
 import { verifyPassword } from "../../utils/encryption";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { createToken } from "../../controllers/tokens/createToken";
+import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
 
 export const authLoginSchema = {
     content: {
@@ -41,6 +42,8 @@ export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, 
     
         if(token === null)
             return Response.json({ success: false, message: "Something went wrong." });
+
+        const subscribed = await hasUserSubscription(env.DATABASE, user.id);
     
         return Response.json({
             success: true,
@@ -50,7 +53,8 @@ export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, 
             user: {
                 id: user.id,
                 name: user.firstname + " " + user.lastname,
-                avatar: user.avatar
+                avatar: user.avatar,
+                subscribed: (subscribed > 0)
             }
         });
     }

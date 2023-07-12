@@ -1,6 +1,7 @@
 import { createToken } from "../../controllers/tokens/createToken";
 import { createUser } from "../../controllers/users/createUser";
 import { getUserByEmail } from "../../controllers/users/getUserByEmail";
+import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
 import { createUserVerification } from "../../controllers/users/verifications/createUserVerification";
 import { sendUserVerificationEmail } from "../../controllers/users/verifications/sendUserVerificationEmail";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
@@ -61,6 +62,8 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
     
         if(token === null)
             return Response.json({ success: false, message: "Something went wrong." });
+
+        const subscribed = await hasUserSubscription(env.DATABASE, user.id);
     
         return Response.json({
             success: true,
@@ -70,7 +73,8 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
             user: {
                 id: user.id,
                 name: user.firstname + " " + user.lastname,
-                avatar: user.avatar
+                avatar: user.avatar,
+                subscribed: (subscribed > 0)
             }
         });
     }

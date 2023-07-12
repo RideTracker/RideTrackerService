@@ -1,6 +1,7 @@
 import { createToken } from "../../controllers/tokens/createToken";
 import { deleteToken } from "../../controllers/tokens/deleteToken";
 import { getUserById } from "../../controllers/users/getUserById";
+import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
 
 export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) {
     await deleteToken(env.DATABASE, request.key.id);
@@ -20,6 +21,8 @@ export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) 
 
     if(!token)
         return Response.json({ success: false });
+
+    const subscribed = await hasUserSubscription(env.DATABASE, user.id);
         
     return Response.json({
         success: true,
@@ -29,7 +32,8 @@ export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) 
         user: {
             id: user.id,
             name: user.firstname + " " + user.lastname,
-            avatar: user.avatar
+            avatar: user.avatar,
+            subscribed: (subscribed > 0)
         }
     });
 };
