@@ -90,7 +90,7 @@ export default function createRouter() {
         });
     });
 
-    router.post("/api/store/subscription", withParams, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
+    router.post("/api/store/subscription", withAuth, withParams, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
 
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
