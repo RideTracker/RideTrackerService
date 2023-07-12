@@ -70,6 +70,16 @@ CREATE TABLE IF NOT EXISTS "user_follows" (
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")
 );
+DROP TABLE IF EXISTS "user_subscriptions";
+CREATE TABLE IF NOT EXISTS "user_subscriptions" (
+    "id"    varchar(255) NOT NULL,
+    "user" varchar(255) NOT NULL,
+    "token" TEXT NOT NULL,
+    "product" TEXT NOT NULL,
+    "expires" double NOT NULL,
+    "timestamp" double NOT NULL,
+    PRIMARY KEY("id")
+);
 DROP TABLE IF EXISTS "tokens";
 CREATE TABLE IF NOT EXISTS "tokens" (
 	"id"	varchar(255) NOT NULL,

@@ -36,6 +36,7 @@ import { Token } from "../models/token";
 import { createMessageRequestSchema, handleCreateMessageRequest } from "../routes/message";
 import { handleUserDeletionRequest } from "../routes/user/delete";
 import getGoogleAuthKey from "../controllers/google/getGoogleAuthKey";
+import { handleStoreSubscriptionRequest, storeSubscriptionRequestSchema } from "../routes/store/subscription";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -89,23 +90,7 @@ export default function createRouter() {
         });
     });
 
-    router.get("/api/subscription/:subscription/:token", withParams, async (request: RequestWithKey, env: Env) => {
-        const { subscription, token } = request.params;
-
-        const accessToken = await getGoogleAuthKey(env, [
-            "https://www.googleapis.com/auth/androidpublisher"
-        ]);
-
-        const response = await fetch(`https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.norasoderlund.ridetrackerapp/purchases/subscriptions/${subscription}/tokens/${token}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-
-        const result = await response.json();
-
-        return Response.json(result);
-    });
+    router.post("/api/store/subscription", withParams, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
 
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
