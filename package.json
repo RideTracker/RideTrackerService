@@ -20,7 +20,7 @@
     "@cfworker/json-schema": "^1.12.5",
     "@googlemaps/polyline-codec": "^1.0.28",
     "@ridetracker/discordwebhooksclient": "^0.9.0",
-    "geolib": "^3.3.3",
+    "geolib": "^3.3.4",
     "itty-router": "^3.0.12",
     "itty-router-extras": "^0.4.2",
     "js-base64": "^3.7.5"
