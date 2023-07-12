@@ -35,6 +35,7 @@ import { handleStatusRequest, statusRequestSchema } from "../routes/status";
 import { Token } from "../models/token";
 import { createMessageRequestSchema, handleCreateMessageRequest } from "../routes/message";
 import { handleUserDeletionRequest } from "../routes/user/delete";
+import { GoogleAuth } from "google-auth-library";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -86,6 +87,35 @@ export default function createRouter() {
             ping: "pong",
             success: true
         });
+    });
+
+    router.get("/api/subscription/:subscription/:token", withParams, async (request: RequestWithKey, env: Env) => {
+        const { subscription, token } = request.params;
+
+        const auth = new GoogleAuth({
+            credentials: {
+                "type": "service_account",
+                "private_key": env.GOOGLE_AUTH_PRIVATE_KEY,
+                "client_email": env.GOOGLE_AUTH_CLIENT_EMAIL,
+                "client_id": env.GOOGLE_AUTH_CLIENT_ID,
+                "universe_domain": "googleapis.com"
+            },
+            scopes: [
+                "https://www.googleapis.com/auth/androidpublisher"
+            ]
+        });
+
+        const accessToken = await auth.getAccessToken();
+
+        const response = await fetch(`https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.norasoderlund.ridetrackerapp/purchases/subscriptions/${subscription}/tokens/${token}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+
+        const result = await response.json();
+
+        return Response.json(result);
     });
 
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
