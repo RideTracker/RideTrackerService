@@ -15,9 +15,7 @@ declare type Env = {
 
     GOOGLE_MAPS_API_TOKEN: string;
 
-    GOOGLE_AUTH_PRIVATE_KEY: string;
-    GOOGLE_AUTH_CLIENT_ID: string;
-    GOOGLE_AUTH_CLIENT_EMAIL: string;
+    GOOGLE_AUTH_CREDENTIALS: string;
 
     GITHUB_SHA: string | undefined;
 };

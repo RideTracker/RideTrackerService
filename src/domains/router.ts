@@ -92,7 +92,9 @@ export default function createRouter() {
     router.get("/api/subscription/:subscription/:token", withParams, async (request: RequestWithKey, env: Env) => {
         const { subscription, token } = request.params;
 
-        const accessToken = await getGoogleAuthKey(env);
+        const accessToken = await getGoogleAuthKey(env, [
+            "https://www.googleapis.com/auth/androidpublisher"
+        ]);
 
         const response = await fetch(`https://androidpublisher.googleapis.com/androidpublisher/v3/applications/com.norasoderlund.ridetrackerapp/purchases/subscriptions/${subscription}/tokens/${token}`, {
             headers: {

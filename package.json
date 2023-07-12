@@ -14,15 +14,18 @@
   "scripts": {
     "start": "wrangler dev",
     "database": "wrangler d1 execute ridetracker-dev --local --file=./database.sql",
-    "test": "vitest run"
+    "test": "vitest run",
+    "key": "node key.js"
   },
   "dependencies": {
     "@cfworker/json-schema": "^1.12.5",
     "@googlemaps/polyline-codec": "^1.0.28",
     "@ridetracker/discordwebhooksclient": "^0.9.0",
+    "cloudflare-workers-and-google-oauth": "^1.2.0",
     "geolib": "^3.3.3",
+    "install": "^0.13.0",
     "itty-router": "^3.0.12",
     "itty-router-extras": "^0.4.2",
-    "js-base64": "^3.7.5"
+    "npm": "^9.8.0"
   }
 }
