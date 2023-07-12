@@ -23,6 +23,6 @@
     "geolib": "^3.3.3",
     "google-auth-library": "^8.9.0",
     "itty-router": "^3.0.12",
-    "itty-router-extras": "^0.4.2"
+    "itty-router-extras": "^0.4.5"
   }
 }
