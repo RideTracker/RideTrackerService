@@ -38,6 +38,8 @@ import { handleUserDeletionRequest } from "../routes/user/delete";
 import getGoogleAuthKey from "../controllers/google/getGoogleAuthKey";
 import { handleStoreSubscriptionRequest, storeSubscriptionRequestSchema } from "../routes/store/subscription";
 import { handleStoreCouponDevRequest, storeCouponDevRequestSchema } from "../routes/store/coupons/dev";
+import { handlePollRequest, pollRequestSchema } from "../routes/polls/[pollId]";
+import { handlePollInputAnswerRequest, pollInputAnswerRequestSchema } from "../routes/polls/inputs/[inputId]/answer";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -79,6 +81,9 @@ export default function createRouter() {
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
     
+    router.get("/api/polls/:pollId", withAuth, withParams, withSchema(pollRequestSchema), handlePollRequest);
+    router.post("/api/polls/:pollId/inputs/:inputId/answer", withAuth, withParams, withContent, withSchema(pollInputAnswerRequestSchema), handlePollInputAnswerRequest);
+
     router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
     router.delete("/api/user/delete", withAuth, handleUserDeletionRequest);
 
