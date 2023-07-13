@@ -41,6 +41,7 @@ import { handleStoreCouponDevRequest, storeCouponDevRequestSchema } from "../rou
 import { handlePollRequest, pollRequestSchema } from "../routes/polls/[pollId]";
 import { handlePollInputAnswerRequest, pollInputAnswerRequestSchema } from "../routes/polls/inputs/[inputId]/answer";
 import { handleProfileFollowRequest, profileFollowRequestSchema } from "../routes/profiles/[profileId]/follow";
+import { withSubscription } from "../middlewares/subscription";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -59,9 +60,9 @@ export default function createRouter() {
     router.post("/api/feed", withAuth, withContent, withSchema(feedRequestSchema), handleFeedRequest);
     router.get("/api/status", withParams, withSchema(statusRequestSchema), handleStatusRequest);
 
-    router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
-    router.get("/api/maps/search", withAuth, withSchema(mapsSearchSchema), handleMapsSearchRequest);
-    router.post("/api/maps/routes", withAuth, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
+    router.get("/api/maps/geocode", withAuth, withSubscription, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
+    router.get("/api/maps/search", withAuth, withSubscription, withSchema(mapsSearchSchema), handleMapsSearchRequest);
+    router.post("/api/maps/routes", withAuth, withSubscription, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
     
     router.get("/api/bikes", withAuth, handleBikesRequest);
     router.post("/api/bikes/create", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
