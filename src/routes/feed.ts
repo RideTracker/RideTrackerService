@@ -78,8 +78,8 @@ export async function handleFeedRequest(request: RequestWithKey, env: Env) {
         }),
 
         offsets: {
-            activities: (offsets.activities) + Math.min(5, activities.length),
-            polls: (offsets.polls) + Math.min(1, polls.length)
+            activities: offsets.activities + 7,
+            polls: offsets.polls + 1
         },
 
         limits: {
