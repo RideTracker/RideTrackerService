@@ -5,6 +5,11 @@ import { Poll } from "../models/Poll";
 
 export const feedRequestSchema = {
     query: {
+        relations: {
+            type: "string",
+            required: true
+        },
+
         search: {
             type: "string",
             required: false
@@ -47,10 +52,10 @@ export const feedRequestSchema = {
 };
 
 export async function handleFeedRequest(request: RequestWithKey, env: Env) {
-    const { search, order, timeline, includePolls } = request.query;
+    const { relations, search, order, timeline, includePolls } = request.query;
     const { offsets } = request.content;
 
-    const activities = await getActivitiesByFeed(env.DATABASE, offsets.activities, 7, search, order, timeline);
+    const activities = await getActivitiesByFeed(env.DATABASE, request.key.user, offsets.activities, 7, relations, search, order, timeline);
 
     if(!activities)
         return new Response(undefined, { status: 404, statusText: "Not Found" });
