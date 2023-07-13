@@ -42,6 +42,7 @@ import { handlePollRequest, pollRequestSchema } from "../routes/polls/[pollId]";
 import { handlePollInputAnswerRequest, pollInputAnswerRequestSchema } from "../routes/polls/inputs/[inputId]/answer";
 import { handleProfileFollowRequest, profileFollowRequestSchema } from "../routes/profiles/[profileId]/follow";
 import { withSubscription } from "../middlewares/subscription";
+import { handleStoreProductsRequest } from "../routes/store/products";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -99,6 +100,7 @@ export default function createRouter() {
         });
     });
 
+    router.get("/api/store/products", withAuth, handleStoreProductsRequest);
     router.post("/api/store/subscription", withAuth, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
     router.post("/api/store/coupons/dev", withStaging, withAuth, withContent, withSchema(storeCouponDevRequestSchema), handleStoreCouponDevRequest);
 
