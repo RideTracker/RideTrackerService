@@ -40,6 +40,7 @@ import { handleStoreSubscriptionRequest, storeSubscriptionRequestSchema } from "
 import { handleStoreCouponDevRequest, storeCouponDevRequestSchema } from "../routes/store/coupons/dev";
 import { handlePollRequest, pollRequestSchema } from "../routes/polls/[pollId]";
 import { handlePollInputAnswerRequest, pollInputAnswerRequestSchema } from "../routes/polls/inputs/[inputId]/answer";
+import { handleProfileFollowRequest, profileFollowRequestSchema } from "../routes/profiles/[profileId]/follow";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -80,6 +81,7 @@ export default function createRouter() {
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
     router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
+    router.post("/api/profiles/:userId/follow", withAuth, withParams, withContent, withSchema(profileFollowRequestSchema), handleProfileFollowRequest);
     
     router.get("/api/polls/:pollId", withAuth, withParams, withSchema(pollRequestSchema), handlePollRequest);
     router.post("/api/polls/:pollId/inputs/:inputId/answer", withAuth, withParams, withContent, withSchema(pollInputAnswerRequestSchema), handlePollInputAnswerRequest);
