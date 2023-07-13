@@ -81,13 +81,31 @@ CREATE TABLE IF NOT EXISTS "user_subscriptions" (
     PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "store_coupons";
-CREATE TABLE IF EXISTS "store_coupons" (
+CREATE TABLE IF NOT EXISTS "store_coupons" (
     "id" varchar(255) NOT NULL,
     "token" TEXT NOT NULL,
     "product" TEXT NOT NULL,
     "duration" double NOT NULL,
     "expires" double NOT NULL,
     "timestamp" double NOT NULL,
+    PRIMARY KEY("id")
+);
+DROP TABLE IF EXISTS "polls";
+CREATE TABLE IF NOT EXISTS "polls" (
+    "id" varchar(255) NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT DEFAULT NULL,
+    "timestamp" double NOT NULL,
+    PRIMARY KEY("id")
+);
+DROP TABLE IF EXISTS "poll_inputs";
+CREATE TABLE IF NOT EXISTS "poll_inputs" (
+    "id" varchar(255) NOT NULL,
+    "poll" varchar(255) NOT NULL,
+    "title" TEXT NOT NULL,
+    "type" TEXT DEFAULT NULL,
+    "choices" TEXT DEFAULT NULL,
+    "index" double NOT NULL
     PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "tokens";

@@ -53,7 +53,7 @@ export default function createRouter() {
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
     router.post("/api/auth/renew", withAuth, handleAuthRenewRequest);
     
-    router.get("/api/feed", withAuth, withSchema(feedRequestSchema), handleFeedRequest);
+    router.post("/api/feed", withAuth, withContent, withSchema(feedRequestSchema), handleFeedRequest);
     router.get("/api/status", withParams, withSchema(statusRequestSchema), handleStatusRequest);
 
     router.get("/api/maps/geocode", withAuth, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
