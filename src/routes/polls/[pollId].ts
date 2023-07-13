@@ -40,7 +40,7 @@ export async function handlePollRequest(request: RequestWithKey, env: Env) {
                     id: input.id,
                     title: input.title,
                     type: input.type,
-                    choice: input.choices,
+                    choices: input.choices,
                     index: input.index
                 };
             }),
