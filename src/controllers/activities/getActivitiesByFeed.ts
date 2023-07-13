@@ -40,46 +40,59 @@ function getSortByOrder(order?: string) {
     }
 };
 
-function getRelationsQuery(relations: string) {
+function getRelationsQuery(relations: string, index: number) {
     switch(relations) {
         default:
         case "everyone":
             return null;
 
         case "following":
-            return "(SELECT COUNT(id) FROM user_follows WHERE user = ?4 AND follow = activities.user) IS NOT 0";
+            return "(SELECT COUNT(id) FROM user_follows WHERE user = ?" + index + " AND follow = activities.user) IS NOT 0";
 
         case "following_or_follows":
-            return "(SELECT COUNT(id) FROM user_follows WHERE (user = ?4 AND follow = activities.user) OR (user = activities.user AND follow = ?4)) IS NOT 0";
+            return "(SELECT COUNT(id) FROM user_follows WHERE (user = ?" + index + " AND follow = activities.user) OR (user = activities.user AND follow = ?" + index + ")) IS NOT 0";
     }
 };
 
 export async function getActivitiesByFeed(database: D1Database, userId: string, offset: number, limit: number, relations: string, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
-    const relationsQuery = getRelationsQuery(relations);
+    
+    const binds: any[] = [ timestamp, offset, limit ];
     
     if(search?.length) {
+        binds.push(search);
+
+        const relationsQuery = getRelationsQuery(relations, binds.length + 1);
+
+        if(relationsQuery)
+            binds.push(userId);
+
         const query = await database.prepare(
             "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (" +
-            "  (LOWER(activities.title) LIKE '%' || LOWER(?5) || '%')" +
-            "  OR (LOWER(activities.description) LIKE '%' || LOWER(?5) || '%')" +
-            "  OR (LOWER(users.firstname) || ' ' || LOWER(users.lastname) LIKE '%' || LOWER(?5) || '%')" +
-            "  OR (LOWER(activities.start_area) LIKE '%' || LOWER(?5) || '%')" +
-            "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?5) || '%')" +
+            "  (LOWER(activities.title) LIKE '%' || LOWER(?4) || '%')" +
+            "  OR (LOWER(activities.description) LIKE '%' || LOWER(?4) || '%')" +
+            "  OR (LOWER(users.firstname) || ' ' || LOWER(users.lastname) LIKE '%' || LOWER(?4) || '%')" +
+            "  OR (LOWER(activities.start_area) LIKE '%' || LOWER(?4) || '%')" +
+            "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?4) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?1) AND activities.status = 'processed'" +
             ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +
             " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2"
-            ).bind(timestamp, offset, limit, userId, search).all<Activity>();
+            ).bind(...binds).all<Activity>();
     
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE (activities.status = 'processed' AND activities.timestamp > ?1) " + ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) + " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2").bind(timestamp, offset, limit, userId).all<Activity>();
+    const relationsQuery = getRelationsQuery(relations, binds.length + 1);
+
+    if(relationsQuery)
+        binds.push(userId);
+
+    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE (activities.status = 'processed' AND activities.timestamp > ?1) " + ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) + " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2").bind(...binds).all<Activity>();
 
     return query.results ?? [];
 };
