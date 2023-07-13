@@ -80,6 +80,16 @@ CREATE TABLE IF NOT EXISTS "user_subscriptions" (
     "timestamp" double NOT NULL,
     PRIMARY KEY("id")
 );
+DROP TABLE IF EXISTS "store_coupons";
+CREATE TABLE IF EXISTS "store_coupons" (
+    "id" varchar(255) NOT NULL,
+    "token" TEXT NOT NULL,
+    "product" TEXT NOT NULL,
+    "duration" double NOT NULL,
+    "expires" double NOT NULL,
+    "timestamp" double NOT NULL,
+    PRIMARY KEY("id")
+);
 DROP TABLE IF EXISTS "tokens";
 CREATE TABLE IF NOT EXISTS "tokens" (
 	"id"	varchar(255) NOT NULL,

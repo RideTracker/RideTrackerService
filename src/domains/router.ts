@@ -37,6 +37,7 @@ import { createMessageRequestSchema, handleCreateMessageRequest } from "../route
 import { handleUserDeletionRequest } from "../routes/user/delete";
 import getGoogleAuthKey from "../controllers/google/getGoogleAuthKey";
 import { handleStoreSubscriptionRequest, storeSubscriptionRequestSchema } from "../routes/store/subscription";
+import { handleStoreCouponDevRequest, storeCouponDevRequestSchema } from "../routes/store/coupons/dev";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -90,7 +91,8 @@ export default function createRouter() {
         });
     });
 
-    router.post("/api/store/subscription", withAuth, withParams, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
+    router.post("/api/store/subscription", withAuth, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
+    router.post("/api/store/coupons/dev", withStaging, withAuth, withContent, withSchema(storeCouponDevRequestSchema), handleStoreCouponDevRequest);
 
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
