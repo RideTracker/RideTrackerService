@@ -105,7 +105,17 @@ CREATE TABLE IF NOT EXISTS "poll_inputs" (
     "title" TEXT NOT NULL,
     "type" TEXT DEFAULT NULL,
     "choices" TEXT DEFAULT NULL,
-    "index" double NOT NULL
+    "index" double NOT NULL,
+    PRIMARY KEY("id")
+);
+DROP TABLE IF EXISTS "poll_answers";
+CREATE TABLE IF NOT EXISTS "poll_answers" (
+    "id" varchar(255) NOT NULL,
+    "poll" varchar(255) NOT NULL,
+    "input" varchar(255) NOT NULL,
+    "user" varchar(255) NOT NULL,
+    "answer" TEXT NOT NULL,
+    "timestamp" double NOT NULL
     PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "tokens";
