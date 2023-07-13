@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS "poll_answers" (
     "input" varchar(255) NOT NULL,
     "user" varchar(255) NOT NULL,
     "answer" TEXT NOT NULL,
-    "timestamp" double NOT NULL
+    "timestamp" double NOT NULL,
     PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "tokens";
