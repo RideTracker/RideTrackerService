@@ -50,7 +50,7 @@ export async function handleFeedRequest(request: RequestWithKey, env: Env) {
     const { search, order, timeline, includePolls } = request.query;
     const { offsets } = request.content;
 
-    const activities = await getActivitiesByFeed(env.DATABASE, offsets.activities, search, order, timeline);
+    const activities = await getActivitiesByFeed(env.DATABASE, offsets.activities, 7, search, order, timeline);
 
     if(!activities)
         return new Response(undefined, { status: 404, statusText: "Not Found" });
@@ -80,6 +80,11 @@ export async function handleFeedRequest(request: RequestWithKey, env: Env) {
         offsets: {
             activities: (offsets.activities) + Math.min(5, activities.length),
             polls: (offsets.polls) + Math.min(1, polls.length)
+        },
+
+        limits: {
+            activities: 7,
+            polls: 1
         }
     });
 };

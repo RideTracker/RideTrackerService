@@ -40,7 +40,7 @@ function getSortByOrder(order?: string) {
     }
 };
 
-export async function getActivitiesByFeed(database: D1Database, offset: number, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
+export async function getActivitiesByFeed(database: D1Database, offset: number, limit: number, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
     
@@ -57,13 +57,13 @@ export async function getActivitiesByFeed(database: D1Database, offset: number, 
             "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?1) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?2) AND activities.status = 'processed'" +
-            " ORDER BY (" + sort + ") DESC LIMIT 5 OFFSET ?3"
-            ).bind(search, timestamp, offset).all<Activity>();
+            " ORDER BY (" + sort + ") DESC LIMIT ?4 OFFSET ?3"
+            ).bind(search, timestamp, offset, limit).all<Activity>();
     
         return query.results ?? [];
     }
 
-    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE activities.status = 'processed' AND activities.timestamp > ?1 ORDER BY (" + sort + ") DESC LIMIT 5 OFFSET ?2").bind(timestamp, offset).all<Activity>();
+    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE activities.status = 'processed' AND activities.timestamp > ?1 ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2").bind(timestamp, offset, limit).all<Activity>();
 
     return query.results ?? [];
 };
