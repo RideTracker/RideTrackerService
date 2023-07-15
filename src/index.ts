@@ -12,6 +12,8 @@ import { FeatureFlags, VersionFeatureFlags } from "./models/FeatureFlags";
 import { updateActivityAreas } from "./controllers/activities/updateActivityAreas";
 import { getActivitySummaryCount } from "./controllers/activities/summary/getActivitySummaryCount";
 import { updateActivityStatus } from "./controllers/activities/updateActivityStatus";
+import { encode } from "@googlemaps/polyline-codec";
+import { updateActivityPolylines } from "./controllers/activities/updateActivityPolylines";
 
 const router = createRouter();
 
@@ -202,12 +204,25 @@ export class ActivityDurableObject {
             const speedSum = speeds.reduce((a, b) => a + b, 0);
             const averageSpeed = (speedSum / speeds.length) || 0;
 
+            const polylines = [];
+        
+            for(let session of sessions) {
+                const path = [];
+        
+                for(let location of session.locations) {
+                    path.push([ location.coords.latitude, location.coords.longitude ]);
+                }
+        
+                polylines.push(encode(path, 5));
+            }
+
             await Promise.all([
                 createActivitySummary(this.env.DATABASE, activity.id, "distance", distance),
                 createActivitySummary(this.env.DATABASE, activity.id, "average_speed", averageSpeed),
                 createActivitySummary(this.env.DATABASE, activity.id, "elevation", elevation),
                 createActivitySummary(this.env.DATABASE, activity.id, "max_speed", maxSpeed),
-                updateActivityAreas(this.env.DATABASE, activity.id, startArea, finishArea)
+                updateActivityAreas(this.env.DATABASE, activity.id, startArea, finishArea),
+                updateActivityPolylines(this.env.DATABASE, activity.id, JSON.stringify(polylines))
             ]);
 
             await updatePersonalBestActivitySummary(this.env.DATABASE, activity.user);

@@ -88,19 +88,7 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const polylines = [];
-
-    for(let session of sessions) {
-        const path = [];
-
-        for(let location of session.locations) {
-            path.push([ location.coords.latitude, location.coords.longitude ]);
-        }
-
-        polylines.push(encode(path, 5));
-    }
-
-    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, JSON.stringify(polylines));
+    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, null);
 
     if(!activity)
         return Response.json({ success: false });
