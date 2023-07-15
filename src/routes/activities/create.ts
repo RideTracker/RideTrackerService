@@ -1,9 +1,6 @@
-import { encode } from "@googlemaps/polyline-codec";
 import { createActivity } from "../../controllers/activities/createActivity";
-import { createActivitySummary } from "../../controllers/activities/summary/createActivitySummary";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { Bike } from "../../models/bike";
-import { handleActivitySummaryRequest } from "./[activityId]/summary";
 import { triggerAlarm } from "../../controllers/alarms/triggerAlarm";
 
 export const createActivityRequestSchema = {
@@ -100,13 +97,6 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
             "activity": activity.id
         }
     });
-    
-    /*await handleActivitySummaryRequest({
-        key: request.key,
-        params: {
-            activityId: activity.id
-        }
-    }, env);*/
 
     const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
     const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);

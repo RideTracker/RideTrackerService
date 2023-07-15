@@ -24,7 +24,6 @@ import { handleProfileActivitiesRequest, profileActivitiesRequestSchema } from "
 import { handleProfileBikesRequest, profileBikesRequestSchema } from "../routes/profiles/bikes";
 import { handleBikeRequest, bikeRequestSchema } from "../routes/bikes/index";
 import { handleUploadUserAvatarRequest, uploadUserImageRequestSchema } from "../routes/user/avatar";
-import { activitySummaryRequestSchema, handleActivitySummaryRequest } from "../routes/activities/[activityId]/summary";
 import { createActivityRequestSchema, handleCreateActivityRequest } from "../routes/activities/create";
 import { activityCommentSummaryRequestSchema, handleActivityCommentsSummaryRequest } from "../routes/activities/comments/summary";
 import { authLoginVerificationCodeSchema, handleAuthLoginVerificationCodeRequest } from "../routes/auth/login/verification/[verificationId]/code";
@@ -73,7 +72,6 @@ export default function createRouter() {
     
     router.post("/api/activities/create", withAuth, withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
-    router.get("/api/activities/:activityId/summary", withAuth, withParams, withSchema(activitySummaryRequestSchema), handleActivitySummaryRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
     router.get("/api/activities/:activityId/comments/summary", withAuth, withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
