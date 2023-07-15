@@ -92,7 +92,7 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const activity = await createActivity(env.DATABASE, request.key.user, visibility, title ?? null, description ?? null, bikeId ?? null, null);
+    const activity = await createActivity(env.DATABASE, request.key.user, visibility);
 
     if(!activity)
         return Response.json({ success: false });

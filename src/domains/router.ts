@@ -43,6 +43,7 @@ import { handleProfileFollowRequest, profileFollowRequestSchema } from "../route
 import { withSubscription } from "../middlewares/subscription";
 import { handleStoreProductsRequest } from "../routes/store/products";
 import { activityDeleteRequestSchema, handleActivityDeleteRequest } from "../routes/activities/[activityId]/delete";
+import { handleUpdateActivityRequest, updateActivityRequestSchema } from "../routes/activities/[activityId]/update";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -73,6 +74,7 @@ export default function createRouter() {
     
     router.post("/api/activities/create", withAuth, withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
     router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
+    router.post("/api/activities/:activityId/update", withAuth, withParams, withContent, withSchema(updateActivityRequestSchema), handleUpdateActivityRequest);
     router.delete("/api/activities/:activityId/delete", withAuth, withParams, withSchema(activityDeleteRequestSchema), handleActivityDeleteRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
