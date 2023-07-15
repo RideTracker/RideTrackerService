@@ -50,6 +50,7 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
             startArea: activity.startArea,
             finishArea: activity.finishArea,
             bike: activity.bike,
+            visibility: activity.visibility,
 
             user: {
                 id: acitivityAuthor.id,

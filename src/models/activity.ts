@@ -1,3 +1,6 @@
+import { ActivityStatus } from "./ActivityStatus";
+import { ActivityVisibility } from "./ActivityVisibility";
+
 export type Activity = {
     id: string;
     user: string;
@@ -7,6 +10,7 @@ export type Activity = {
     polylines: string | null;
     startArea: string | null;
     finishArea: string | null;
-    status: "created" | "processed" | "deleted";
+    status: ActivityStatus;
+    visibility: ActivityVisibility;
     timestamp: number;
 };

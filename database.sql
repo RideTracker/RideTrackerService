@@ -146,6 +146,7 @@ DROP TABLE IF EXISTS "activities";
 CREATE TABLE IF NOT EXISTS "activities" (
 	"id"	varchar(255) NOT NULL,
 	"user"	varchar(255) NOT NULL,
+	"visibility"	TEXT NOT NULL,
 	"title"	varchar(255) DEFAULT NULL,
 	"description"	varchar(255) DEFAULT NULL,
 	"bike"	varchar(255) DEFAULT NULL,

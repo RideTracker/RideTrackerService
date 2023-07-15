@@ -17,6 +17,13 @@ export const createActivityRequestSchema = {
             type: "string"
         },
 
+        visibility: {
+            type: "enum",
+            required: true,
+
+            schema: [ "PUBLIC", "FOLLOWERS_ONLY", "UNLISTED", "PRIVATE" ]
+        },
+
         sessions: {
             type: "array",
             required: true,
@@ -78,14 +85,14 @@ export const createActivityRequestSchema = {
 };
 
 export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
-    const { title, description, bikeId, sessions } = request.content;
+    const { visibility, title, description, bikeId, sessions } = request.content;
 
     const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
     
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const activity = await createActivity(env.DATABASE, request.key.user, title ?? null, description ?? null, bikeId ?? null, null);
+    const activity = await createActivity(env.DATABASE, request.key.user, visibility, title ?? null, description ?? null, bikeId ?? null, null);
 
     if(!activity)
         return Response.json({ success: false });
