@@ -5,6 +5,7 @@ import { getActivityLikeByUser } from "../../controllers/activities/likes/getAct
 import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getActivitySummaryById } from "../../controllers/activities/summary/getActivitySummaryById";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
+import { getBikeModel } from "../../controllers/bikes/getBikeModel";
 import { getUserById } from "../../controllers/users/getUserById";
 
 export const activityRequestSchema = {
@@ -41,6 +42,8 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
 
     const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
 
+    const activityBikeModel = (activity.bike) && await getBikeModel(env.DATABASE, activity.bike);
+
     return Response.json({
         success: true,
 
@@ -51,7 +54,10 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
             polylines: activity.polylines && JSON.parse(activity.polylines),
             startArea: activity.startArea,
             finishArea: activity.finishArea,
-            bike: activity.bike,
+            bike: (activity.bike) && {
+                id: activity.bike,
+                model: activityBikeModel
+            },
             visibility: activity.visibility,
 
             user: {
