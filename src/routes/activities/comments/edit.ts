@@ -33,6 +33,9 @@ export async function handleActivityEditCommentRequest(request: RequestWithKey, 
     if(!activity)
         return Response.json({ success: false });
 
+    if(activity.status === "deleted")
+        return Response.json({ success: false });
+
     const comment = await getActivityCommentById(env.DATABASE, commentId);
 
     if(!comment)

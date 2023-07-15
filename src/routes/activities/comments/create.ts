@@ -30,6 +30,9 @@ export async function handleActivityCreateCommentRequest(request: RequestWithKey
 
     if(!activity)
         return Response.json({ success: false });
+
+    if(activity.status === "deleted")
+        return Response.json({ success: false });
     
     const comment = await createActivityComment(env.DATABASE, id, request.key.user, parent ?? null, message);
 

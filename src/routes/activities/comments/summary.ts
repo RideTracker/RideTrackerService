@@ -1,5 +1,6 @@
 import { getActivityCommentsCount } from "../../../controllers/activities/comments/getActivityCommentsCount";
 import { getActivityCommentsSummary } from "../../../controllers/activities/comments/getActivityCommentsSummary";
+import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { getUserById } from "../../../controllers/users/getUserById";
 
 export const activityCommentSummaryRequestSchema = {
@@ -13,6 +14,11 @@ export const activityCommentSummaryRequestSchema = {
 
 export async function handleActivityCommentsSummaryRequest(request: RequestWithKey, env: Env) {
     const { activityId } = request.params;
+
+    const activity = await getActivityById(env.DATABASE, activityId);
+
+    if(activity.status === "deleted")
+        return Response.json({ success: false });
 
     const comments = await getActivityCommentsSummary(env.DATABASE, activityId);
 
