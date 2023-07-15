@@ -7,6 +7,6 @@ export type Activity = {
     polylines: string | null;
     startArea: string | null;
     finishArea: string | null;
-    status: string;
+    status: "created" | "processed" | "deleted";
     timestamp: number;
 };
