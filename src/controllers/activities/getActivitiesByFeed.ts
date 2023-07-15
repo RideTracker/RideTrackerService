@@ -58,41 +58,43 @@ export async function getActivitiesByFeed(database: D1Database, userId: string, 
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
     
-    const binds: any[] = [ timestamp, offset, limit ];
+    const binds: any[] = [ timestamp, offset, limit, userId ];
     
     if(search?.length) {
         binds.push(search);
 
-        const relationsQuery = getRelationsQuery(relations, binds.length + 1);
-
-        if(relationsQuery)
-            binds.push(userId);
+        const relationsQuery = getRelationsQuery(relations, 4);
 
         const query = await database.prepare(
             "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (" +
-            "  (LOWER(activities.title) LIKE '%' || LOWER(?4) || '%')" +
-            "  OR (LOWER(activities.description) LIKE '%' || LOWER(?4) || '%')" +
-            "  OR (LOWER(users.firstname) || ' ' || LOWER(users.lastname) LIKE '%' || LOWER(?4) || '%')" +
-            "  OR (LOWER(activities.start_area) LIKE '%' || LOWER(?4) || '%')" +
-            "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?4) || '%')" +
+            "  (LOWER(activities.title) LIKE '%' || LOWER(?5) || '%')" +
+            "  OR (LOWER(activities.description) LIKE '%' || LOWER(?5) || '%')" +
+            "  OR (LOWER(users.firstname) || ' ' || LOWER(users.lastname) LIKE '%' || LOWER(?5) || '%')" +
+            "  OR (LOWER(activities.start_area) LIKE '%' || LOWER(?5) || '%')" +
+            "  OR (LOWER(activities.finish_area) LIKE '%' || LOWER(?5) || '%')" +
             " ) AND" +
             " (activities.timestamp > ?1) AND activities.status = 'processed'" +
             ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +
+            " AND ((activities.visibility = 'PUBLIC') OR (activities.visibility = 'PRIVATE' AND activities.user = ?4) OR (activities.visibility = 'FOLLOWERS_ONLY' AND (activities.user = ?4 OR (SELECT COUNT(id) FROM user_follows WHERE user = activities.user AND follow = ?4) IS NOT 0)))" +
             " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2"
             ).bind(...binds).all<Activity>();
     
         return query.results ?? [];
     }
 
-    const relationsQuery = getRelationsQuery(relations, binds.length + 1);
+    const relationsQuery = getRelationsQuery(relations, 4);
 
-    if(relationsQuery)
-        binds.push(userId);
-
-    const query = await database.prepare("SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities WHERE (activities.status = 'processed' AND activities.timestamp > ?1) " + ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) + " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2").bind(...binds).all<Activity>();
+    const query = await database.prepare(
+        "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
+        " WHERE" +
+        " (activities.status = 'processed' AND activities.timestamp > ?1) " +
+        ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +
+        " AND ((activities.visibility = 'PUBLIC') OR (activities.visibility = 'PRIVATE' AND activities.user = ?4) OR (activities.visibility = 'FOLLOWERS_ONLY' AND (activities.user = ?4 OR (SELECT COUNT(id) FROM user_follows WHERE user = activities.user AND follow = ?4) IS NOT 0)))" +
+        " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2"
+        ).bind(...binds).all<Activity>();
 
     return query.results ?? [];
 };
