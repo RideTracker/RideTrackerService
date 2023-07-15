@@ -24,6 +24,9 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
     if(!activity)
         return Response.json({ success: false });
 
+    if(activity.status === "deleted")
+        return Response.json({ success: false, deleted: true });
+
     const acitivityAuthor = await getUserById(env.DATABASE, activity.user);
 
     if(!acitivityAuthor)
