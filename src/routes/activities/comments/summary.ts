@@ -18,12 +18,12 @@ export async function handleActivityCommentsSummaryRequest(request: RequestWithK
     const activity = await getActivityById(env.DATABASE, activityId);
 
     if(activity.status === "deleted")
-        return Response.json({ success: false });
+        return Response.json({ success: false, message: "Activity has been deleted." });
 
     const comments = await getActivityCommentsSummary(env.DATABASE, activityId);
 
     if(!comments)
-        return Response.json({ success: false });
+        return Response.json({ success: false, message: "!comments" });
 
     const count = await getActivityCommentsCount(env.DATABASE, activityId);
 
