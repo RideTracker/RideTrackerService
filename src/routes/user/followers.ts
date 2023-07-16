@@ -12,26 +12,26 @@ export const userFollowersRequestSchema = {
 export async function handleUserFollowersRequest(request: RequestWithKey, env: Env) {
     const { offset } = request.content;
 
-    const following = await getUserFollowersByFeed(env.DATABASE, request.key.user, offset, 10);
+    const followers = await getUserFollowersByFeed(env.DATABASE, request.key.user, offset, 10);
 
     return Response.json({
         success: true,
 
-        following: following.map((following) => {
+        followers: followers.map((followers) => {
             return {
-                id: following.id,
-                timestamp: following.timestamp,
-                followsBack: following.followsBack,
+                id: followers.id,
+                timestamp: followers.timestamp,
+                followsBack: followers.followsBack,
 
                 follow: {
-                    id: following.follow,
-                    name: following.firstname + " " + following.lastname,
-                    avatar: following.avatar
+                    id: followers.follow,
+                    name: followers.firstname + " " + followers.lastname,
+                    avatar: followers.avatar
                 }
             };
         }),
 
-        offset: offset + following.length,
+        offset: offset + followers.length,
         limit: 10
     });
 };
