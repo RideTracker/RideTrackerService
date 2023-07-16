@@ -30,6 +30,7 @@ export async function handleUserFollowingRequest(request: RequestWithKey, env: E
             };
         }),
 
-        offset: offset + following.length
+        offset: offset + following.length,
+        limit: 10
     });
 };
