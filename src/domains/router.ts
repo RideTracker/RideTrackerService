@@ -45,6 +45,8 @@ import { handleStoreProductsRequest } from "../routes/store/products";
 import { activityDeleteRequestSchema, handleActivityDeleteRequest } from "../routes/activities/[activityId]/delete";
 import { handleUpdateActivityRequest, updateActivityRequestSchema } from "../routes/activities/[activityId]/update";
 import { activityCommentRequestSchema, handleActivityCommentRequest } from "../routes/activities/comments/index";
+import { handleUserFollowingRequest, userFollowingRequestSchema } from "../routes/user/following";
+import { handleUserFollowersRequest, userFollowersRequestSchema } from "../routes/user/followers";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -93,6 +95,8 @@ export default function createRouter() {
     router.post("/api/polls/:pollId/inputs/:inputId/answer", withAuth, withParams, withContent, withSchema(pollInputAnswerRequestSchema), handlePollInputAnswerRequest);
 
     router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
+    router.post("/api/user/following", withAuth, withContent, withSchema(userFollowingRequestSchema), handleUserFollowingRequest);
+    router.post("/api/user/followers", withAuth, withContent, withSchema(userFollowersRequestSchema), handleUserFollowersRequest);
     router.delete("/api/user/delete", withAuth, handleUserDeletionRequest);
 
     router.post("/api/message", withAuth, withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);
