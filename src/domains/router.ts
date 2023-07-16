@@ -78,9 +78,9 @@ export default function createRouter() {
     router.post("/api/activities/:activityId/update", withAuth, withParams, withContent, withSchema(updateActivityRequestSchema), handleUpdateActivityRequest);
     router.delete("/api/activities/:activityId/delete", withAuth, withParams, withSchema(activityDeleteRequestSchema), handleActivityDeleteRequest);
     router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
+    router.get("/api/activities/:activityId/comments/summary", withAuth, withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
     router.get("/api/activities/:id/comments/:commentId", withAuth, withParams, withSchema(activityCommentRequestSchema), handleActivityCommentRequest);
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
-    router.get("/api/activities/:activityId/comments/summary", withAuth, withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
