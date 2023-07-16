@@ -4,6 +4,7 @@ export type UserFollowersFeedQuery = UserFollow & {
     firstname: string;
     lastname: string;
     avatar: string;
+    followsBack: number;
 };
 
 export async function getUserFollowersByFeed(database: D1Database, userId: string, offset: number, limit: number): Promise<UserFollowersFeedQuery[]> {

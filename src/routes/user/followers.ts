@@ -21,6 +21,7 @@ export async function handleUserFollowersRequest(request: RequestWithKey, env: E
             return {
                 id: following.id,
                 timestamp: following.timestamp,
+                followsBack: following.followsBack,
 
                 follow: {
                     id: following.follow,
