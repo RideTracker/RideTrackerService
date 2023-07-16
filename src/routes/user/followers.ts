@@ -24,7 +24,7 @@ export async function handleUserFollowersRequest(request: RequestWithKey, env: E
                 followsBack: followers.followsBack,
 
                 follow: {
-                    id: followers.follow,
+                    id: followers.user,
                     name: followers.firstname + " " + followers.lastname,
                     avatar: followers.avatar
                 }
