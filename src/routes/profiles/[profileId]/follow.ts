@@ -25,6 +25,9 @@ export async function handleProfileFollowRequest(request: RequestWithKey, env: E
     const { userId } = request.params;
     const { follow } = request.content;
 
+    if(request.key.user === userId)
+        return Response.json({ success: false });
+
     const user = await getUserById(env.DATABASE, userId);
 
     if(!user)
