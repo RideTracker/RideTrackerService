@@ -13,6 +13,16 @@ export const createRouteRequestSchema = {
             type: "string",
             required: true
         },
+        
+        distance: {
+            type: "number",
+            required: true
+        },
+        
+        duration: {
+            type: "string",
+            required: true
+        },
 
         waypoints: {
             type: "array",
@@ -90,7 +100,7 @@ export const createRouteRequestSchema = {
 };
 
 export async function handleCreateRouteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
-    const { polyline, waypoints } = request.content;
+    const { polyline, distance, duration, waypoints } = request.content;
 
     const decodedPolyline = decode(polyline);
 
@@ -99,7 +109,7 @@ export async function handleCreateRouteRequest(request: RequestWithKey, env: Env
     if(!center)
         return Response.json({ success: false });
 
-    const route = await createRoute(env.DATABASE, request.key.user, center, polyline);
+    const route = await createRoute(env.DATABASE, request.key.user, center, polyline, distance, duration);
 
     if(!route)
         return Response.json({ success: false });

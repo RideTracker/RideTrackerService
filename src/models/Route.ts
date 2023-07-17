@@ -4,5 +4,7 @@ export type Route = {
     centerLatitude: number;
     centerLongitude: number;
     polyline: string;
+    distance: number;
+    duration: string;
     timestamp: number;
 };
