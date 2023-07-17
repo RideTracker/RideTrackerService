@@ -14,20 +14,20 @@ export async function handleUserRoutesRequest(request: RequestWithKey, env: Env)
     const { offset } = request.content;
 
     const routes = await getRoutesByUserFeed(env.DATABASE, request.key.user, offset, 5);
-    const routesWaypoints = await getRoutesWaypoints(env.DATABASE, routes.map((route) => route.id));
+    const routesWaypoints = (routes.length)?(await getRoutesWaypoints(env.DATABASE, routes.map((route) => route.id))):(undefined);
 
     return Response.json({
         success: true,
 
         routes: routes.map((route) => {
-            const routeWaypoints = routesWaypoints.filter((routeWaypoint) => routeWaypoint.route === route.id);
+            const routeWaypoints = routesWaypoints?.filter((routeWaypoint) => routeWaypoint.route === route.id);
             
             return {
                 id: route.id,
                 polyline: route.polyline,
                 timestamp: route.timestamp,
 
-                waypoints: routeWaypoints.map((routeWaypoint) => {
+                waypoints: routeWaypoints?.map((routeWaypoint) => {
                     return {
                         id: routeWaypoint.id,
                         type: routeWaypoint.type,
