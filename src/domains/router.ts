@@ -47,6 +47,8 @@ import { handleUpdateActivityRequest, updateActivityRequestSchema } from "../rou
 import { activityCommentRequestSchema, handleActivityCommentRequest } from "../routes/activities/comments/index";
 import { handleUserFollowingRequest, userFollowingRequestSchema } from "../routes/user/following";
 import { handleUserFollowersRequest, userFollowersRequestSchema } from "../routes/user/followers";
+import { createRouteRequestSchema, handleCreateRouteRequest } from "../routes/routes/create";
+import { handleUserRoutesRequest, userRoutesRequestSchema } from "../routes/routes/feed/user";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -85,6 +87,9 @@ export default function createRouter() {
     router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
     router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
+
+    router.post("/api/routes/create", withAuth, withContent, withSchema(createRouteRequestSchema), handleCreateRouteRequest);
+    router.post("/api/routes/feed/user", withAuth, withContent, withSchema(userRoutesRequestSchema), handleUserRoutesRequest);
 
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
     router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);

@@ -163,3 +163,30 @@ CREATE TABLE IF NOT EXISTS "messages" (
 	"message"	TEXT DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );
+DROP TABLE IF EXISTS "routes";
+CREATE TABLE IF NOT EXISTS "routes" (
+	"id" VARCHAR(255) NOT NULL,
+	"user" VARCHAR(255) NOT NULL,
+	"center_latitude" DOUBLE NOT NULL,
+	"center_longitude" DOUBLE NOT NULL,
+	"polyline" TEXT NOT NULL,
+	"timestamp" DOUBLE NOT NULL,
+	PRIMARY KEY("id")
+);
+DROP TABLE IF EXISTS "route_waypoints";
+CREATE TABLE IF NOT EXISTS "route_waypoints" (
+	"id" VARCHAR(255) NOT NULL,
+	"route" VARCHAR(255) NOT NULL,
+	"name" VARCHAR(255) NOT NULL,
+	"type" VARCHAR(255) NOT NULL,
+	"place_id" VARCHAR(255) DEFAULT NULL,
+	"latitude" DOUBLE DEFAULT NULL,
+	"longitude" DOUBLE DEFAULT NULL,
+	"coordinates" TEXT DEFAULT NULL,
+	"polyline" TEXT DEFAULT NULL,
+	"distance" DOUBLE DEFAULT NULL,
+	"duration" VARCHAR(255) DEFAULT NULL,
+	"index" INTEGER NOT NULL,
+	"timestamp" DOUBLE NOT NULL,
+	PRIMARY KEY("id")
+);
