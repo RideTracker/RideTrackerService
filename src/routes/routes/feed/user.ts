@@ -28,6 +28,7 @@ export async function handleUserRoutesRequest(request: RequestWithKey, env: Env)
                 timestamp: route.timestamp,
                 distance: route.distance,
                 duration: route.duration,
+                color: route.color,
 
                 waypoints: routeWaypoints?.map((routeWaypoint) => {
                     return {

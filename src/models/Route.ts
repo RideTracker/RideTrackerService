@@ -6,5 +6,6 @@ export type Route = {
     polyline: string;
     distance: number;
     duration: string;
+    color: string;
     timestamp: number;
 };

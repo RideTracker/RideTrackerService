@@ -173,6 +173,7 @@ CREATE TABLE IF NOT EXISTS "routes" (
 	"timestamp" DOUBLE NOT NULL,
 	"distance" DOUBLE NOT NULL,
 	"duration" VARCHAR(255) NOT NULL,
+	"color" VARCHAR(255) NOT NULL,
 	PRIMARY KEY("id")
 );
 DROP TABLE IF EXISTS "route_waypoints";

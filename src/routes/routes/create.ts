@@ -109,7 +109,12 @@ export async function handleCreateRouteRequest(request: RequestWithKey, env: Env
     if(!center)
         return Response.json({ success: false });
 
-    const route = await createRoute(env.DATABASE, request.key.user, center, polyline, distance, duration);
+    const color: number[] = [];
+
+    for(let index = 0; index < 3; index++)
+        color.push(Math.floor(Math.random() * 200));
+
+    const route = await createRoute(env.DATABASE, request.key.user, center, polyline, distance, duration, JSON.stringify(color));
 
     if(!route)
         return Response.json({ success: false });
