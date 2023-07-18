@@ -102,7 +102,12 @@ export const createRouteRequestSchema = {
 export async function handleCreateRouteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
     const { polyline, distance, duration, waypoints } = request.content;
 
-    const decodedPolyline = decode(polyline);
+    const decodedPolyline = decode(polyline).map((coordinate) => {
+        return {
+            latitude: coordinate[0],
+            longitude: coordinate[1]
+        }
+    });
 
     const center = getCenter(decodedPolyline);
 
