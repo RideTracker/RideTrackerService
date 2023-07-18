@@ -49,6 +49,7 @@ import { handleUserFollowingRequest, userFollowingRequestSchema } from "../route
 import { handleUserFollowersRequest, userFollowersRequestSchema } from "../routes/user/followers";
 import { createRouteRequestSchema, handleCreateRouteRequest } from "../routes/routes/create";
 import { handleUserRoutesRequest, userRoutesRequestSchema } from "../routes/routes/feed/user";
+import { handleRoutesFeedRequest, routesFeedRequestSchema } from "../routes/routes/feed";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -89,6 +90,7 @@ export default function createRouter() {
     router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
     router.post("/api/routes/create", withAuth, withContent, withSchema(createRouteRequestSchema), handleCreateRouteRequest);
+    router.post("/api/routes/feed", withAuth, withContent, withSchema(routesFeedRequestSchema), handleRoutesFeedRequest);
     router.post("/api/routes/feed/user", withAuth, withContent, withSchema(userRoutesRequestSchema), handleUserRoutesRequest);
 
     router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
