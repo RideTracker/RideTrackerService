@@ -14,6 +14,7 @@ import { getActivitySummaryCount } from "./controllers/activities/summary/getAct
 import { updateActivityStatus } from "./controllers/activities/updateActivityStatus";
 import { encode } from "@googlemaps/polyline-codec";
 import { updateActivityPolylines } from "./controllers/activities/updateActivityPolylines";
+import UserAgent from "./models/UserAgent";
 
 const router = createRouter();
 
@@ -54,7 +55,7 @@ export default {
         }
     },
 
-    async fetch(request: Request, env: Env, context: EventContext<Env, string, null>) {
+    async fetch(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
         try {
             const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
 
@@ -87,6 +88,8 @@ export default {
                     statusText: "Gone"
                 });
             }
+
+            request.userAgent = new UserAgent(userAgent);
 
             const response = await getRequest(request, env, context, versionFeatureFlags);
 

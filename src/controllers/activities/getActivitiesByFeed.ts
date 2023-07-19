@@ -66,7 +66,7 @@ export async function getActivitiesByFeed(database: D1Database, userId: string, 
         const relationsQuery = getRelationsQuery(relations, 4);
 
         const query = await database.prepare(
-            "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
+            "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, local_id AS localId, activities.* FROM activities" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
             " (" +
@@ -88,7 +88,7 @@ export async function getActivitiesByFeed(database: D1Database, userId: string, 
     const relationsQuery = getRelationsQuery(relations, 4);
 
     const query = await database.prepare(
-        "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, activities.* FROM activities" +
+        "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, local_id AS localId, activities.* FROM activities" +
         " WHERE" +
         " (activities.status = 'processed' AND activities.timestamp > ?1) " +
         ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +

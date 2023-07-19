@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS "activities" (
 	"start_area"	TEXT DEFAULT NULL,
 	"finish_area"	TEXT DEFAULT NULL,
 	"status"	TEXT DEFAULT NULL,
+	"local_id"	varchar(255) DEFAULT NULL,
 	"timestamp"	double NOT NULL
 );
 DROP TABLE IF EXISTS "messages";

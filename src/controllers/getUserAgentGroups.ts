@@ -10,9 +10,9 @@ export default function getUserAgentGroups(userAgent: string | null) {
     return {
         client: match.groups.client,
         version: {
-            major: match.groups.major,
-            minor: match.groups.minor,
-            patch: match.groups.patch,
+            major: parseInt(match.groups.major),
+            minor: parseInt(match.groups.minor),
+            patch: parseInt(match.groups.patch),
 
             toString: () => {
                 return `${match.groups?.major}.${match.groups?.minor}.${match.groups?.patch}`;

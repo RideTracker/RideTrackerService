@@ -2,18 +2,12 @@ import { createActivity } from "../../controllers/activities/createActivity";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { Bike } from "../../models/bike";
 import { triggerAlarm } from "../../controllers/alarms/triggerAlarm";
+import { VersionFeatureFlags } from "../../models/FeatureFlags";
+import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
 
 export const createActivityRequestSchema = {
     content: {
-        title: {
-            type: "string"
-        },
-        
-        description: {
-            type: "string"
-        },
-        
-        bikeId: {
+        localId: {
             type: "string"
         },
 
@@ -84,15 +78,23 @@ export const createActivityRequestSchema = {
     }
 };
 
-export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
-    const { visibility, title, description, bikeId, sessions } = request.content;
+export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, versionFeatureFlags: VersionFeatureFlags) {
+    let { localId } = request.content;
+    const { visibility, sessions } = request.content;
 
-    const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
-    
-    if(bikeId && bike?.user !== request.key.user)
-        return Response.json({ success: false });
+    // localId was introduced in RideTrackerApp-0.9.3
+    if(!localId) {
+        if(request.userAgent.isBelow("RideTrackerApp-0.9.3")) {
+            localId = sessions[0].id;
+        }
+    }
 
-    const activity = await createActivity(env.DATABASE, request.key.user, visibility);
+    const existingActivity = await getActivityByLocalId(env.DATABASE, request.key.user, localId);
+
+    if(existingActivity)
+        return Response.json({ success: false, message: "You have already uploaded this activity!" });
+
+    const activity = await createActivity(env.DATABASE, request.key.user, visibility, localId);
 
     if(!activity)
         return Response.json({ success: false });
