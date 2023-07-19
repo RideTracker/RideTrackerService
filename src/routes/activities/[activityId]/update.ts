@@ -28,8 +28,6 @@ export const updateActivityRequestSchema = {
 
         visibility: {
             type: "enum",
-            required: true,
-
             schema: [ "PUBLIC", "FOLLOWERS_ONLY", "UNLISTED", "PRIVATE" ]
         }
     }
@@ -37,7 +35,8 @@ export const updateActivityRequestSchema = {
 
 export async function handleUpdateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
     const { activityId } = request.params;
-    const { visibility, title, description, bikeId } = request.content;
+    const { title, description, bikeId } = request.content;
+    let { visibility } = request.content;
 
     const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
     
@@ -48,6 +47,13 @@ export async function handleUpdateActivityRequest(request: RequestWithKey, env: 
 
     if(!activity)
         return Response.json({ success: false });
+
+    // visibility was bugged when creating an activity in RideTrackerApp-0.9.2
+    if(!visibility) {
+        if(request.userAgent.isBelow("RideTrackerApp-0.9.3")) {
+            visibility = activity.visibility;
+        }
+    }
 
     if(activity.status === "deleted")
         return Response.json({ success: false });
