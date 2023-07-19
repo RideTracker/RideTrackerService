@@ -55,7 +55,7 @@ export async function handleUpdateActivityRequest(request: RequestWithKey, env: 
     if(activity.user !== request.key.user)
         return Response.json({ success: false });
 
-    await updateActivity(env.DATABASE, activity.id, visibility, title, description, bike?.id ?? null);
+    await updateActivity(env.DATABASE, activity.id, visibility, title ?? null, description ?? null, bike?.id ?? null);
 
     return Response.json({
         success: true
