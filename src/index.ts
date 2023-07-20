@@ -65,13 +65,26 @@ export default {
 
             console.log(JSON.stringify(analyticsClient));
             
-            context.waitUntil(createError({ ...analyticsClient, fetcher: env.ANALYTICS_SERVICE.fetch }, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                request: {
-                    userAgent: request.headers.get("User-Agent"),
-                    resource: `${request.method} ${request.url}`,
-                    remoteAddress: request.headers.get("CF-Connecting-IP")
-                }
-            })));
+            context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    error: "SERVER_ERROR",
+                    data: "Test.",
+                    service: "RideTrackerService",
+                    environment: env.ENVIRONMENT,
+                    payload: JSON.stringify({
+                        request: {
+                            userAgent: request.headers.get("User-Agent"),
+                            resource: `${request.method} ${request.url}`,
+                            remoteAddress: request.headers.get("CF-Connecting-IP")
+                        }
+                    })
+                })
+            }));
 
         }
         try {
