@@ -56,6 +56,22 @@ export default {
     },
 
     async fetch(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+        {
+            const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
+                identity: env.ANALYTICS_CLIENT_ID,
+                key: env.ANALYTICS_CLIENT_TOKEN,
+                type: "Basic"
+            });
+            
+            context.waitUntil(createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
+                request: {
+                    userAgent: request.headers.get("User-Agent"),
+                    resource: `${request.method} ${request.url}`,
+                    remoteAddress: request.headers.get("CF-Connecting-IP")
+                }
+            })));
+
+        }
         try {
             const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
 
