@@ -1,5 +1,5 @@
 import UserAgent from "./models/UserAgent";
-import { Token } from "./models/token";
+import { Token } from "@ridetracker/authservice";
 
 declare global {
     interface Env {

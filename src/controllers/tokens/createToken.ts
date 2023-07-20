@@ -1,5 +1,4 @@
-import { TokenType } from "../../models/TokenType";
-import { Token } from "../../models/token";
+import { Token, TokenType } from "@ridetracker/authservice";
 
 export async function createToken(database: D1Database, key: string, type: TokenType, user?: string): Promise<Token | null> {
     const id = crypto.randomUUID();

@@ -1,11 +1,11 @@
 import { ThrowableRouter, withContent, withParams } from "itty-router-extras";
+import { Token, withAuth } from "@ridetracker/authservice";
 
 import { withSchema } from "../middlewares/schema";
 import { authLoginSchema, handleAuthLoginRequest } from "../routes/auth/login";
 import { authLoginVerificationSchema, handleAuthLoginVerificationRequest } from "../routes/auth/login/verify";
 import { authRegisterSchema, handleAuthRegisterRequest } from "../routes/auth/register";
 import { handleAuthRenewRequest } from "../routes/auth/renew";
-import { withAuth } from "../middlewares/auth";
 import { withStaging } from "../middlewares/staging";
 import { handleStagingVerificationRequest } from "../routes/staging/getVerificationCode";
 import { handleStagingDeleteUserRequest } from "../routes/staging/deleteUser";
@@ -31,10 +31,8 @@ import { handleMapsSearchRequest, mapsSearchSchema } from "../routes/maps/search
 import { handleMapsGeocodeRequest, mapsGeocodeSchema } from "../routes/maps/geocode";
 import { handleMapsRouteRequest, mapsRouteSchema } from "../routes/maps/route";
 import { handleStatusRequest, statusRequestSchema } from "../routes/status";
-import { Token } from "../models/token";
 import { createMessageRequestSchema, handleCreateMessageRequest } from "../routes/message";
 import { handleUserDeletionRequest } from "../routes/user/delete";
-import getGoogleAuthKey from "../controllers/google/getGoogleAuthKey";
 import { handleStoreSubscriptionRequest, storeSubscriptionRequestSchema } from "../routes/store/subscription";
 import { handleStoreCouponDevRequest, storeCouponDevRequestSchema } from "../routes/store/coupons/dev";
 import { handlePollRequest, pollRequestSchema } from "../routes/polls/[pollId]";
@@ -63,50 +61,50 @@ export default function createRouter() {
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.get("/api/auth/login/verify/:verificationId/code", withStaging, withParams, withSchema(authLoginVerificationCodeSchema), handleAuthLoginVerificationCodeRequest);
     router.post("/api/auth/register", withContent, withSchema(authRegisterSchema), handleAuthRegisterRequest);
-    router.post("/api/auth/renew", withAuth, handleAuthRenewRequest);
+    router.post("/api/auth/renew", withAuth("user", "DATABASE"), handleAuthRenewRequest);
     
-    router.post("/api/feed", withAuth, withContent, withSchema(feedRequestSchema), handleFeedRequest);
+    router.post("/api/feed", withAuth("user", "DATABASE"), withContent, withSchema(feedRequestSchema), handleFeedRequest);
     router.get("/api/status", withParams, withSchema(statusRequestSchema), handleStatusRequest);
 
-    router.get("/api/maps/geocode", withAuth, withSubscription, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
-    router.get("/api/maps/search", withAuth, withSubscription, withSchema(mapsSearchSchema), handleMapsSearchRequest);
-    router.post("/api/maps/routes", withAuth, withSubscription, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
+    router.get("/api/maps/geocode", withAuth("user", "DATABASE"), withSubscription, withSchema(mapsGeocodeSchema), handleMapsGeocodeRequest);
+    router.get("/api/maps/search", withAuth("user", "DATABASE"), withSubscription, withSchema(mapsSearchSchema), handleMapsSearchRequest);
+    router.post("/api/maps/routes", withAuth("user", "DATABASE"), withSubscription, withContent, withSchema(mapsRouteSchema), handleMapsRouteRequest);
     
-    router.get("/api/bikes", withAuth, handleBikesRequest);
-    router.post("/api/bikes/create", withAuth, withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
-    router.get("/api/bikes/:bikeId", withAuth, withSchema(bikeRequestSchema), handleBikeRequest);
-    router.post("/api/bikes/:bikeId/images", withAuth, withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
-    router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth, withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
+    router.get("/api/bikes", withAuth("user", "DATABASE"), handleBikesRequest);
+    router.post("/api/bikes/create", withAuth("user", "DATABASE"), withContent, withSchema(createBikeRequestSchema), handleCreateBikeRequest);
+    router.get("/api/bikes/:bikeId", withAuth("user", "DATABASE"), withSchema(bikeRequestSchema), handleBikeRequest);
+    router.post("/api/bikes/:bikeId/images", withAuth("user", "DATABASE"), withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
+    router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth("user", "DATABASE"), withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
     
-    router.post("/api/activities/create", withAuth, withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
-    router.get("/api/activities/:id", withAuth, withParams, withSchema(activityRequestSchema), handleActivityRequest);
-    router.post("/api/activities/:activityId/update", withAuth, withParams, withContent, withSchema(updateActivityRequestSchema), handleUpdateActivityRequest);
-    router.delete("/api/activities/:activityId/delete", withAuth, withParams, withSchema(activityDeleteRequestSchema), handleActivityDeleteRequest);
-    router.get("/api/activities/:id/comments", withAuth, withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
-    router.get("/api/activities/:activityId/comments/summary", withAuth, withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
-    router.get("/api/activities/:id/comments/:commentId", withAuth, withParams, withSchema(activityCommentRequestSchema), handleActivityCommentRequest);
-    router.post("/api/activities/:id/comments", withAuth, withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
-    router.patch("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
-    router.delete("/api/activities/:activityId/comments/:commentId", withAuth, withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
+    router.post("/api/activities/create", withAuth("user", "DATABASE"), withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
+    router.get("/api/activities/:id", withAuth("user", "DATABASE"), withParams, withSchema(activityRequestSchema), handleActivityRequest);
+    router.post("/api/activities/:activityId/update", withAuth("user", "DATABASE"), withParams, withContent, withSchema(updateActivityRequestSchema), handleUpdateActivityRequest);
+    router.delete("/api/activities/:activityId/delete", withAuth("user", "DATABASE"), withParams, withSchema(activityDeleteRequestSchema), handleActivityDeleteRequest);
+    router.get("/api/activities/:id/comments", withAuth("user", "DATABASE"), withParams, withSchema(activityRequestSchema), handleActivityCommentsRequest);
+    router.get("/api/activities/:activityId/comments/summary", withAuth("user", "DATABASE"), withParams, withSchema(activityCommentSummaryRequestSchema), handleActivityCommentsSummaryRequest);
+    router.get("/api/activities/:id/comments/:commentId", withAuth("user", "DATABASE"), withParams, withSchema(activityCommentRequestSchema), handleActivityCommentRequest);
+    router.post("/api/activities/:id/comments", withAuth("user", "DATABASE"), withParams, withContent, withSchema(activityCreateCommentRequestSchema), handleActivityCreateCommentRequest);
+    router.patch("/api/activities/:activityId/comments/:commentId", withAuth("user", "DATABASE"), withParams, withContent, withSchema(activityEditCommentRequestSchema), handleActivityEditCommentRequest);
+    router.delete("/api/activities/:activityId/comments/:commentId", withAuth("user", "DATABASE"), withParams, withSchema(activityDeleteCommentRequestSchema), handleActivityDeleteCommentRequest);
 
-    router.post("/api/routes/create", withAuth, withContent, withSchema(createRouteRequestSchema), handleCreateRouteRequest);
-    router.post("/api/routes/feed", withAuth, withContent, withSchema(routesFeedRequestSchema), handleRoutesFeedRequest);
-    router.post("/api/routes/feed/user", withAuth, withContent, withSchema(userRoutesRequestSchema), handleUserRoutesRequest);
+    router.post("/api/routes/create", withAuth("user", "DATABASE"), withContent, withSchema(createRouteRequestSchema), handleCreateRouteRequest);
+    router.post("/api/routes/feed", withAuth("user", "DATABASE"), withContent, withSchema(routesFeedRequestSchema), handleRoutesFeedRequest);
+    router.post("/api/routes/feed/user", withAuth("user", "DATABASE"), withContent, withSchema(userRoutesRequestSchema), handleUserRoutesRequest);
 
-    router.get("/api/profiles/:userId", withAuth, withParams, withSchema(profileRequestSchema), handleProfileRequest);
-    router.post("/api/profiles/:userId/activities", withAuth, withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
-    router.post("/api/profiles/:userId/bikes", withAuth, withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
-    router.post("/api/profiles/:userId/follow", withAuth, withParams, withContent, withSchema(profileFollowRequestSchema), handleProfileFollowRequest);
+    router.get("/api/profiles/:userId", withAuth("user", "DATABASE"), withParams, withSchema(profileRequestSchema), handleProfileRequest);
+    router.post("/api/profiles/:userId/activities", withAuth("user", "DATABASE"), withParams, withContent, withSchema(profileActivitiesRequestSchema), handleProfileActivitiesRequest);
+    router.post("/api/profiles/:userId/bikes", withAuth("user", "DATABASE"), withParams, withContent, withSchema(profileBikesRequestSchema), handleProfileBikesRequest);
+    router.post("/api/profiles/:userId/follow", withAuth("user", "DATABASE"), withParams, withContent, withSchema(profileFollowRequestSchema), handleProfileFollowRequest);
     
-    router.get("/api/polls/:pollId", withAuth, withParams, withSchema(pollRequestSchema), handlePollRequest);
-    router.post("/api/polls/:pollId/inputs/:inputId/answer", withAuth, withParams, withContent, withSchema(pollInputAnswerRequestSchema), handlePollInputAnswerRequest);
+    router.get("/api/polls/:pollId", withAuth("user", "DATABASE"), withParams, withSchema(pollRequestSchema), handlePollRequest);
+    router.post("/api/polls/:pollId/inputs/:inputId/answer", withAuth("user", "DATABASE"), withParams, withContent, withSchema(pollInputAnswerRequestSchema), handlePollInputAnswerRequest);
 
-    router.post("/api/user/avatar", withAuth, withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
-    router.post("/api/user/following", withAuth, withContent, withSchema(userFollowingRequestSchema), handleUserFollowingRequest);
-    router.post("/api/user/followers", withAuth, withContent, withSchema(userFollowersRequestSchema), handleUserFollowersRequest);
-    router.delete("/api/user/delete", withAuth, handleUserDeletionRequest);
+    router.post("/api/user/avatar", withAuth("user", "DATABASE"), withContent, withSchema(uploadUserImageRequestSchema), handleUploadUserAvatarRequest);
+    router.post("/api/user/following", withAuth("user", "DATABASE"), withContent, withSchema(userFollowingRequestSchema), handleUserFollowingRequest);
+    router.post("/api/user/followers", withAuth("user", "DATABASE"), withContent, withSchema(userFollowersRequestSchema), handleUserFollowersRequest);
+    router.delete("/api/user/delete", withAuth("user", "DATABASE"), handleUserDeletionRequest);
 
-    router.post("/api/message", withAuth, withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);
+    router.post("/api/message", withAuth("user", "DATABASE"), withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);
     
     router.get("/api/ping", withContent, async (request: RequestWithKey, env: Env) => {
         return Response.json({
@@ -115,9 +113,9 @@ export default function createRouter() {
         });
     });
 
-    router.get("/api/store/products", withAuth, handleStoreProductsRequest);
-    router.post("/api/store/subscription", withAuth, withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
-    router.post("/api/store/coupons/dev", withStaging, withAuth, withContent, withSchema(storeCouponDevRequestSchema), handleStoreCouponDevRequest);
+    router.get("/api/store/products", withAuth("user", "DATABASE"), handleStoreProductsRequest);
+    router.post("/api/store/subscription", withAuth("user", "DATABASE"), withContent, withSchema(storeSubscriptionRequestSchema), handleStoreSubscriptionRequest);
+    router.post("/api/store/coupons/dev", withStaging, withAuth("user", "DATABASE"), withContent, withSchema(storeCouponDevRequestSchema), handleStoreCouponDevRequest);
 
     router.post("/staging/register", withStaging, withContent, handleStagingDeleteUserRequest);
     router.post("/staging/verification", withStaging, withContent, handleStagingVerificationRequest);
