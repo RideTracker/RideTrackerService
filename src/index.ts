@@ -62,14 +62,20 @@ export default {
                 key: env.ANALYTICS_CLIENT_TOKEN,
                 type: "Basic"
             });
+
+            console.log(analyticsClient);
             
-            context.waitUntil(createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                request: {
-                    userAgent: request.headers.get("User-Agent"),
-                    resource: `${request.method} ${request.url}`,
-                    remoteAddress: request.headers.get("CF-Connecting-IP")
-                }
-            })));
+            context.waitUntil(new Promise(async (resolve) => {
+                const result = await createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
+                    request: {
+                        userAgent: request.headers.get("User-Agent"),
+                        resource: `${request.method} ${request.url}`,
+                        remoteAddress: request.headers.get("CF-Connecting-IP")
+                    }
+                }));
+
+                console.log(result);
+            }));
 
         }
         try {
