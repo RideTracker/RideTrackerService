@@ -61,7 +61,7 @@ export default {
                 identity: env.ANALYTICS_CLIENT_ID,
                 key: env.ANALYTICS_CLIENT_TOKEN,
                 type: "Basic"
-            }, env.ANALYTICS_SERVICE as any);
+            }, env.ANALYTICS_SERVICE.fetch);
 
             console.log(JSON.stringify(analyticsClient));
             
