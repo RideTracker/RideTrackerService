@@ -1,11 +1,9 @@
+import { TokenType } from "../../models/TokenType";
 import { Token } from "../../models/token";
-import { getTokenById } from "./getTokenById";
 
-export async function createToken(database: D1Database, key: string, user?: string): Promise<Token> {
+export async function createToken(database: D1Database, key: string, type: TokenType, user?: string): Promise<Token | null> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO tokens (id, key, user, timestamp) VALUES (?, ?, ?, ?)").bind(id, key, user, timestamp).run();
-    
-    return await getTokenById(database, id);
+    return await database.prepare("INSERT INTO tokens (id, key, type, user, timestamp) VALUES (?, ?, ?, ?, ?) RETURNING *").bind(id, key, type, user, timestamp).first<Token | null>();
 };

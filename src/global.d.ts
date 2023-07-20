@@ -29,6 +29,6 @@ declare global {
     
         userAgent: UserAgent;
         
-        key: Required<Token>;
+        key: Token;
     };
 };

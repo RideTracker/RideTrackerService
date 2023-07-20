@@ -17,7 +17,7 @@ export async function handleAuthRenewRequest(request: RequestWithKey, env: Env) 
     const keyArray = new Uint8Array(64);
     crypto.getRandomValues(keyArray);
     const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');
-    const token = await createToken(env.DATABASE, btoa(key), user.id);
+    const token = await createToken(env.DATABASE, btoa(key), "user", user.id);
 
     if(!token)
         return Response.json({ success: false });
