@@ -1,7 +1,3 @@
-import { createActivity } from "../../controllers/activities/createActivity";
-import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { Bike } from "../../models/bike";
-import { triggerAlarm } from "../../controllers/alarms/triggerAlarm";
 import createRoute from "../../controllers/routes/createRoute";
 import { decode } from "@googlemaps/polyline-codec";
 import { getCenter } from "geolib";

@@ -1,7 +1,5 @@
-import { createActivity } from "../../../controllers/activities/createActivity";
 import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
-import { triggerAlarm } from "../../../controllers/alarms/triggerAlarm";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { updateActivity } from "../../../controllers/activities/updateActivity";
 

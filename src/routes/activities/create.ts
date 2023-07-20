@@ -1,9 +1,7 @@
 import { createActivity } from "../../controllers/activities/createActivity";
-import { getBikeById } from "../../controllers/bikes/getBikeById";
-import { Bike } from "../../models/bike";
-import { triggerAlarm } from "../../controllers/alarms/triggerAlarm";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
+import AnalyticsClient, { createError } from "@ridetracker/analyticsclient";
 
 export const createActivityRequestSchema = {
     content: {
@@ -119,7 +117,24 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         if(!response.ok) {
             const text = await response.json();
 
-            return triggerAlarm(env, "Activity Processing Failed Alarm", "```\n" + JSON.stringify(text, null, 4) + "\n```");
+            const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
+                identity: env.ANALYTICS_CLIENT_ID,
+                key: env.ANALYTICS_CLIENT_TOKEN,
+                type: "Basic"
+            });
+            
+            return createError(analyticsClient, "ACTIVITY_PROCESSING_ERROR", "An error was thrown during the activity processing.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
+                response: {
+                    statusCode: response.status,
+                    statusText: response.statusText,
+                    responseBody: text
+                },
+                request: {
+                    userAgent: request.headers.get("User-Agent"),
+                    resource: `${request.method} ${request.url}`,
+                    remoteAddress: request.headers.get("CF-Connecting-IP")
+                }
+            }));
         }
     }));
 
