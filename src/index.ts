@@ -66,17 +66,15 @@ export default {
             console.log(JSON.stringify(analyticsClient));
             
             context.waitUntil(new Promise(async (resolve) => {
-                const response = await createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
+                const result = await createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
                     request: {
                         userAgent: request.headers.get("User-Agent"),
                         resource: `${request.method} ${request.url}`,
                         remoteAddress: request.headers.get("CF-Connecting-IP")
                     }
-                })) as any;
+                }));
                 
-                const result = await response.text();
-
-                console.log(result);
+                console.log(JSON.stringify(result));
             }));
 
         }
