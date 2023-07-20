@@ -1,7 +1,6 @@
 import { createActivity } from "../../controllers/activities/createActivity";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
-import AnalyticsClient, { createError } from "@ridetracker/analyticsclient";
 
 export const createActivityRequestSchema = {
     content: {
@@ -117,23 +116,30 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         if(!response.ok) {
             const text = await response.json();
 
-            const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                identity: env.ANALYTICS_CLIENT_ID,
-                key: env.ANALYTICS_CLIENT_TOKEN,
-                type: "Basic"
-            });
-            
-            return createError(analyticsClient, "ACTIVITY_PROCESSING_ERROR", "An error was thrown during the activity processing.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                response: {
-                    statusCode: response.status,
-                    statusText: response.statusText,
-                    responseBody: text
+            return context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                    "Content-Type": "application/json"
                 },
-                request: {
-                    userAgent: request.headers.get("User-Agent"),
-                    resource: `${request.method} ${request.url}`,
-                    remoteAddress: request.headers.get("CF-Connecting-IP")
-                }
+                body: JSON.stringify({
+                    error: "ACTIVITY_PROCESSING_ERROR",
+                    data: "An error was thrown during the activity processing.",
+                    service: "RideTrackerService",
+                    environment: env.ENVIRONMENT,
+                    payload: JSON.stringify({
+                        response: {
+                            statusCode: response.status,
+                            statusText: response.statusText,
+                            responseBody: text
+                        },
+                        request: {
+                            userAgent: request.headers.get("User-Agent"),
+                            resource: `${request.method} ${request.url}`,
+                            remoteAddress: request.headers.get("CF-Connecting-IP")
+                        }
+                    })
+                })
             }));
         }
     }));

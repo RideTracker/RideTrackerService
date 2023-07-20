@@ -14,7 +14,6 @@ import { updateActivityStatus } from "./controllers/activities/updateActivitySta
 import { encode } from "@googlemaps/polyline-codec";
 import { updateActivityPolylines } from "./controllers/activities/updateActivityPolylines";
 import UserAgent from "./models/UserAgent";
-import AnalyticsClient, { createError } from "@ridetracker/analyticsclient";
 
 const router = createRouter();
 
@@ -56,37 +55,7 @@ export default {
     },
 
     async fetch(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
-        {
-            const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                identity: env.ANALYTICS_CLIENT_ID,
-                key: env.ANALYTICS_CLIENT_TOKEN,
-                type: "Basic"
-            });
 
-            console.log(JSON.stringify(analyticsClient));
-            
-            context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    error: "SERVER_ERROR",
-                    data: "Test.",
-                    service: "RideTrackerService",
-                    environment: env.ENVIRONMENT,
-                    payload: JSON.stringify({
-                        request: {
-                            userAgent: request.headers.get("User-Agent"),
-                            resource: `${request.method} ${request.url}`,
-                            remoteAddress: request.headers.get("CF-Connecting-IP")
-                        }
-                    })
-                })
-            }));
-
-        }
         try {
             const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
 
@@ -105,19 +74,26 @@ export default {
             const versionFeatureFlags = featureFlags?.versions[userAgent.version.toString()];
 
             if(!versionFeatureFlags) {
-                const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                    identity: env.ANALYTICS_CLIENT_ID,
-                    key: env.ANALYTICS_CLIENT_TOKEN,
-                    type: "Basic"
-                });
-                
-                context.waitUntil(createError(analyticsClient, "INVALID_USER_AGENT_ERROR", "An invalid user agent was detected.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                    request: {
-                        userAgent: request.headers.get("User-Agent"),
-                        resource: `${request.method} ${request.url}`,
-                        remoteAddress: request.headers.get("CF-Connecting-IP")
-                    }
-                })));
+                context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        error: "INVALID_USER_AGENT_ERROR",
+                        data: "An invalid user agent was detected.",
+                        service: "RideTrackerService",
+                        environment: env.ENVIRONMENT,
+                        payload: JSON.stringify({
+                            request: {
+                                userAgent: request.headers.get("User-Agent"),
+                                resource: `${request.method} ${request.url}`,
+                                remoteAddress: request.headers.get("CF-Connecting-IP")
+                            }
+                        })
+                    })
+                }));
 
                 return new Response(undefined, {
                     status: 400,
@@ -137,27 +113,30 @@ export default {
             const response = await getRequest(request, env, context, versionFeatureFlags);
 
             if(response.status >= 500 && response.status <= 599) { 
-                const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                    identity: env.ANALYTICS_CLIENT_ID,
-                    key: env.ANALYTICS_CLIENT_TOKEN,
-                    type: "Basic"
-                });
-
-                context.waitUntil(new Promise<void>(async (resolve) => {
-                    await createError(analyticsClient, "SERVER_ERROR", "A response has returned a server error status code.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                        response: {
-                            statusCode: response.status,
-                            statusText: response.statusText,
-                            responseBody: await response.text()
-                        },
-                        request: {
-                            userAgent: request.headers.get("User-Agent"),
-                            resource: `${request.method} ${request.url}`,
-                            remoteAddress: request.headers.get("CF-Connecting-IP")
-                        }
-                    }));
-
-                    resolve();
+                context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        error: "SERVER_ERROR",
+                        data: "A response has returned a server error status code.",
+                        service: "RideTrackerService",
+                        environment: env.ENVIRONMENT,
+                        payload: JSON.stringify({
+                            response: {
+                                statusCode: response.status,
+                                statusText: response.statusText,
+                                responseBody: await response.text()
+                            },
+                            request: {
+                                userAgent: request.headers.get("User-Agent"),
+                                resource: `${request.method} ${request.url}`,
+                                remoteAddress: request.headers.get("CF-Connecting-IP")
+                            }
+                        })
+                    })
                 }));
             }
 
@@ -170,20 +149,27 @@ export default {
         catch(error: any) {
             if(error instanceof Error) {
                 if(error.message.startsWith("D1_")) {
-                    const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                        identity: env.ANALYTICS_CLIENT_ID,
-                        key: env.ANALYTICS_CLIENT_TOKEN,
-                        type: "Basic"
-                    });
-                    
-                    context.waitUntil(createError(analyticsClient, "D1_ERROR", "An error was thrown by D1 during execution.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                        error,
-                        request: {
-                            userAgent: request.headers.get("User-Agent"),
-                            resource: `${request.method} ${request.url}`,
-                            remoteAddress: request.headers.get("CF-Connecting-IP")
-                        }
-                    })));
+                    context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            error: "D1_ERROR",
+                            data: "An error was thrown by D1 during execution.",
+                            service: "RideTrackerService",
+                            environment: env.ENVIRONMENT,
+                            payload: JSON.stringify({
+                                error,
+                                request: {
+                                    userAgent: request.headers.get("User-Agent"),
+                                    resource: `${request.method} ${request.url}`,
+                                    remoteAddress: request.headers.get("CF-Connecting-IP")
+                                }
+                            })
+                        })
+                    }));
 
                     return new Response(undefined, {
                         status: 502,
@@ -192,20 +178,27 @@ export default {
                 }
             }
 
-            const analyticsClient = new AnalyticsClient(env.ANALYTICS_HOST, {
-                identity: env.ANALYTICS_CLIENT_ID,
-                key: env.ANALYTICS_CLIENT_TOKEN,
-                type: "Basic"
-            });
-            
-            context.waitUntil(createError(analyticsClient, "SERVER_ERROR", "An uncaught error was thrown during a response.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
-                error,
-                request: {
-                    userAgent: request.headers.get("User-Agent"),
-                    resource: `${request.method} ${request.url}`,
-                    remoteAddress: request.headers.get("CF-Connecting-IP")
-                }
-            })));
+            context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    error: "SERVER_ERROR",
+                    data: "An uncaught error was thrown during a response.",
+                    service: "RideTrackerService",
+                    environment: env.ENVIRONMENT,
+                    payload: JSON.stringify({
+                        error,
+                        request: {
+                            userAgent: request.headers.get("User-Agent"),
+                            resource: `${request.method} ${request.url}`,
+                            remoteAddress: request.headers.get("CF-Connecting-IP")
+                        }
+                    })
+                })
+            }));
 
             return new Response(undefined, {
                 status: 500,
@@ -325,20 +318,27 @@ export class ActivityDurableObject {
         catch(error: any) {
             if(error instanceof Error) {
                 if(error.message.startsWith("D1_")) {
-                    const analyticsClient = new AnalyticsClient(this.env.ANALYTICS_HOST, {
-                        identity: this.env.ANALYTICS_CLIENT_ID,
-                        key: this.env.ANALYTICS_CLIENT_TOKEN,
-                        type: "Basic"
-                    });
-                    
-                    this.state.waitUntil(createError(analyticsClient, "D1_ERROR", "An error was thrown by D1 during a durable object execution.", "RideTrackerService", this.env.ENVIRONMENT, JSON.stringify({
-                        error,
-                        request: {
-                            userAgent: request.headers.get("User-Agent"),
-                            resource: `${request.method} ${request.url}`,
-                            remoteAddress: request.headers.get("CF-Connecting-IP")
-                        }
-                    })));
+                    this.state.waitUntil(this.env.ANALYTICS_SERVICE.fetch(this.env.ANALYTICS_HOST + "/api/error", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Basic ${this.env.ANALYTICS_CLIENT_ID}:${this.env.ANALYTICS_CLIENT_TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            error: "D1_ERROR",
+                            data: "An error was thrown by D1 during a durable object execution.",
+                            service: "RideTrackerService",
+                            environment: this.env.ENVIRONMENT,
+                            payload: JSON.stringify({
+                                error,
+                                request: {
+                                    userAgent: request.headers.get("User-Agent"),
+                                    resource: `${request.method} ${request.url}`,
+                                    remoteAddress: request.headers.get("CF-Connecting-IP")
+                                }
+                            })
+                        })
+                    }));
 
                     return new Response(undefined, {
                         status: 502,
@@ -347,20 +347,27 @@ export class ActivityDurableObject {
                 }
             }
 
-            const analyticsClient = new AnalyticsClient(this.env.ANALYTICS_HOST, {
-                identity: this.env.ANALYTICS_CLIENT_ID,
-                key: this.env.ANALYTICS_CLIENT_TOKEN,
-                type: "Basic"
-            });
-            
-            this.state.waitUntil(createError(analyticsClient, "SERVER_ERROR", "An uncaught error was thrown during a durable object execution.", "RideTrackerService", this.env.ENVIRONMENT, JSON.stringify({
-                error,
-                request: {
-                    userAgent: request.headers.get("User-Agent"),
-                    resource: `${request.method} ${request.url}`,
-                    remoteAddress: request.headers.get("CF-Connecting-IP")
-                }
-            })));
+            this.state.waitUntil(this.env.ANALYTICS_SERVICE.fetch(this.env.ANALYTICS_HOST + "/api/error", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Basic ${this.env.ANALYTICS_CLIENT_ID}:${this.env.ANALYTICS_CLIENT_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    error: "SERVER_ERROR",
+                    data: "An uncaught error was thrown during a durable object execution.",
+                    service: "RideTrackerService",
+                    environment: this.env.ENVIRONMENT,
+                    payload: JSON.stringify({
+                        error,
+                        request: {
+                            userAgent: request.headers.get("User-Agent"),
+                            resource: `${request.method} ${request.url}`,
+                            remoteAddress: request.headers.get("CF-Connecting-IP")
+                        }
+                    })
+                })
+            }));
             
             return new Response(undefined, {
                 status: 500,
