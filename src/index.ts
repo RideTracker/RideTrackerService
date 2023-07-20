@@ -61,11 +61,11 @@ export default {
                 identity: env.ANALYTICS_CLIENT_ID,
                 key: env.ANALYTICS_CLIENT_TOKEN,
                 type: "Basic"
-            }, env.ANALYTICS_SERVICE.fetch);
+            });
 
             console.log(JSON.stringify(analyticsClient));
             
-            context.waitUntil(createError(analyticsClient, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
+            context.waitUntil(createError({ ...analyticsClient, fetcher: env.ANALYTICS_SERVICE.fetch }, "SERVER_ERROR", "Test.", "RideTrackerService", env.ENVIRONMENT, JSON.stringify({
                 request: {
                     userAgent: request.headers.get("User-Agent"),
                     resource: `${request.method} ${request.url}`,
