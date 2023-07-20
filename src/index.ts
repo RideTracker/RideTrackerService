@@ -74,7 +74,7 @@ export default {
             const versionFeatureFlags = featureFlags?.versions[userAgent.version.toString()];
 
             if(!versionFeatureFlags) {
-                await env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+                context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
                     method: "POST",
                     headers: {
                         "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
@@ -93,7 +93,7 @@ export default {
                             }
                         })
                     })
-                });
+                }));
 
                 return new Response(undefined, {
                     status: 400,
