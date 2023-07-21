@@ -48,6 +48,6 @@ jobs:
                     GOOGLE_AUTH_CREDENTIALS:'${{ secrets.GOOGLE_AUTH_CREDENTIALS }}'
                     DISCORD_WEBHOOKS_CLIENT_ID:${{ secrets.DISCORD_WEBHOOKS_CLIENT_ID }} 
                     DISCORD_WEBHOOKS_CLIENT_TOKEN:${{ secrets.DISCORD_WEBHOOKS_CLIENT_TOKEN }}
-                    ANALYTICS_HOST:${{ vars.ANALYTICS_HOST }} 
-                    ANALYTICS_CLIENT_ID:${{ vars.ANALYTICS_CLIENT_ID }} 
-                    ANALYTICS_CLIENT_TOKEN:${{ secrets.ANALYTICS_CLIENT_TOKEN }}
+                    ANALYTICS_SERVICE_HOST:${{ vars.ANALYTICS_HOST }} 
+                    ANALYTICS_SERVICE_CLIENT_ID:${{ vars.ANALYTICS_CLIENT_ID }} 
+                    ANALYTICS_SERVICE_CLIENT_TOKEN:${{ secrets.ANALYTICS_CLIENT_TOKEN }}

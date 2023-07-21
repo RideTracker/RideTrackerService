@@ -3,8 +3,6 @@ import { Token } from "@ridetracker/authservice";
 
 declare global {
     interface Env {
-        [key: string]: string | undefined;
-        
         DATABASE: D1Database;
         BUCKET: R2Bucket;
         ACTIVITY_DURABLE_OBJECT: DurableObjectNamespace;
@@ -15,12 +13,9 @@ declare global {
         CLOUDFLARE_API_IMAGES_TOKEN: string;
 
         ANALYTICS_SERVICE: Fetcher;
-        ANALYTICS_HOST: string;
-        ANALYTICS_CLIENT_ID: string;
-        ANALYTICS_CLIENT_TOKEN: string;
-
-        DISCORD_WEBHOOKS_CLIENT_ID: string;
-        DISCORD_WEBHOOKS_CLIENT_TOKEN: string;
+        ANALYTICS_SERVICE_HOST: string;
+        ANALYTICS_SERVICE_CLIENT_ID: string;
+        ANALYTICS_SERVICE_CLIENT_TOKEN: string;
 
         GOOGLE_MAPS_API_TOKEN: string;
 

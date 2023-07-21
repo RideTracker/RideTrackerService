@@ -116,10 +116,10 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         if(!response.ok) {
             const text = await response.json();
 
-            return context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_HOST + "/api/error", {
+            return context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_SERVICE_HOST + "/api/error", {
                 method: "POST",
                 headers: {
-                    "Authorization": `Basic ${env.ANALYTICS_CLIENT_ID}:${env.ANALYTICS_CLIENT_TOKEN}`,
+                    "Authorization": `Basic ${env.ANALYTICS_SERVICE_CLIENT_ID}:${env.ANALYTICS_SERVICE_CLIENT_TOKEN}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
