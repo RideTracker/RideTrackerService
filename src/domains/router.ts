@@ -48,6 +48,7 @@ import { handleUserFollowersRequest, userFollowersRequestSchema } from "../route
 import { createRouteRequestSchema, handleCreateRouteRequest } from "../routes/routes/create";
 import { handleUserRoutesRequest, userRoutesRequestSchema } from "../routes/routes/feed/user";
 import { handleRoutesFeedRequest, routesFeedRequestSchema } from "../routes/routes/feed";
+import { getActivitiesWithoutSummary } from "../controllers/activities/getActivitiesWithoutSummary";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -122,6 +123,24 @@ export default function createRouter() {
 
     router.get("/staging/github", withStaging, async (request: RequestWithKey, env: Env) => {
         return Response.json({ sha: env.GITHUB_SHA });
+    });
+
+    router.get("/staging/activities/process", withStaging, async (request: RequestWithKey, env: Env, context: ExecutionContext) => {
+        const activities = await getActivitiesWithoutSummary(env.DATABASE);
+                
+        const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
+        const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
+
+        activities.forEach((activity) => {
+            context.waitUntil(durableObject.fetch("https://service.ridetracker.app/scheduled", {
+                method: "POST",
+                body: JSON.stringify({
+                    activityId: activity.id
+                })
+            }));
+        });
+
+        return Response.json({ success: true });
     });
 
     router.get("/api/auth/random", withStaging, async (request: RequestWithKey, env: Env) => {
