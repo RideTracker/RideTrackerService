@@ -35,19 +35,19 @@ export async function handleAuthRegisterRequest(request: RequestWithKey, env: En
     const { firstname, lastname, email, password } = request.content;
 
     if(firstname.length < 2 || firstname.length > 128)
-        return Response.json({ success: false, message: "Firstname may not be less than 2 character and may not exceed 128 characters." });
+        return Response.json({ success: false, field: "name", message: "Firstname may not be less than 2 character and may not exceed 128 characters." });
         
     if(lastname.length < 2 || lastname.length > 128)
-        return Response.json({ success: false, message: "Lastname may not be less than 2 character and may not exceed 128 characters." });
+        return Response.json({ success: false, field: "name", message: "Lastname may not be less than 2 character and may not exceed 128 characters." });
 
     if(!email.includes('@') || !email.split('@')[1].includes('.') || email.endsWith('.'))
-        return Response.json({ success: false, message: "Email does not pass our spam validation, make sure it's a real email." });
+        return Response.json({ success: false, field: "email", message: "Email does not pass our spam validation, make sure it's a real email." });
 
     if((await getUserByEmail(env.DATABASE, email)) !== null)
-        return Response.json({ success: false, message: "Email is already registered to someone." });
+        return Response.json({ success: false, field: "email", message: "Email is already registered to someone." });
 
     if(password.length < 3)
-        return Response.json({ success: false, message: "Password must be at least 3 characters. We recommend a minimum of 6 characters or longer!" });
+        return Response.json({ success: false, field: "password", message: "Password must be at least 3 characters. We recommend a minimum of 6 characters or longer!" });
     
     const user = await createUser(env.DATABASE, firstname, lastname, email, await encryptPassword(password));
 
