@@ -4,5 +4,5 @@ export async function createDevice(database: D1Database, userId: string, name: s
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    return await database.prepare("INSERT INTO devices (id, user, name, timestamp) VALUES (?, ?, ?, ?) RETURNING *").bind(id, userId, timestamp).first<Device>();
+    return await database.prepare("INSERT INTO devices (id, user, name, timestamp) VALUES (?, ?, ?, ?) RETURNING *").bind(id, userId, name, timestamp).first<Device>();
 };

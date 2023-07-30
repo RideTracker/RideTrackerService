@@ -2,6 +2,7 @@
 CREATE TABLE "devices" (
 	"id"	varchar(255) NOT NULL,
 	"user"	varchar(255) NOT NULL,
+	"name"	varchar(255) NOT NULL,
 	"timestamp"	double NOT NULL,
 	PRIMARY KEY("id")
 );
