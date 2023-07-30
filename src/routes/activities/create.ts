@@ -1,6 +1,7 @@
 import { createActivity } from "../../controllers/activities/createActivity";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
+import { getDevice } from "../../controllers/devices/getDevice";
 
 export const createActivityRequestSchema = {
     content: {
@@ -79,6 +80,17 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     let { localId } = request.content;
     const { visibility, sessions } = request.content;
 
+    let userId = request.key.user;
+
+    if(request.key.type === "device") {
+        const device = await getDevice(env.DATABASE, request.key.user);
+
+        if(!device)
+            return Response.json({ success: false });
+        
+        userId = device.user;
+    }
+
     // localId was introduced in RideTrackerApp-0.9.3
     if(!localId) {
         if(request.userAgent.isBelow("RideTrackerApp-0.9.3")) {
@@ -86,12 +98,12 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         }
     }
 
-    const existingActivity = await getActivityByLocalId(env.DATABASE, request.key.user, localId);
+    const existingActivity = await getActivityByLocalId(env.DATABASE, userId, localId);
 
     if(existingActivity)
         return Response.json({ success: false, message: "You have already uploaded this activity!" });
 
-    const activity = await createActivity(env.DATABASE, request.key.user, visibility, localId);
+    const activity = await createActivity(env.DATABASE, userId, visibility, localId);
 
     if(!activity)
         return Response.json({ success: false });
@@ -99,7 +111,7 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     await env.BUCKET.put(`activities/${activity.id}.json`, JSON.stringify(sessions), {
         customMetadata: {
             "type": "activity",
-            "user": request.key.user,
+            "user": userId,
             "activity": activity.id
         }
     });

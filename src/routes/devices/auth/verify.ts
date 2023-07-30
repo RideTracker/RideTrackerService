@@ -1,11 +1,11 @@
-import { createDevice } from "../../controllers/devices/createDevice";
-import { createDeviceVerification } from "../../controllers/devices/verifications/createDeviceVerification";
-import { deleteDeviceVerification } from "../../controllers/devices/verifications/deleteDeviceVerification";
-import { getDeviceVerification } from "../../controllers/devices/verifications/getDeviceVerification";
-import { createToken } from "../../controllers/tokens/createToken";
-import { VersionFeatureFlags } from "../../models/FeatureFlags";
+import { createDevice } from "../../../controllers/devices/createDevice";
+import { createDeviceVerification } from "../../../controllers/devices/verifications/createDeviceVerification";
+import { deleteDeviceVerification } from "../../../controllers/devices/verifications/deleteDeviceVerification";
+import { getDeviceVerification } from "../../../controllers/devices/verifications/getDeviceVerification";
+import { createToken } from "../../../controllers/tokens/createToken";
+import { VersionFeatureFlags } from "../../../models/FeatureFlags";
 
-export async function handleDeviceVerificationRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
+export async function handleDeviceAuthVerificationRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
     const { name, code } = request.content;
 
     const trimmedCode = code.replace(/[^a-zA-Z0-9]/g, '');

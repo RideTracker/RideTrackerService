@@ -50,9 +50,10 @@ import { handleUserRoutesRequest, userRoutesRequestSchema } from "../routes/rout
 import { handleRoutesFeedRequest, routesFeedRequestSchema } from "../routes/routes/feed";
 import { getActivitiesWithoutSummary } from "../controllers/activities/getActivitiesWithoutSummary";
 import { handleNewDeviceRequest } from "../routes/devices/new";
-import { handleDeviceVerificationRequest } from "../routes/devices/verify";
+import { handleDeviceAuthVerificationRequest } from "../routes/devices/auth/verify";
 import { handleDeviceAuthRenewRequest } from "../routes/devices/auth/renew";
 import { handleDevicesRequest } from "../routes/devices";
+import { handleDeviceAuthLoginRequest } from "../routes/devices/auth/login";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -81,7 +82,7 @@ export default function createRouter() {
     router.post("/api/bikes/:bikeId/images", withAuth("user", "DATABASE"), withSchema(uploadBikeImageRequestSchema), handleUploadBikeImageRequest);
     router.post("/api/bikes/:bikeId/images/:imageId/verify", withAuth("user", "DATABASE"), withSchema(verifyBikeImageRequestSchema), handleVerifyBikeImageRequest);
     
-    router.post("/api/activities/create", withAuth("user", "DATABASE"), withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
+    router.post("/api/activities/create", withAuth([ "user", "device" ], "DATABASE"), withContent, withSchema(createActivityRequestSchema), handleCreateActivityRequest);
     router.get("/api/activities/:id", withAuth("user", "DATABASE"), withParams, withSchema(activityRequestSchema), handleActivityRequest);
     router.post("/api/activities/:activityId/update", withAuth("user", "DATABASE"), withParams, withContent, withSchema(updateActivityRequestSchema), handleUpdateActivityRequest);
     router.delete("/api/activities/:activityId/delete", withAuth("user", "DATABASE"), withParams, withSchema(activityDeleteRequestSchema), handleActivityDeleteRequest);
@@ -111,7 +112,8 @@ export default function createRouter() {
 
     router.get("/api/devices", withAuth("user", "DATABASE"), handleDevicesRequest);
     router.get("/api/devices/new", withAuth("user", "DATABASE"), handleNewDeviceRequest);
-    router.post("/api/devices/verify", withContent, handleDeviceVerificationRequest);
+    router.post("/api/devices/auth/verify", withContent, handleDeviceAuthVerificationRequest);
+    router.post("/api/devices/auth/login", withAuth("device", "DATABASE"), withContent, handleDeviceAuthLoginRequest);
     router.post("/api/devices/auth/renew", withAuth("device", "DATABASE"), withContent, handleDeviceAuthRenewRequest);
 
     router.post("/api/message", withAuth("user", "DATABASE"), withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);

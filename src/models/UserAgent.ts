@@ -8,6 +8,10 @@ export default class UserAgent {
         this.groups = userAgentGroups;
     };
 
+    getClient() {
+        return this.groups.client;
+    };
+
     isBelow(userAgent: string | string[]) {
         if(typeof(userAgent) === "string") {
             const group = getUserAgentGroups(userAgent);
