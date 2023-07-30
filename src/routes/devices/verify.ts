@@ -22,7 +22,7 @@ export async function handleDeviceVerificationRequest(request: RequestWithKey, e
     if(date > deviceVerification.expires)
         return Response.json({ success: false, message: "Code has expired."});
 
-    const device = await createDevice(env.DATABASE, name, deviceVerification.user);
+    const device = await createDevice(env.DATABASE, deviceVerification.user, name);
 
     const keyArray = new Uint8Array(64);
     crypto.getRandomValues(keyArray);
