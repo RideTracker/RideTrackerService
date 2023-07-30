@@ -52,6 +52,7 @@ import { getActivitiesWithoutSummary } from "../controllers/activities/getActivi
 import { handleNewDeviceRequest } from "../routes/devices/new";
 import { handleDeviceVerificationRequest } from "../routes/devices/verify";
 import { handleDeviceAuthRenewRequest } from "../routes/devices/auth/renew";
+import { handleDevicesRequest } from "../routes/devices";
 
 export default function createRouter() {
     const router = ThrowableRouter();
@@ -108,6 +109,7 @@ export default function createRouter() {
     router.post("/api/user/followers", withAuth("user", "DATABASE"), withContent, withSchema(userFollowersRequestSchema), handleUserFollowersRequest);
     router.delete("/api/user/delete", withAuth("user", "DATABASE"), handleUserDeletionRequest);
 
+    router.get("/api/devices", withAuth("user", "DATABASE"), handleDevicesRequest);
     router.get("/api/devices/new", withAuth("user", "DATABASE"), handleNewDeviceRequest);
     router.post("/api/devices/verify", withContent, handleDeviceVerificationRequest);
     router.post("/api/devices/auth/renew", withAuth("device", "DATABASE"), withContent, handleDeviceAuthRenewRequest);
