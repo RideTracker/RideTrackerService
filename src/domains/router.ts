@@ -113,7 +113,7 @@ export default function createRouter() {
     router.get("/api/devices", withAuth("user", "DATABASE"), handleDevicesRequest);
     router.get("/api/devices/new", withAuth("user", "DATABASE"), handleNewDeviceRequest);
     router.post("/api/devices/auth/verify", withContent, handleDeviceAuthVerificationRequest);
-    router.post("/api/devices/auth/login", withAuth("device", "DATABASE"), withContent, handleDeviceAuthLoginRequest);
+    router.post("/api/devices/auth/login", withContent, handleDeviceAuthLoginRequest);
     router.post("/api/devices/auth/renew", withAuth("device", "DATABASE"), withContent, handleDeviceAuthRenewRequest);
 
     router.post("/api/message", withAuth("user", "DATABASE"), withContent, withSchema(createMessageRequestSchema), handleCreateMessageRequest);
