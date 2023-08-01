@@ -48,7 +48,7 @@ ENVIRONMENT = "staging"
 [[ env.staging.d1_databases ]]
 binding = "DATABASE"
 database_name = "ridetracker-staging"
-database_id = "361813f2-1a83-4c3d-9df1-204fc7093b6f"
+database_id = "fc97d7d6-9958-4d2c-81d8-6fb6522cd862"
 
 [[ env.staging.r2_buckets ]]
 binding = "BUCKET"
