@@ -1,6 +1,6 @@
-import { Activity } from "../../../models/activity";
-import { ActivityComment } from "../../../models/activityComment";
-import { ActivitySummary } from "../../../models/activitySummary";
+import { Activity } from "@ridetracker/ridetrackertypes";
+import { ActivityComment } from "@ridetracker/ridetrackertypes";
+import { ActivitySummary } from "@ridetracker/ridetrackertypes";
 
 export async function getActivityCommentsSummary(database: D1Database, activity: string): Promise<(ActivityComment & { comments_count?: number })[]> {
     return (await database.prepare(

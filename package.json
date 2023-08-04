@@ -4,7 +4,9 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",
     "@ridetracker/ridetrackerclient": "^0.9.36",
+    "@ridetracker/ridetrackertypes": "^0.9.6",
     "@types/itty-router-extras": "^0.4.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
     "lorem-ipsum": "^2.0.8",
     "typescript": "^5.0.3",
     "vitest": "^0.30.0",

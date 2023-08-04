@@ -1,4 +1,4 @@
-import { ActivitySummary } from "../../../models/activitySummary";
+import { ActivitySummary } from "@ridetracker/ridetrackertypes";
 
 export async function createActivitySummary(database: D1Database, id: string, key: string, value: number): Promise<void> {
     const timestamp = Date.now();

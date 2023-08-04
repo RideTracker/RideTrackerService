@@ -1,4 +1,4 @@
-import { Activity } from "../../models/activity";
+import { Activity } from "@ridetracker/ridetrackertypes";
 
 function getTimestampByTimeline(timeline?: string) {
     switch(timeline) {

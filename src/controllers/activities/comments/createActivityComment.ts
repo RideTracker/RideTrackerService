@@ -1,4 +1,4 @@
-import { ActivityComment } from "../../../models/activityComment";
+import { ActivityComment } from "@ridetracker/ridetrackertypes";
 import { getActivityCommentById } from "./getActivityCommentById";
 
 export async function createActivityComment(database: D1Database, activity: string, user: string, parent: string | null, message: string): Promise<ActivityComment> {

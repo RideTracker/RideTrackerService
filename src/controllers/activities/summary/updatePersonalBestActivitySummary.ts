@@ -1,4 +1,4 @@
-import { ActivitySummary } from "../../../models/activitySummary";
+import { ActivitySummary } from "@ridetracker/ridetrackertypes";
 import { getActivitySummaryById } from "./getActivitySummaryById";
 
 function updatePersonalBestActivitySummaryColumn(database: D1Database, user: string, column: string) {

@@ -1,5 +1,4 @@
-import { ActivityVisibility } from "../../models/ActivityVisibility";
-import { Activity } from "../../models/activity";
+import { Activity, ActivityVisibility } from "@ridetracker/ridetrackertypes";
 import { getActivityById } from "./getActivityById";
 
 export async function createActivity(database: D1Database, user: string, visibility: ActivityVisibility, localId: string): Promise<Activity> {
