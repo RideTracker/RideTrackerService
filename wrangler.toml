@@ -11,7 +11,7 @@ new_classes = [ "ActivityDurableObject" ]
 [env.production]
 services = [
     { binding = "ANALYTICS_SERVICE", service = "analytics-service-production" },
-    { binding = "ROUTE_SERVICE", service = "route-service-production" }
+    { binding = "ROUTE_SERVICE", service = "ridetracker-route-service-production" }
 ]
 
 [env.production.vars]
@@ -41,7 +41,7 @@ crons = [ "0 * * * *" ]
 [env.staging]
 services = [
     { binding = "ANALYTICS_SERVICE", service = "analytics-service-staging" },
-    { binding = "ROUTE_SERVICE", service = "route-service-staging" }
+    { binding = "ROUTE_SERVICE", service = "ridetracker-route-service-staging" }
 ]
 
 [env.staging.vars]
