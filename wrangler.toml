@@ -4,10 +4,6 @@ compatibility_date = "2023-04-07"
 usage_model = "bundled"
 node_compat = true
 
-[[migrations]]
-tag = "v1"
-new_classes = [ "ActivityDurableObject" ]
-
 [env.production]
 services = [
     { binding = "ANALYTICS_SERVICE", service = "analytics-service-production" },
@@ -26,17 +22,9 @@ database_id = "4cb96598-71ce-47f5-b556-9ef1bfca42a1"
 binding = "BUCKET"
 bucket_name = "ridetracker-production"
 
-[env.production.durable_objects]
-bindings = [
-    { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
-]
-
 [[ env.production.kv_namespaces ]]
 binding = "FEATURE_FLAGS"
 id = "e9e05d97db9c4e0f8fa1e3784dc4d0ad"
-
-[env.production.triggers]
-crons = [ "0 * * * *" ]
 
 [env.staging]
 services = [
@@ -56,14 +44,6 @@ database_id = "fc97d7d6-9958-4d2c-81d8-6fb6522cd862"
 binding = "BUCKET"
 bucket_name = "ridetracker-staging"
 
-[env.staging.durable_objects]
-bindings = [
-    { name = "ACTIVITY_DURABLE_OBJECT", class_name = "ActivityDurableObject" }
-]
-
 [[ env.staging.kv_namespaces ]]
 binding = "FEATURE_FLAGS"
 id = "225cf6788c7447079e5f8dc7b9f1be18"
-
-[env.staging.triggers]
-crons = [ "0 * * * *" ]
