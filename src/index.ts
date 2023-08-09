@@ -21,7 +21,7 @@ import { FeatureFlagsExecution } from "./models/FeatureFlagsExecution";
 const router = createRouter();
 
 async function getRequest(request: Request, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
-    const response: Response = await router.handle(request, env, context, featureFlags);
+    const response: Response = await router.handle(request, env, context, databaseSource, featureFlags);
 
     if(!response) {
         return new Response(undefined, {
@@ -35,6 +35,8 @@ async function getRequest(request: Request, env: Env, context: EventContext<Env,
 
 export default {
     async fetch(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+        let executionFeatureFlags: FeatureFlagsExecution | null = null;
+
         try {
             const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
 
@@ -87,14 +89,16 @@ export default {
                 });
             }
 
+            executionFeatureFlags = {
+                databaseSource: featureFlags.databaseSource,
+                version: versionFeatureFlags
+            };
+
             request.userAgent = new UserAgent(userAgent);
 
             const databaseSource = getDatabaseSource(env, featureFlags);
 
-            const response = await getRequest(request, env, context, databaseSource, {
-                databaseSource: featureFlags.databaseSource,
-                version: versionFeatureFlags
-            });
+            const response = await getRequest(request, env, context, databaseSource, executionFeatureFlags);
 
             if(response.status >= 500 && response.status <= 599) { 
                 context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_SERVICE_HOST + "/api/error", {
@@ -179,7 +183,8 @@ export default {
                             userAgent: request.headers.get("User-Agent"),
                             resource: `${request.method} ${request.url}`,
                             remoteAddress: request.headers.get("CF-Connecting-IP")
-                        }
+                        },
+                        featureFlags: executionFeatureFlags
                     })
                 })
             }));
