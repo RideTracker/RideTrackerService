@@ -145,7 +145,10 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     //const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
 
     context.waitUntil(env.ROUTE_SERVICE.fetch(`https://route-service.ridetracker.app/api/activities/${activity.id}/process`, {
-        method: "POST"
+        method: "POST",
+        headers: {
+            "Authorization": `Basic ${env.ROUTE_SERVICE_CLIENT_ID}:${env.ROUTE_SERVICE_CLIENT_TOKEN}`,
+        }
     }).then(async (response) => {
         if(!response.ok) {
             const text = await response.json();
