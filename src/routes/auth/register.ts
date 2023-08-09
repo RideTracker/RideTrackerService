@@ -4,7 +4,7 @@ import { getUserByEmail } from "../../controllers/users/getUserByEmail";
 import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
 import { createUserVerification } from "../../controllers/users/verifications/createUserVerification";
 import { sendUserVerificationEmail } from "../../controllers/users/verifications/sendUserVerificationEmail";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { encryptPassword } from "../../utils/encryption";

@@ -4,7 +4,7 @@ import { deleteUserFollow } from "../../../controllers/users/follows/deleteUserF
 import { getUserFollow } from "../../../controllers/users/follows/getUserFollow";
 import { getUserFollowersCount } from "../../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../../controllers/users/getUserById";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const profileFollowRequestSchema = {

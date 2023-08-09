@@ -1,5 +1,5 @@
 import { Token, TokenType } from "@ridetracker/authservice";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createToken(databaseSource: DatabaseSource, key: string, type: TokenType, user: string): Promise<Token | null> {
     const id = crypto.randomUUID();

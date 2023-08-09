@@ -1,5 +1,5 @@
 import { createDeviceVerification } from "../../controllers/devices/verifications/createDeviceVerification";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 

@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { PollInput } from "../../../models/PollInput";
 
 export async function getPollInput(databaseSource: DatabaseSource, pollId: string, inputId: string): Promise<PollInput | null> {

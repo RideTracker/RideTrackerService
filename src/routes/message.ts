@@ -1,7 +1,7 @@
 import { createMessage } from "../controllers/messages/createMessage";
 import { sendMessageEmail } from "../controllers/messages/sendMessageEmail";
 import { getUserById } from "../controllers/users/getUserById";
-import DatabaseSource from "../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { VersionFeatureFlags } from "../models/FeatureFlags";
 import { FeatureFlagsExecution } from "../models/FeatureFlagsExecution";
 

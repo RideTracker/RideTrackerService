@@ -2,7 +2,7 @@ import { getActivityById } from "@ridetracker/ridetrackerclient";
 import { getActivityCommentById } from "../../../controllers/activities/comments/getActivityCommentById";
 import { getUserById } from "../../../controllers/users/getUserById";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export const activityCommentRequestSchema = {
     params: {

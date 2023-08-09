@@ -1,5 +1,5 @@
 import { getUserVerification } from "../../controllers/users/verifications/getUserVerification";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export async function handleStagingVerificationRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

@@ -14,9 +14,9 @@ import { updateActivityStatus } from "./controllers/activities/updateActivitySta
 import { encode } from "@googlemaps/polyline-codec";
 import { updateActivityPolylines } from "./controllers/activities/updateActivityPolylines";
 import UserAgent from "./models/UserAgent";
-import DatabaseSource from "./database/databaseSource";
 import getDatabaseSource from "./controllers/database/getDatabaseSource";
 import { FeatureFlagsExecution } from "./models/FeatureFlagsExecution";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 const router = createRouter();
 

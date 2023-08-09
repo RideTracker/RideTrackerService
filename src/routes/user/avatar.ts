@@ -1,6 +1,6 @@
 import { createUserAvatar } from "../../controllers/users/avatars/createUserAvatar";
 import { setUserAvatar } from "../../controllers/users/setUserAvatar";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 

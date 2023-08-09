@@ -7,7 +7,7 @@ import { getActivitySummaryById } from "../../controllers/activities/summary/get
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikeModel } from "../../controllers/bikes/getBikeModel";
 import { getUserById } from "../../controllers/users/getUserById";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const activityRequestSchema = {

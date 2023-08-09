@@ -2,7 +2,7 @@ import { getActivityCommentsCount } from "../../../controllers/activities/commen
 import { getActivityCommentsSummary } from "../../../controllers/activities/comments/getActivityCommentsSummary";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { getUserById } from "../../../controllers/users/getUserById";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityCommentSummaryRequestSchema = {

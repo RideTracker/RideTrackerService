@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { UserSubscription } from "../../../models/UserSubscription";
 
 export async function getUserSubscriptionByToken(databaseSource: DatabaseSource, token: string): Promise<UserSubscription | null> {

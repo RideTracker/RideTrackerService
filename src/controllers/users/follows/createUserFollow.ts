@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { User } from "../../../models/user";
 import { UserFollow } from "../../../models/userFollow";
 import { getUserById } from "./../getUserById";

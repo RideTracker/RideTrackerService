@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createActivitySummary(databaseSource: DatabaseSource, id: string, key: string, value: number): Promise<void> {
     const timestamp = Date.now();

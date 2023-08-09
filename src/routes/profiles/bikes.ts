@@ -4,7 +4,7 @@ import { getBikesByUser } from "../../controllers/bikes/getBikesByUser";
 import { getBikesByUserOffset } from "../../controllers/bikes/getBikesByUserOffset";
 import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../controllers/users/getUserById";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const profileBikesRequestSchema = {

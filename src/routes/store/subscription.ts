@@ -4,7 +4,7 @@ import deleteStoreCoupon from "../../controllers/store/coupons/deleteStoreCoupon
 import getStoreCouponByToken from "../../controllers/store/coupons/getStoreCouponByToken";
 import { createUserSubscription } from "../../controllers/users/subscriptions/createUserSubscription";
 import { getUserSubscriptionByToken } from "../../controllers/users/subscriptions/getUserSubscriptionByToken";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { GoogleSubscriptionPurchase } from "../../models/google/GoogleSubscriptionPurchase";
 

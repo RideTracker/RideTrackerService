@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { UserAvatar } from "../../../models/userAvatar";
 
 export async function getUserAvatarsByUser(databaseSource: DatabaseSource, user: string): Promise<UserAvatar[]> {

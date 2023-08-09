@@ -1,6 +1,6 @@
 import { ActivityComment } from "@ridetracker/ridetrackertypes";
 import { getActivityCommentById } from "./getActivityCommentById";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createActivityComment(databaseSource: DatabaseSource, activity: string, user: string, parent: string | null, message: string): Promise<ActivityComment> {
     const id = crypto.randomUUID();

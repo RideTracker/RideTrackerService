@@ -2,7 +2,7 @@ import { createPollAnswer } from "../../../../controllers/polls/answers/createPo
 import { hasPollInputAnswerByUser } from "../../../../controllers/polls/answers/hasPollInputAnswerByUser";
 import { getPoll } from "../../../../controllers/polls/getPoll";
 import { getPollInput } from "../../../../controllers/polls/inputs/getPollInput";
-import DatabaseSource from "../../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../../models/FeatureFlagsExecution";
 
 export const pollInputAnswerRequestSchema = {

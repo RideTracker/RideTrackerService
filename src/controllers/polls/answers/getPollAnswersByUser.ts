@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { PollAnswer } from "../../../models/PollAnswer";
 
 export async function getPollAnswersByUser(databaseSource: DatabaseSource, pollId: string, userId: string): Promise<PollAnswer[]> {

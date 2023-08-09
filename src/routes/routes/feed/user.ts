@@ -1,6 +1,6 @@
 import { getRoutesByUserFeed } from "../../../controllers/routes/getRoutesByUserFeed";
 import { getRoutesWaypoints } from "../../../controllers/routes/waypoints/getRoutesWaypoints";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const userRoutesRequestSchema = {

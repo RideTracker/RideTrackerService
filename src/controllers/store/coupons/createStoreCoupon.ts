@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export default async function createStoreCoupon(databaseSource: DatabaseSource, token: string, product: string, duration: number, expires: number): Promise<void> {
     const id = crypto.randomUUID();

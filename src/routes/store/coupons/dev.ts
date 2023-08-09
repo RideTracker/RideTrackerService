@@ -1,5 +1,5 @@
 import createStoreCoupon from "../../../controllers/store/coupons/createStoreCoupon";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const storeCouponDevRequestSchema = {

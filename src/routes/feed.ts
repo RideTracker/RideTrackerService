@@ -1,7 +1,7 @@
 import { getActivities } from "../controllers/activities/getActivities";
 import { getActivitiesByFeed } from "../controllers/activities/getActivitiesByFeed";
 import { getPollsByFeed } from "../controllers/polls/getPollsByFeed";
-import DatabaseSource from "../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../models/FeatureFlagsExecution";
 import { Poll } from "../models/Poll";
 

@@ -3,7 +3,7 @@ import { deleteActivityCommentMessage } from "../../../controllers/activities/co
 import { getActivityCommentById } from "../../../controllers/activities/comments/getActivityCommentById";
 import { setActivityCommentMessage } from "../../../controllers/activities/comments/setActivityComentMessage";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityDeleteCommentRequestSchema = {

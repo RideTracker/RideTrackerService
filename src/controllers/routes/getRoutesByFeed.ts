@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { CoordinateBounds } from "../../models/CoordinateBounds";
 import { Route } from "../../models/Route";
 

@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createPollAnswer(databaseSource: DatabaseSource, pollId: string, inputId: string, userId: string, answer: string): Promise<void> {
     const id = crypto.randomUUID();

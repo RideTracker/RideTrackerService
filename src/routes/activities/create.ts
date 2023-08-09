@@ -3,7 +3,7 @@ import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
 import { getDevice } from "../../controllers/devices/getDevice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export const createActivityRequestSchema = {
     content: {

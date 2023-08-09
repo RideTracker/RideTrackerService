@@ -3,7 +3,7 @@ import { getDevice } from "../../../controllers/devices/getDevice";
 import { createToken } from "../../../controllers/tokens/createToken";
 import { deleteToken } from "../../../controllers/tokens/deleteToken";
 import { getUserByEmail } from "../../../controllers/users/getUserByEmail";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 import { verifyPassword } from "../../../utils/encryption";
 

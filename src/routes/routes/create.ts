@@ -3,7 +3,7 @@ import { decode } from "@googlemaps/polyline-codec";
 import { getCenter } from "geolib";
 import createRouteWaypoint from "../../controllers/routes/waypoints/createRouteWaypoint";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export const createRouteRequestSchema = {
     content: {

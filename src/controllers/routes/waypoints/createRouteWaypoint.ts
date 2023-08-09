@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { RouteWaypoint } from "../../../models/RouteWaypoint";
 import { RouteWaypointType } from "../../../models/RouteWaypointType";
 

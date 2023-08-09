@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { Device } from "../../models/Device";
 
 export async function getDevice(databaseSource: DatabaseSource, id: string): Promise<Device | null> {

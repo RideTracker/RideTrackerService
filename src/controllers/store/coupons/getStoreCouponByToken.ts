@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { StoreCoupon } from "../../../models/StoreCoupon";
 
 export default async function getStoreCouponByToken(databaseSource: DatabaseSource, token: string): Promise<StoreCoupon | null> {

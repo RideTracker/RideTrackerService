@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { Route } from "../../models/Route";
 
 export default async function createRoute(databaseSource: DatabaseSource, userId: string, center: {

@@ -1,6 +1,6 @@
 import { getPlaceGeocoding } from "../../controllers/maps/getPlaceGeocoding";
 import { getRoutesPolyline } from "../../controllers/maps/getRoutesPolyline";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const mapsRouteSchema = {

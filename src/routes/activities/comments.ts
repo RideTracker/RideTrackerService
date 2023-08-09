@@ -1,7 +1,7 @@
 import { getActivityComments } from "../../controllers/activities/comments/getActivityComments";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getUserById } from "../../controllers/users/getUserById";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export async function handleActivityCommentsRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

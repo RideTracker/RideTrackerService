@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { DeviceVerification } from "../../../models/DeviceVerification";
 
 export function generateDeviceVerificationCode(): string {

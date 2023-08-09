@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { User } from "../../models/user";
 
 export async function deleteUser(databaseSource: DatabaseSource, user: User): Promise<void> {

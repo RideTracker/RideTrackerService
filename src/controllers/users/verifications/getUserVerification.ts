@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { UserVerification } from "../../../models/userVerification";
 
 export async function getUserVerification(databaseSource: DatabaseSource, id: string): Promise<UserVerification> {

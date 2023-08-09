@@ -1,7 +1,7 @@
 import { getPollAnswersByUser } from "../../controllers/polls/answers/getPollAnswersByUser";
 import { getPoll } from "../../controllers/polls/getPoll";
 import { getPollInputs } from "../../controllers/polls/inputs/getPollInputs";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const pollRequestSchema = {

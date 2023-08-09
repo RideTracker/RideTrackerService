@@ -1,7 +1,7 @@
 import { Activity } from "@ridetracker/ridetrackertypes";
 import { ActivityComment } from "@ridetracker/ridetrackertypes";
 import { ActivitySummary } from "@ridetracker/ridetrackertypes";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function getActivityCommentsSummary(databaseSource: DatabaseSource, activity: string): Promise<(ActivityComment & { comments_count?: number })[]> {
     return await databaseSource.prepare(

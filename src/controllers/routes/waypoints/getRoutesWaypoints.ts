@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { RouteWaypoint } from "../../../models/RouteWaypoint";
 
 export async function getRoutesWaypoints(databaseSource: DatabaseSource, routeIds: string[]): Promise<RouteWaypoint[]> {

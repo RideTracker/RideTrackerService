@@ -1,5 +1,5 @@
 import { getMapsSearchPredictions } from "../../controllers/maps/getMapsSearchPredictions";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const mapsSearchSchema = {

@@ -2,7 +2,7 @@ import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { updateActivity } from "../../../controllers/activities/updateActivity";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const updateActivityRequestSchema = {

@@ -2,7 +2,7 @@ import { createToken } from "../../../controllers/tokens/createToken";
 import { getUserById } from "../../../controllers/users/getUserById";
 import { deleteUserVerification } from "../../../controllers/users/verifications/deleteUserVerification";
 import { getUserVerification } from "../../../controllers/users/verifications/getUserVerification";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const authLoginVerificationSchema = {

@@ -1,6 +1,6 @@
 import { deleteUser } from "../../controllers/users/deleteUser";
 import { getUserByEmail } from "../../controllers/users/getUserByEmail";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export async function handleStagingDeleteUserRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

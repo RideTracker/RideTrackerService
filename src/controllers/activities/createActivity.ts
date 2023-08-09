@@ -1,5 +1,5 @@
 import { Activity, ActivityVisibility } from "@ridetracker/ridetrackertypes";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createActivity(databaseSource: DatabaseSource, user: string, visibility: ActivityVisibility, localId: string): Promise<Activity> {
     const id = crypto.randomUUID();

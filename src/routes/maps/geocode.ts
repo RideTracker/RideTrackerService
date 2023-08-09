@@ -1,5 +1,5 @@
 import { getPlaceGeocoding } from "../../controllers/maps/getPlaceGeocoding";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const mapsGeocodeSchema = {

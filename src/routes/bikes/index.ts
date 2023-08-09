@@ -1,7 +1,7 @@
 import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikePrimaryImage } from "../../controllers/bikes/images/getBikePrimaryImage";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const bikeRequestSchema = {

@@ -3,7 +3,7 @@ import { sendMessageEmail } from "../../controllers/messages/sendMessageEmail";
 import { deleteTokensByUser } from "../../controllers/tokens/deleteTokensByUser";
 import { getUserById } from "../../controllers/users/getUserById";
 import { setUserStatus } from "../../controllers/users/setUserStatus";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export async function handleUserDeletionRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

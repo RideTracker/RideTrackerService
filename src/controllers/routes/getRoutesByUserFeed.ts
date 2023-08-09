@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { Route } from "../../models/Route";
 
 export async function getRoutesByUserFeed(databaseSource: DatabaseSource, userId: string, offset: number, limit: number): Promise<Route[]> {

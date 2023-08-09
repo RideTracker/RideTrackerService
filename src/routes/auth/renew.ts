@@ -2,7 +2,7 @@ import { createToken } from "../../controllers/tokens/createToken";
 import { deleteToken } from "../../controllers/tokens/deleteToken";
 import { getUserById } from "../../controllers/users/getUserById";
 import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export async function handleAuthRenewRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

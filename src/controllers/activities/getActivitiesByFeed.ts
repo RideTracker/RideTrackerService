@@ -1,5 +1,5 @@
 import { Activity } from "@ridetracker/ridetrackertypes";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 function getTimestampByTimeline(timeline?: string) {
     switch(timeline) {

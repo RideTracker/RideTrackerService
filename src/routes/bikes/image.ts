@@ -1,7 +1,7 @@
 import { createBike } from "../../controllers/bikes/createBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikeImagesCount } from "../../controllers/bikes/images/getBikeImagesCount";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const uploadBikeImageRequestSchema = {

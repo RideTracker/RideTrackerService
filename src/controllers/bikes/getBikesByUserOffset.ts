@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { Bike } from "../../models/bike";
 
 export async function getBikesByUserOffset(databaseSource: DatabaseSource, user: string, offset: number): Promise<Bike[]> {

@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { BikeImage } from "../../../models/bikeImage";
 
 export async function getBikePrimaryImage(databaseSource: DatabaseSource, id: string): Promise<BikeImage> {

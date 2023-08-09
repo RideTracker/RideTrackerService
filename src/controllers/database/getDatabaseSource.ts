@@ -1,6 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
-import D1DatabaseSource from "../../database/sources/d1DatabaseSource";
-import TursoDatabaseSource from "../../database/sources/tursoDatabaseSource";
+import { D1DatabaseSource, DatabaseSource, TursoDatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlags } from "../../models/FeatureFlags";
 
 export default function getDatabaseSource(env: Env, featureFlags: FeatureFlags): DatabaseSource {

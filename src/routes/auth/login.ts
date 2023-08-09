@@ -6,7 +6,7 @@ import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { createToken } from "../../controllers/tokens/createToken";
 import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export const authLoginSchema = {
     content: {

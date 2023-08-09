@@ -2,7 +2,7 @@ import { getRoutesByFeed } from "../../../controllers/routes/getRoutesByFeed";
 import { getRoutesByUserFeed } from "../../../controllers/routes/getRoutesByUserFeed";
 import { getRoutesWaypoints } from "../../../controllers/routes/waypoints/getRoutesWaypoints";
 import { getUsersById } from "../../../controllers/users/getUsersByIds";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const routesFeedRequestSchema = {

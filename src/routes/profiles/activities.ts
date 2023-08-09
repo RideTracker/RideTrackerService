@@ -2,7 +2,7 @@ import { getActivitiesByUser } from "../../controllers/activities/getActivitiesB
 import { getActivityCountByUser } from "../../controllers/activities/getActivityCountByUser";
 import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../controllers/users/getUserById";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const profileActivitiesRequestSchema = {

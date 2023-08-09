@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createUserSubscription(databaseSource: DatabaseSource, user: string, token: string, product: string, expires: number): Promise<void> {
     const id = crypto.randomUUID();

@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 function updatePersonalBestActivitySummaryColumn(databaseSource: DatabaseSource, user: string, column: string) {
     return [

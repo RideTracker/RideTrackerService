@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { UserVerification } from "../../../models/userVerification";
 
 export async function deleteUserVerification(databaseSource: DatabaseSource, userVerification: UserVerification): Promise<void> {

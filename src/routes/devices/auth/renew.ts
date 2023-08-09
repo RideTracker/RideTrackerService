@@ -1,7 +1,7 @@
 import { getDevice } from "../../../controllers/devices/getDevice";
 import { createToken } from "../../../controllers/tokens/createToken";
 import { deleteToken } from "../../../controllers/tokens/deleteToken";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export async function handleDeviceAuthRenewRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {

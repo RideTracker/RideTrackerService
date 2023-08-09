@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { Poll } from "../../models/Poll";
 
 export async function getPollsByFeed(databaseSource: DatabaseSource, offset: number, limit: number): Promise<Poll[]> {

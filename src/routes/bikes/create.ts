@@ -2,7 +2,7 @@ import { createBike } from "../../controllers/bikes/createBike";
 import getFormattedBikeModel from "../../controllers/bikes/getFormattedBikeModel";
 import { createBikeImage } from "../../controllers/bikes/images/createBikeImage";
 import { getUserById } from "../../controllers/users/getUserById";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 

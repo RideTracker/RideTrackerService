@@ -1,5 +1,5 @@
 import { getUserFollowingByFeed } from "../../controllers/users/follows/getUserFollowingByFeed";
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const userFollowingRequestSchema = {

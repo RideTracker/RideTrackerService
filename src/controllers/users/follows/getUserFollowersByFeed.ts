@@ -1,4 +1,4 @@
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { UserFollow } from "../../../models/userFollow";
 
 export type UserFollowersFeedQuery = UserFollow & {

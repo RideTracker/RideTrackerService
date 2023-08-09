@@ -1,4 +1,4 @@
-import DatabaseSource from "../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 
 export async function createMessage(databaseSource: DatabaseSource, user: string, message: string): Promise<void> {
     const id = crypto.randomUUID();

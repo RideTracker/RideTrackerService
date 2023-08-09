@@ -2,7 +2,7 @@ import { getActivityById } from "../../../controllers/activities/getActivityById
 import { deleteActivitySummaries } from "../../../controllers/activities/summary/deleteActivitySummaries";
 import { updatePersonalBestActivitySummary } from "../../../controllers/activities/summary/updatePersonalBestActivitySummary";
 import { updateActivityStatus } from "../../../controllers/activities/updateActivityStatus";
-import DatabaseSource from "../../../database/databaseSource";
+import { DatabaseSource } from "@ridetracker/authservice";
 import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityDeleteRequestSchema = {
