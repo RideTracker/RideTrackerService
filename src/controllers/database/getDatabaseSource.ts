@@ -9,6 +9,6 @@ export default function getDatabaseSource(env: Env, featureFlags: FeatureFlags):
             return new D1DatabaseSource(env.DATABASE);
 
         case "Turso":
-            return new TursoDatabaseSource();
+            return new TursoDatabaseSource(env.TURSO_SERVICE_DATABASE_URL, env.TURSO_SERVICE_DATABASE_TOKEN);
     };
 };

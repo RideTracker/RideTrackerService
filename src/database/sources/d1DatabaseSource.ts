@@ -8,15 +8,15 @@ export default class D1DatabaseSource implements DatabaseSource {
         this.d1database = d1database;
     };
 
-    prepare(statement: string, ...args: DatabaseValue[]): DatabasePreparedStatement {
-        return new D1DatabasePreparedStatement(this.d1database.prepare(statement).bind(...args));
-    };
-
     async batch<T>(preparations: D1DatabasePreparedStatement[]): Promise<T[][]> {
         const results = await this.d1database.batch<T>(preparations.map((preparedStatement) => preparedStatement.d1PreparedStatemnt));
 
         return results.map((result) => {
             return result.results ?? [];
         });
+    };
+
+    prepare(statement: string, ...args: DatabaseValue[]): DatabasePreparedStatement {
+        return new D1DatabasePreparedStatement(this.d1database.prepare(statement).bind(...args));
     };
 };

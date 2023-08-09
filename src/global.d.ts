@@ -9,6 +9,10 @@ declare global {
         FEATURE_FLAGS: KVNamespace;
         
         ENVIRONMENT: "production" | "staging" | "dev";
+
+        TURSO_SERVICE_DATABASE_URL: string;
+        TURSO_SERVICE_DATABASE_TOKEN: string;
+
         CLOUDFLARE_ACCOUNT_ID: string;
         CLOUDFLARE_API_IMAGES_TOKEN: string;
 

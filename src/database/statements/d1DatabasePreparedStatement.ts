@@ -9,7 +9,7 @@ export default class D1DatabasePreparedStatement implements DatabasePreparedStat
         await this.d1PreparedStatemnt.run();
     };
 
-    async first<T>(columnName?: string): Promise<T> {
+    async first<T>(columnName?: string): Promise<T | null> {
         const result = await this.d1PreparedStatemnt.first<T>(columnName);
 
         return result;
