@@ -5,10 +5,6 @@ import { getDevice } from "../../controllers/devices/getDevice";
 
 export const createActivityRequestSchema = {
     content: {
-        localId: {
-            type: "string"
-        },
-
         visibility: {
             type: "enum",
             required: true,
@@ -18,7 +14,7 @@ export const createActivityRequestSchema = {
 
         sessions: {
             type: "array",
-            required: true,
+            required: false,
 
             schema: {
                 id: {
@@ -72,13 +68,33 @@ export const createActivityRequestSchema = {
                     required: true
                 }
             }
+        },
+
+        recording: {
+            type: "object",
+            required: false,
+
+            schema: {
+                id: {
+                    type: "string",
+                    required: true
+                },
+
+                sessions: {
+                    type: "array",
+                    required: true,
+
+                    schema: {
+                        type: "object"
+                    }
+                }
+            }
         }
     }
 };
 
 export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, versionFeatureFlags: VersionFeatureFlags) {
-    let { localId } = request.content;
-    const { visibility, sessions } = request.content;
+    const { visibility, sessions, recording } = request.content;
 
     let userId = request.key.user;
 
@@ -91,12 +107,21 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         userId = device.user;
     }
 
-    // localId was introduced in RideTrackerApp-0.9.3
-    if(!localId) {
+    let localId: string;
+
+    if(!recording && !sessions)
+        return Response.json({ success: false, message: "No recording attached." });
+
+    // RecordingV1 was deprecated in RideTrackerApp-0.9.3
+    if(!recording) {
         if(request.userAgent.isBelow("RideTrackerApp-0.9.3")) {
             localId = sessions[0].id;
         }
+        else
+            return Response.json({ success: false, message: "Unknown recording manifest." });
     }
+    else
+        localId = recording.id;
 
     const existingActivity = await getActivityByLocalId(env.DATABASE, userId, localId);
 
@@ -108,7 +133,7 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     if(!activity)
         return Response.json({ success: false });
 
-    await env.BUCKET.put(`activities/${activity.id}.json`, JSON.stringify(sessions), {
+    await env.BUCKET.put(`activities/${activity.id}.json`, JSON.stringify(recording ?? sessions), {
         customMetadata: {
             "type": "activity",
             "user": userId,
@@ -116,14 +141,11 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
         }
     });
 
-    const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
-    const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
+    //const durableObjectId = env.ACTIVITY_DURABLE_OBJECT.idFromName("default");
+    //const durableObject = env.ACTIVITY_DURABLE_OBJECT.get(durableObjectId);
 
-    context.waitUntil(durableObject.fetch(request.url, {
-        method: "POST",
-        body: JSON.stringify({
-            activityId: activity.id
-        })
+    context.waitUntil(env.ROUTE_SERVICE.fetch(`https://route-service.ridetracker.app/api/activities/${activity.id}/process`, {
+        method: "POST"
     }).then(async (response) => {
         if(!response.ok) {
             const text = await response.json();

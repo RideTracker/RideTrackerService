@@ -12,6 +12,8 @@ declare global {
         CLOUDFLARE_ACCOUNT_ID: string;
         CLOUDFLARE_API_IMAGES_TOKEN: string;
 
+        ROUTE_SERVICE: Fetcher;
+
         ANALYTICS_SERVICE: Fetcher;
         ANALYTICS_SERVICE_HOST: string;
         ANALYTICS_SERVICE_CLIENT_ID: string;
