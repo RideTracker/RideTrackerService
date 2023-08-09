@@ -1,6 +1,8 @@
 import { getActivitySummaryByBike } from "../../controllers/activities/summary/getActivitySummaryByBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikePrimaryImage } from "../../controllers/bikes/images/getBikePrimaryImage";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const bikeRequestSchema = {
     params: {
@@ -11,16 +13,16 @@ export const bikeRequestSchema = {
     }
 };
 
-export async function handleBikeRequest(request: RequestWithKey, env: Env) {
+export async function handleBikeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { bikeId } = request.params;
 
-    const bike = await getBikeById(env.DATABASE, bikeId);
+    const bike = await getBikeById(databaseSource, bikeId);
 
     if(!bike)
         return Response.json({ success: false });
 
-    const bikeSummary = await getActivitySummaryByBike(env.DATABASE, bike.id);
-    const bikeImage = await getBikePrimaryImage(env.DATABASE, bike.id);
+    const bikeSummary = await getActivitySummaryByBike(databaseSource, bike.id);
+    const bikeImage = await getBikePrimaryImage(databaseSource, bike.id);
 
     return Response.json({
         success: true,

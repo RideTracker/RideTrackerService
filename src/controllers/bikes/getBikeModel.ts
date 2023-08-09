@@ -1,3 +1,5 @@
-export async function getBikeModel(database: D1Database, bikeId: string): Promise<string> {
-    return await database.prepare("SELECT model FROM bikes WHERE id = ?").bind(bikeId).first<string>("model");
+import DatabaseSource from "../../database/databaseSource";
+
+export async function getBikeModel(databaseSource: DatabaseSource, bikeId: string): Promise<string> {
+    return await databaseSource.prepare("SELECT model FROM bikes WHERE id = ?", bikeId).first<string>("model");
 };

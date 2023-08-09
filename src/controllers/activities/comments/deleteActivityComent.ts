@@ -1,6 +1,5 @@
-import { ActivityComment } from "@ridetracker/ridetrackertypes";
-import { getActivityCommentById } from "./getActivityCommentById";
+import DatabaseSource from "../../../database/databaseSource";
 
-export async function deleteActivityCommentMessage(database: D1Database, comment: string): Promise<void> {
-    await database.prepare("DELETE FROM activity_comments WHERE id = ?").bind(comment).run();
+export async function deleteActivityCommentMessage(databaseSource: DatabaseSource, comment: string): Promise<void> {
+    await databaseSource.prepare("DELETE FROM activity_comments WHERE id = ?", comment).run();
 };

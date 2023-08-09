@@ -5,6 +5,8 @@ import { verifyPassword } from "../../utils/encryption";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { createToken } from "../../controllers/tokens/createToken";
 import { hasUserSubscription } from "../../controllers/users/subscriptions/hasUserSubscription";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
+import DatabaseSource from "../../database/databaseSource";
 
 export const authLoginSchema = {
     content: {
@@ -20,10 +22,10 @@ export const authLoginSchema = {
     }
 };
 
-export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
+export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { email, password } = request.content;
 
-    const user = await getUserByEmail(env.DATABASE, email);
+    const user = await getUserByEmail(databaseSource, email);
 
     if(user === null)
         return Response.json({ success: false, message: "This email is not registered to anyone." });
@@ -34,16 +36,16 @@ export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, 
     if(!(await verifyPassword(password, user.password)))
         return Response.json({ success: false, message: "Your credentials do not match." });
 
-    if(featureFlags.disableUserEmailVerification) {
+    if(featureFlags.version.disableUserEmailVerification) {
         const keyArray = new Uint8Array(64);
         crypto.getRandomValues(keyArray);
         const key = Array.from(keyArray, (decimal) => decimal.toString(16).padStart(2, '0')).join('');
-        const token = await createToken(env.DATABASE, btoa(key), "user", user.id);
+        const token = await createToken(databaseSource, btoa(key), "user", user.id);
     
         if(token === null)
             return Response.json({ success: false, message: "Something went wrong." });
 
-        const subscribed = await hasUserSubscription(env.DATABASE, user.id);
+        const subscribed = await hasUserSubscription(databaseSource, user.id);
     
         return Response.json({
             success: true,
@@ -59,7 +61,7 @@ export async function handleAuthLoginRequest(request: RequestWithKey, env: Env, 
         });
     }
 
-    const userVerification = await createUserVerification(env.DATABASE, user);
+    const userVerification = await createUserVerification(databaseSource, user);
 
     if(userVerification === null)
         return Response.json({ success: false, message: "Something went wrong." });

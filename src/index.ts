@@ -14,10 +14,13 @@ import { updateActivityStatus } from "./controllers/activities/updateActivitySta
 import { encode } from "@googlemaps/polyline-codec";
 import { updateActivityPolylines } from "./controllers/activities/updateActivityPolylines";
 import UserAgent from "./models/UserAgent";
+import DatabaseSource from "./database/databaseSource";
+import getDatabaseSource from "./controllers/database/getDatabaseSource";
+import { FeatureFlagsExecution } from "./models/FeatureFlagsExecution";
 
 const router = createRouter();
 
-async function getRequest(request: Request, env: Env, context: EventContext<Env, string, null>, featureFlags: VersionFeatureFlags) {
+async function getRequest(request: Request, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const response: Response = await router.handle(request, env, context, featureFlags);
 
     if(!response) {
@@ -86,7 +89,12 @@ export default {
 
             request.userAgent = new UserAgent(userAgent);
 
-            const response = await getRequest(request, env, context, versionFeatureFlags);
+            const databaseSource = getDatabaseSource(env, featureFlags);
+
+            const response = await getRequest(request, env, context, databaseSource, {
+                databaseSource: featureFlags.databaseSource,
+                version: versionFeatureFlags
+            });
 
             if(response.status >= 500 && response.status <= 599) { 
                 context.waitUntil(env.ANALYTICS_SERVICE.fetch(env.ANALYTICS_SERVICE_HOST + "/api/error", {

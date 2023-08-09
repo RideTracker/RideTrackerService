@@ -2,6 +2,8 @@ import { createBike } from "../../../controllers/bikes/createBike";
 import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { createBikeImage } from "../../../controllers/bikes/images/createBikeImage";
 import { getBikeImagesCount } from "../../../controllers/bikes/images/getBikeImagesCount";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const verifyBikeImageRequestSchema = {
     params: {
@@ -17,10 +19,10 @@ export const verifyBikeImageRequestSchema = {
     }
 };
 
-export async function handleVerifyBikeImageRequest(request: RequestWithKey, env: Env) {
+export async function handleVerifyBikeImageRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { bikeId, imageId } = request.params;
 
-    const bike = await getBikeById(env.DATABASE, bikeId);
+    const bike = await getBikeById(databaseSource, bikeId);
 
     if(!bike)
         return Response.json({ success: false });
@@ -28,7 +30,7 @@ export async function handleVerifyBikeImageRequest(request: RequestWithKey, env:
     if(bike.user !== request.key.user)
         return Response.json({ success: false });
 
-    const imageCount = await getBikeImagesCount(env.DATABASE, bike.id);
+    const imageCount = await getBikeImagesCount(databaseSource, bike.id);
 
     if(imageCount >= 5)
         return Response.json({ success: false });
@@ -59,7 +61,7 @@ export async function handleVerifyBikeImageRequest(request: RequestWithKey, env:
     if(result.result.metadata.bike !== bike.id)
         return Response.json({ success: false });
 
-    const image = await createBikeImage(env.DATABASE, bike.id, result.result.id);
+    const image = await createBikeImage(databaseSource, bike.id, result.result.id, 0);
 
     if(!image)
         return Response.json({ success: false });

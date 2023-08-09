@@ -14,6 +14,8 @@ export type VersionFeatureFlags = {
 };
 
 export type FeatureFlags = {
+    databaseSource: "D1" | "Turso";
+
     versions: {
         [key: string]: VersionFeatureFlags;
     };

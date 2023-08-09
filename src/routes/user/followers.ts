@@ -1,4 +1,6 @@
 import { getUserFollowersByFeed } from "../../controllers/users/follows/getUserFollowersByFeed";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const userFollowersRequestSchema = {
     content: {
@@ -9,10 +11,10 @@ export const userFollowersRequestSchema = {
     }
 };
 
-export async function handleUserFollowersRequest(request: RequestWithKey, env: Env) {
+export async function handleUserFollowersRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { offset } = request.content;
 
-    const followers = await getUserFollowersByFeed(env.DATABASE, request.key.user, offset, 10);
+    const followers = await getUserFollowersByFeed(databaseSource, request.key.user, offset, 10);
 
     return Response.json({
         success: true,

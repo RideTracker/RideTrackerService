@@ -1,5 +1,7 @@
 import { getRoutesByUserFeed } from "../../../controllers/routes/getRoutesByUserFeed";
 import { getRoutesWaypoints } from "../../../controllers/routes/waypoints/getRoutesWaypoints";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const userRoutesRequestSchema = {
     content: {
@@ -10,11 +12,11 @@ export const userRoutesRequestSchema = {
     }
 };
 
-export async function handleUserRoutesRequest(request: RequestWithKey, env: Env) {
+export async function handleUserRoutesRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { offset } = request.content;
 
-    const routes = await getRoutesByUserFeed(env.DATABASE, request.key.user, offset, 5);
-    const routesWaypoints = (routes.length)?(await getRoutesWaypoints(env.DATABASE, routes.map((route) => route.id))):(undefined);
+    const routes = await getRoutesByUserFeed(databaseSource, request.key.user, offset, 5);
+    const routesWaypoints = (routes.length)?(await getRoutesWaypoints(databaseSource, routes.map((route) => route.id))):(undefined);
 
     return Response.json({
         success: true,

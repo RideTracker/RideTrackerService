@@ -1,11 +1,10 @@
+import DatabaseSource from "../../../database/databaseSource";
 import { UserAvatar } from "../../../models/userAvatar";
 import { getUserAvatarById } from "./getUserAvatarById";
 
-export async function createUserAvatar(database: D1Database, user: string, image: string): Promise<UserAvatar> {
+export async function createUserAvatar(databaseSource: DatabaseSource, user: string, image: string): Promise<UserAvatar> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO user_avatars (id, user, image, timestamp) VALUES (?, ?, ?, ?)").bind(id, user, image, timestamp).run();
-
-    return await getUserAvatarById(database, id);
+    return await databaseSource.prepare("INSERT INTO user_avatars (id, user, image, timestamp) VALUES (?, ?, ?, ?) RETURNING *", id, user, image, timestamp).first<UserAvatar>();
 };

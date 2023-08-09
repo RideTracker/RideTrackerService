@@ -1,4 +1,6 @@
 import { getUserVerification } from "../../../../../controllers/users/verifications/getUserVerification";
+import DatabaseSource from "../../../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../../../models/FeatureFlagsExecution";
 
 export const authLoginVerificationCodeSchema = {
     params: {
@@ -9,10 +11,10 @@ export const authLoginVerificationCodeSchema = {
     }
 };
 
-export async function handleAuthLoginVerificationCodeRequest(request: RequestWithKey, env: Env) {
+export async function handleAuthLoginVerificationCodeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { verificationId } = request.params;
 
-    const userVerification = await getUserVerification(env.DATABASE, verificationId);
+    const userVerification = await getUserVerification(databaseSource, verificationId);
 
     if(userVerification === null)
         return Response.json({ success: false });

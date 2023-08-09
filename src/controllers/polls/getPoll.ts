@@ -1,5 +1,6 @@
+import DatabaseSource from "../../database/databaseSource";
 import { Poll } from "../../models/Poll";
 
-export async function getPoll(database: D1Database, id: string): Promise<Poll | null> {
-    return await database.prepare("SELECT * FROM polls WHERE id = ?").bind(id).first<Poll | null>();
+export async function getPoll(databaseSource: DatabaseSource, id: string): Promise<Poll | null> {
+    return await databaseSource.prepare("SELECT * FROM polls WHERE id = ?", id).first<Poll | null>();
 };

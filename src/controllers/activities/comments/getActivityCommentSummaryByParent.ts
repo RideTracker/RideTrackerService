@@ -1,7 +1,6 @@
-import { Activity } from "@ridetracker/ridetrackertypes";
 import { ActivityComment } from "@ridetracker/ridetrackertypes";
-import { ActivitySummary } from "@ridetracker/ridetrackertypes";
+import DatabaseSource from "../../../database/databaseSource";
 
-export async function getActivityCommentSummaryByParent(database: D1Database, parent: string): Promise<ActivityComment> {
-    return await database.prepare("SELECT *, COUNT(activity_comments.id) AS count FROM activity_comments WHERE parent = ?").bind(parent).first();
+export async function getActivityCommentSummaryByParent(databaseSource: DatabaseSource, parent: string): Promise<ActivityComment> {
+    return await databaseSource.prepare("SELECT *, COUNT(activity_comments.id) AS count FROM activity_comments WHERE parent = ?", parent).first();
 };

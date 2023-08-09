@@ -7,6 +7,8 @@ import { getActivitySummaryById } from "../../controllers/activities/summary/get
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikeModel } from "../../controllers/bikes/getBikeModel";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const activityRequestSchema = {
     params: {
@@ -17,10 +19,10 @@ export const activityRequestSchema = {
     }
 };
 
-export async function handleActivityRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { id } = request.params;
 
-    const activity = await getActivityById(env.DATABASE, id);
+    const activity = await getActivityById(databaseSource, id);
 
     if(!activity)
         return Response.json({ success: false });
@@ -28,21 +30,21 @@ export async function handleActivityRequest(request: RequestWithKey, env: Env) {
     if(activity.status === "deleted")
         return Response.json({ success: false, deleted: true });
 
-    const acitivityAuthor = await getUserById(env.DATABASE, activity.user);
+    const acitivityAuthor = await getUserById(databaseSource, activity.user);
 
     if(!acitivityAuthor)
         return Response.json({ success: false });
 
-    const activitySummary = await getActivitySummaryById(env.DATABASE, id);
+    const activitySummary = await getActivitySummaryById(databaseSource, id);
 
-    const activityComment = await getLatestActivityComment(env.DATABASE, id);
-    const activityCommentUser = (activityComment) && await getUserById(env.DATABASE, activityComment.user);
+    const activityComment = await getLatestActivityComment(databaseSource, id);
+    const activityCommentUser = (activityComment) && await getUserById(databaseSource, activityComment.user);
 
-    const activityComments = await getActivityCommentsCount(env.DATABASE, activity.id);
+    const activityComments = await getActivityCommentsCount(databaseSource, activity.id);
 
-    const activityUserLike = await getActivityLikeByUser(env.DATABASE, id, request.key.user);
+    const activityUserLike = await getActivityLikeByUser(databaseSource, id, request.key.user);
 
-    const activityBikeModel = (activity.bike) && await getBikeModel(env.DATABASE, activity.bike);
+    const activityBikeModel = (activity.bike) && await getBikeModel(databaseSource, activity.bike);
 
     return Response.json({
         success: true,

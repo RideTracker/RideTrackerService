@@ -2,6 +2,8 @@ import { getActivityCountByUser } from "../../controllers/activities/getActivity
 import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { hasUserFollow } from "../../controllers/users/follows/hasUserFollow";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const profileRequestSchema = {
     params: {
@@ -12,18 +14,18 @@ export const profileRequestSchema = {
     }
 };
 
-export async function handleProfileRequest(request: RequestWithKey, env: Env) {
+export async function handleProfileRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { userId } = request.params;
 
-    const user = await getUserById(env.DATABASE, userId);
+    const user = await getUserById(databaseSource, userId);
 
     if(!user)
         return Response.json({ success: false });
 
-    const userFollowsCount = await getUserFollowersCount(env.DATABASE, user.id);
-    const userActivitiesCount = await getActivityCountByUser(env.DATABASE, user.id);
+    const userFollowsCount = await getUserFollowersCount(databaseSource, user.id);
+    const userActivitiesCount = await getActivityCountByUser(databaseSource, user.id);
 
-    const follow = await hasUserFollow(env.DATABASE, request.key.user, user.id);
+    const follow = await hasUserFollow(databaseSource, request.key.user, user.id);
 
     return Response.json({
         success: true,

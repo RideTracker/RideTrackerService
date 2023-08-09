@@ -1,4 +1,6 @@
 import createStoreCoupon from "../../../controllers/store/coupons/createStoreCoupon";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const storeCouponDevRequestSchema = {
     content: {
@@ -9,7 +11,7 @@ export const storeCouponDevRequestSchema = {
     }  
 };
 
-export async function handleStoreCouponDevRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+export async function handleStoreCouponDevRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { product } = request.content;
 
     const date = new Date();
@@ -17,7 +19,7 @@ export async function handleStoreCouponDevRequest(request: RequestWithKey, env: 
 
     const token = crypto.randomUUID();
 
-    await createStoreCoupon(env.DATABASE, token, product, date.getTime() - Date.now(), date.getTime());
+    await createStoreCoupon(databaseSource, token, product, date.getTime() - Date.now(), date.getTime());
 
     return Response.json({
         success: true,

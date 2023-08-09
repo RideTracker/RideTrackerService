@@ -3,6 +3,8 @@ import { deleteActivityCommentMessage } from "../../../controllers/activities/co
 import { getActivityCommentById } from "../../../controllers/activities/comments/getActivityCommentById";
 import { setActivityCommentMessage } from "../../../controllers/activities/comments/setActivityComentMessage";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityDeleteCommentRequestSchema = {
     params: {
@@ -18,15 +20,15 @@ export const activityDeleteCommentRequestSchema = {
     }
 };
 
-export async function handleActivityDeleteCommentRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityDeleteCommentRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { activityId, commentId } = request.params;
 
-    const activity = await getActivityById(env.DATABASE, activityId);
+    const activity = await getActivityById(databaseSource, activityId);
 
     if(!activity)
         return Response.json({ success: false });
 
-    const comment = await getActivityCommentById(env.DATABASE, commentId);
+    const comment = await getActivityCommentById(databaseSource, commentId);
 
     if(!comment)
         return Response.json({ success: false });
@@ -34,7 +36,7 @@ export async function handleActivityDeleteCommentRequest(request: RequestWithKey
     if(comment.user !== request.key.user)
         return Response.json({ success: false });
 
-    await deleteActivityCommentMessage(env.DATABASE, comment.id);
+    await deleteActivityCommentMessage(databaseSource, comment.id);
 
     return Response.json({
         success: true

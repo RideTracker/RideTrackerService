@@ -4,6 +4,8 @@ import { getBikesByUser } from "../../controllers/bikes/getBikesByUser";
 import { getBikesByUserOffset } from "../../controllers/bikes/getBikesByUserOffset";
 import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const profileBikesRequestSchema = {
     params: {
@@ -21,11 +23,11 @@ export const profileBikesRequestSchema = {
     }
 };
 
-export async function handleProfileBikesRequest(request: RequestWithKey, env: Env) {
+export async function handleProfileBikesRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { userId } = request.params;
     const { offset } = request.content;
 
-    const bikes = await getBikesByUserOffset(env.DATABASE, userId, offset);
+    const bikes = await getBikesByUserOffset(databaseSource, userId, offset);
 
     if(!bikes || !bikes.length)
         return Response.json({ success: false });

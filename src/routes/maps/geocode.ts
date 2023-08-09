@@ -1,4 +1,6 @@
 import { getPlaceGeocoding } from "../../controllers/maps/getPlaceGeocoding";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const mapsGeocodeSchema = {
     query: {
@@ -9,7 +11,7 @@ export const mapsGeocodeSchema = {
     }  
 };
 
-export async function handleMapsGeocodeRequest(request: RequestWithKey, env: Env) {
+export async function handleMapsGeocodeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { placeId } = request.query;
 
     const result = await getPlaceGeocoding(env.GOOGLE_MAPS_API_TOKEN, placeId);

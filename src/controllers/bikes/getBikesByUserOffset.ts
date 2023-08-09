@@ -1,5 +1,6 @@
+import DatabaseSource from "../../database/databaseSource";
 import { Bike } from "../../models/bike";
 
-export async function getBikesByUserOffset(database: D1Database, user: string, offset: number): Promise<Bike[]> {
-    return (await database.prepare("SELECT * FROM bikes WHERE user = ? ORDER BY timestamp DESC LIMIT 10 OFFSET ?").bind(user, offset).all<Bike>()).results ?? [];
+export async function getBikesByUserOffset(databaseSource: DatabaseSource, user: string, offset: number): Promise<Bike[]> {
+    return await databaseSource.prepare("SELECT * FROM bikes WHERE user = ? ORDER BY timestamp DESC LIMIT 10 OFFSET ?", user, offset).all<Bike>();
 };

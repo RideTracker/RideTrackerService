@@ -1,5 +1,7 @@
 import { createUserAvatar } from "../../controllers/users/avatars/createUserAvatar";
 import { setUserAvatar } from "../../controllers/users/setUserAvatar";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 
 export const uploadUserImageRequestSchema = {
@@ -10,7 +12,7 @@ export const uploadUserImageRequestSchema = {
         }
     }
 };
-export async function handleUploadUserAvatarRequest(request: RequestWithKey, env: Env) {
+export async function handleUploadUserAvatarRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { image } = request.content;
 
     const directUpload = await getDirectUploadUrl(env, {
@@ -26,12 +28,12 @@ export async function handleUploadUserAvatarRequest(request: RequestWithKey, env
     if(!upload.success)
         return Response.json({ success: false });
 
-    const userAvatar = await createUserAvatar(env.DATABASE, request.key.user, directUpload.id);
+    const userAvatar = await createUserAvatar(databaseSource, request.key.user, directUpload.id);
 
     if(!userAvatar)
         return Response.json({ success: false });
 
-    await setUserAvatar(env.DATABASE, request.key.user, userAvatar.image);
+    await setUserAvatar(databaseSource, request.key.user, userAvatar.image);
 
     return Response.json({
         success: true,

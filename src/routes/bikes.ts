@@ -1,14 +1,16 @@
 import { getBikesByUser } from "../controllers/bikes/getBikesByUser";
 import { getBikePrimaryImage } from "../controllers/bikes/images/getBikePrimaryImage";
+import DatabaseSource from "../database/databaseSource";
+import { FeatureFlagsExecution } from "../models/FeatureFlagsExecution";
 
-export async function handleBikesRequest(request: RequestWithKey, env: Env) {
-    const bikes = await getBikesByUser(env.DATABASE, request.key.user);
+export async function handleBikesRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
+    const bikes = await getBikesByUser(databaseSource, request.key.user);
 
     if(!bikes)
         return Response.json({ success: false });
 
     const bikeImages = await Promise.all(bikes.map((bike) => {
-        return getBikePrimaryImage(env.DATABASE, bike.id);
+        return getBikePrimaryImage(databaseSource, bike.id);
     }));
 
     return Response.json({

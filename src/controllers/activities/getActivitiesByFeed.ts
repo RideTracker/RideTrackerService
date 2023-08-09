@@ -1,4 +1,5 @@
 import { Activity } from "@ridetracker/ridetrackertypes";
+import DatabaseSource from "../../database/databaseSource";
 
 function getTimestampByTimeline(timeline?: string) {
     switch(timeline) {
@@ -54,7 +55,7 @@ function getRelationsQuery(relations: string, index: number) {
     }
 };
 
-export async function getActivitiesByFeed(database: D1Database, userId: string, offset: number, limit: number, relations: string, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
+export async function getActivitiesByFeed(databaseSource: DatabaseSource, userId: string, offset: number, limit: number, relations: string, search?: string, order?: string, timeline?: string): Promise<Activity[]> {
     const timestamp = getTimestampByTimeline(timeline);
     const sort = getSortByOrder(order);
     
@@ -65,7 +66,7 @@ export async function getActivitiesByFeed(database: D1Database, userId: string, 
 
         const relationsQuery = getRelationsQuery(relations, 4);
 
-        const query = await database.prepare(
+        return await databaseSource.prepare(
             "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, local_id AS localId, activities.* FROM activities" +
             " LEFT JOIN users ON activities.user = users.id" +
             " WHERE" +
@@ -79,22 +80,18 @@ export async function getActivitiesByFeed(database: D1Database, userId: string, 
             " (activities.timestamp > ?1) AND activities.status = 'processed'" +
             ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +
             " AND ((activities.visibility = 'PUBLIC') OR (activities.visibility = 'PRIVATE' AND activities.user = ?4) OR (activities.visibility = 'FOLLOWERS_ONLY' AND (activities.user = ?4 OR (SELECT COUNT(id) FROM user_follows WHERE user = activities.user AND follow = ?4) IS NOT 0)))" +
-            " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2"
-            ).bind(...binds).all<Activity>();
-    
-        return query.results ?? [];
+            " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2",
+            ...binds).all<Activity>();
     }
 
     const relationsQuery = getRelationsQuery(relations, 4);
 
-    const query = await database.prepare(
+    return await databaseSource.prepare(
         "SELECT activities.start_area AS startArea, activities.finish_area AS finishArea, local_id AS localId, activities.* FROM activities" +
         " WHERE" +
         " (activities.status = 'processed' AND activities.timestamp > ?1) " +
         ((relationsQuery)?(" AND (" + relationsQuery + ")"):("")) +
         " AND ((activities.visibility = 'PUBLIC') OR (activities.visibility = 'PRIVATE' AND activities.user = ?4) OR (activities.visibility = 'FOLLOWERS_ONLY' AND (activities.user = ?4 OR (SELECT COUNT(id) FROM user_follows WHERE user = activities.user AND follow = ?4) IS NOT 0)))" +
-        " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2"
-        ).bind(...binds).all<Activity>();
-
-    return query.results ?? [];
+        " ORDER BY (" + sort + ") DESC LIMIT ?3 OFFSET ?2",
+        ...binds).all<Activity>();
 };

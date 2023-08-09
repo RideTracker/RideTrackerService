@@ -1,3 +1,5 @@
-export async function deleteToken(database: D1Database, id: string): Promise<void> {
-    await database.prepare("DELETE FROM tokens WHERE id = ?").bind(id).run();
+import DatabaseSource from "../../database/databaseSource";
+
+export async function deleteToken(databaseSource: DatabaseSource, id: string): Promise<void> {
+    await databaseSource.prepare("DELETE FROM tokens WHERE id = ?", id).run();
 };

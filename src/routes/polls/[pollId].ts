@@ -1,6 +1,8 @@
 import { getPollAnswersByUser } from "../../controllers/polls/answers/getPollAnswersByUser";
 import { getPoll } from "../../controllers/polls/getPoll";
 import { getPollInputs } from "../../controllers/polls/inputs/getPollInputs";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const pollRequestSchema = {
     params: {
@@ -11,20 +13,20 @@ export const pollRequestSchema = {
     }
 };
 
-export async function handlePollRequest(request: RequestWithKey, env: Env) {
+export async function handlePollRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { pollId } = request.params;
 
-    const poll = await getPoll(env.DATABASE, pollId);
+    const poll = await getPoll(databaseSource, pollId);
 
     if(!poll)
         return Response.json({ success: false });
 
-    const inputs = await getPollInputs(env.DATABASE, poll.id);
+    const inputs = await getPollInputs(databaseSource, poll.id);
 
     if(!inputs.length)
         return Response.json({ success: false });
 
-    const answers = await getPollAnswersByUser(env.DATABASE, poll.id, request.key.user);
+    const answers = await getPollAnswersByUser(databaseSource, poll.id, request.key.user);
 
     return Response.json({
         success: true,

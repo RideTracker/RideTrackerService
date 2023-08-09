@@ -2,6 +2,8 @@ import createRoute from "../../controllers/routes/createRoute";
 import { decode } from "@googlemaps/polyline-codec";
 import { getCenter } from "geolib";
 import createRouteWaypoint from "../../controllers/routes/waypoints/createRouteWaypoint";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
+import DatabaseSource from "../../database/databaseSource";
 
 export const createRouteRequestSchema = {
     content: {
@@ -95,7 +97,7 @@ export const createRouteRequestSchema = {
     }
 };
 
-export async function handleCreateRouteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+export async function handleCreateRouteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { polyline, distance, duration, waypoints } = request.content;
 
     const decodedPolyline = decode(polyline).map((coordinate) => {
@@ -115,17 +117,17 @@ export async function handleCreateRouteRequest(request: RequestWithKey, env: Env
     for(let index = 0; index < 3; index++)
         color.push(Math.floor(Math.random() * 200));
 
-    const route = await createRoute(env.DATABASE, request.key.user, center, polyline, distance, duration, JSON.stringify(color));
+    const route = await createRoute(databaseSource, request.key.user, center, polyline, distance, duration, JSON.stringify(color));
 
     if(!route)
         return Response.json({ success: false });
 
     await Promise.all(waypoints.map(async (waypoint: any, index: number) => {
         if(waypoint.type === "SEARCH_PREDICTION")
-            return createRouteWaypoint(env.DATABASE, route.id, waypoint.searchPrediction.name, "SEARCH_PREDICTION", waypoint.searchPrediction.placeId, waypoint.searchPrediction.location ?? null, null, null, null, null, index);
+            return createRouteWaypoint(databaseSource, route.id, waypoint.searchPrediction.name, "SEARCH_PREDICTION", waypoint.searchPrediction.placeId, waypoint.searchPrediction.location ?? null, null, null, null, null, index);
         
         if(waypoint.type === "PATH")
-            return createRouteWaypoint(env.DATABASE, route.id, "Custom path", "PATH", null, null, waypoint.path.original, waypoint.path.route, waypoint.path.distance, waypoint.path.duration, index);
+            return createRouteWaypoint(databaseSource, route.id, "Custom path", "PATH", null, null, waypoint.path.original, waypoint.path.route, waypoint.path.distance, waypoint.path.duration, index);
     }));
 
     return Response.json({

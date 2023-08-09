@@ -2,6 +2,8 @@ import { getBikeById } from "../../../controllers/bikes/getBikeById";
 import { Bike } from "../../../models/bike";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { updateActivity } from "../../../controllers/activities/updateActivity";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const updateActivityRequestSchema = {
     params: {
@@ -31,17 +33,17 @@ export const updateActivityRequestSchema = {
     }
 };
 
-export async function handleUpdateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+export async function handleUpdateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { activityId } = request.params;
     const { title, description, bikeId } = request.content;
     let { visibility } = request.content;
 
-    const bike: Bike | null = bikeId && await getBikeById(env.DATABASE, bikeId);
+    const bike: Bike | null = bikeId && await getBikeById(databaseSource, bikeId);
     
     if(bikeId && bike?.user !== request.key.user)
         return Response.json({ success: false });
 
-    const activity = await getActivityById(env.DATABASE, activityId);
+    const activity = await getActivityById(databaseSource, activityId);
 
     if(!activity)
         return Response.json({ success: false });
@@ -59,7 +61,7 @@ export async function handleUpdateActivityRequest(request: RequestWithKey, env: 
     if(activity.user !== request.key.user)
         return Response.json({ success: false });
 
-    await updateActivity(env.DATABASE, activity.id, visibility, title ?? null, description ?? null, bike?.id ?? null);
+    await updateActivity(databaseSource, activity.id, visibility, title ?? null, description ?? null, bike?.id ?? null);
 
     return Response.json({
         success: true

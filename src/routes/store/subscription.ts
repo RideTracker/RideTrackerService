@@ -4,6 +4,8 @@ import deleteStoreCoupon from "../../controllers/store/coupons/deleteStoreCoupon
 import getStoreCouponByToken from "../../controllers/store/coupons/getStoreCouponByToken";
 import { createUserSubscription } from "../../controllers/users/subscriptions/createUserSubscription";
 import { getUserSubscriptionByToken } from "../../controllers/users/subscriptions/getUserSubscriptionByToken";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { GoogleSubscriptionPurchase } from "../../models/google/GoogleSubscriptionPurchase";
 
 export const storeSubscriptionRequestSchema = {
@@ -20,20 +22,20 @@ export const storeSubscriptionRequestSchema = {
     }  
 };
 
-export async function handleStoreSubscriptionRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+export async function handleStoreSubscriptionRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { token, subscription } = request.content;
 
-    const existingSubscription = await getUserSubscriptionByToken(env.DATABASE, token);
+    const existingSubscription = await getUserSubscriptionByToken(databaseSource, token);
 
     if(existingSubscription)
         return Response.json({ success: false });
 
-    const coupon = await getStoreCouponByToken(env.DATABASE, token);
+    const coupon = await getStoreCouponByToken(databaseSource, token);
 
     if(coupon) {
-        await createUserSubscription(env.DATABASE, request.key.user, coupon.token, coupon.product, Date.now() + coupon.duration);
+        await createUserSubscription(databaseSource, request.key.user, coupon.token, coupon.product, Date.now() + coupon.duration);
 
-        await deleteStoreCoupon(env.DATABASE, coupon.id);
+        await deleteStoreCoupon(databaseSource, coupon.id);
     }
     else if(subscription) {
         const accessToken = await getGoogleAuthKey(env, [
@@ -53,7 +55,7 @@ export async function handleStoreSubscriptionRequest(request: RequestWithKey, en
 
         const expires = parseInt(result.expiryTimeMillis);
 
-        await createUserSubscription(env.DATABASE, request.key.user, token, subscription, expires);
+        await createUserSubscription(databaseSource, request.key.user, token, subscription, expires);
     }
     else
         return Response.json({ succcess: false });

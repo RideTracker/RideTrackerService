@@ -1,22 +1,24 @@
 import { getActivityComments } from "../../controllers/activities/comments/getActivityComments";
 import { getActivityById } from "../../controllers/activities/getActivityById";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
-export async function handleActivityCommentsRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityCommentsRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { id } = request.params;
 
-    const activity = await getActivityById(env.DATABASE, id);
+    const activity = await getActivityById(databaseSource, id);
 
     if(activity.status === "deleted")
         return Response.json({ success: false });
 
-    const comments = await getActivityComments(env.DATABASE, id);
+    const comments = await getActivityComments(databaseSource, id);
 
     if(!comments)
         return Response.json({ success: false });
 
     const commentUsers = await Promise.all(comments.map((comment) => {
-        return getUserById(env.DATABASE, comment.user);
+        return getUserById(databaseSource, comment.user);
     }));
 
     return Response.json({

@@ -1,5 +1,7 @@
 import { createActivityComment } from "../../../controllers/activities/comments/createActivityComment";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityCreateCommentRequestSchema = {
     params: {
@@ -22,11 +24,11 @@ export const activityCreateCommentRequestSchema = {
     }
 };
 
-export async function handleActivityCreateCommentRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityCreateCommentRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { id } = request.params;
     const { parent, message } = request.content;
 
-    const activity = await getActivityById(env.DATABASE, id);
+    const activity = await getActivityById(databaseSource, id);
 
     if(!activity)
         return Response.json({ success: false });
@@ -34,7 +36,7 @@ export async function handleActivityCreateCommentRequest(request: RequestWithKey
     if(activity.status === "deleted")
         return Response.json({ success: false });
     
-    const comment = await createActivityComment(env.DATABASE, id, request.key.user, parent ?? null, message);
+    const comment = await createActivityComment(databaseSource, id, request.key.user, parent ?? null, message);
 
     if(!comment)
         return Response.json({ success: false });

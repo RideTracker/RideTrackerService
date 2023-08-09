@@ -1,5 +1,7 @@
 import { getPlaceGeocoding } from "../../controllers/maps/getPlaceGeocoding";
 import { getRoutesPolyline } from "../../controllers/maps/getRoutesPolyline";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const mapsRouteSchema = {
     content: {
@@ -26,7 +28,7 @@ export const mapsRouteSchema = {
     }  
 };
 
-export async function handleMapsRouteRequest(request: RequestWithKey, env: Env) {
+export async function handleMapsRouteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { waypoints } = request.content;
 
     const result = await getRoutesPolyline(env.GOOGLE_MAPS_API_TOKEN, waypoints);

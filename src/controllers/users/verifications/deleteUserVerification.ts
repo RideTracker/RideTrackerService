@@ -1,5 +1,6 @@
+import DatabaseSource from "../../../database/databaseSource";
 import { UserVerification } from "../../../models/userVerification";
 
-export async function deleteUserVerification(database: D1Database, userVerification: UserVerification): Promise<void> {
-    await database.prepare("DELETE FROM user_verifications WHERE id = ?").bind(userVerification.id).run();
+export async function deleteUserVerification(databaseSource: DatabaseSource, userVerification: UserVerification): Promise<void> {
+    await databaseSource.prepare("DELETE FROM user_verifications WHERE id = ?", userVerification.id).run();
 };

@@ -1,7 +1,7 @@
-import { ActivitySummary } from "@ridetracker/ridetrackertypes";
+import DatabaseSource from "../../../database/databaseSource";
 
-export async function createActivitySummary(database: D1Database, id: string, key: string, value: number): Promise<void> {
+export async function createActivitySummary(databaseSource: DatabaseSource, id: string, key: string, value: number): Promise<void> {
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO activity_summary (id, key, value, personal_best, timestamp) VALUES (?, ?, ?, ?, ?)").bind(id, key, value, 0, timestamp).run();
+    await databaseSource.prepare("INSERT INTO activity_summary (id, key, value, personal_best, timestamp) VALUES (?, ?, ?, ?, ?)", id, key, value, 0, timestamp).run();
 };

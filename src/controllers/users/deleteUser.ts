@@ -1,9 +1,10 @@
+import DatabaseSource from "../../database/databaseSource";
 import { User } from "../../models/user";
 
-export async function deleteUser(database: D1Database, user: User): Promise<void> {
-    await database.batch([
-        database.prepare("DELETE FROM user_keys WHERE user = ?").bind(user.id),
-        database.prepare("DELETE FROM user_verifications WHERE user = ?").bind(user.id),
-        database.prepare("DELETE FROM users WHERE id = ?").bind(user.id)
+export async function deleteUser(databaseSource: DatabaseSource, user: User): Promise<void> {
+    await databaseSource.batch([
+        databaseSource.prepare("DELETE FROM user_keys WHERE user = ?", user.id),
+        databaseSource.prepare("DELETE FROM user_verifications WHERE user = ?", user.id),
+        databaseSource.prepare("DELETE FROM users WHERE id = ?", user.id)
     ]);
 };

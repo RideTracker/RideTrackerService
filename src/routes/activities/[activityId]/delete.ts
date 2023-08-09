@@ -2,6 +2,8 @@ import { getActivityById } from "../../../controllers/activities/getActivityById
 import { deleteActivitySummaries } from "../../../controllers/activities/summary/deleteActivitySummaries";
 import { updatePersonalBestActivitySummary } from "../../../controllers/activities/summary/updatePersonalBestActivitySummary";
 import { updateActivityStatus } from "../../../controllers/activities/updateActivityStatus";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityDeleteRequestSchema = {
     params: {
@@ -12,10 +14,10 @@ export const activityDeleteRequestSchema = {
     }
 };
 
-export async function handleActivityDeleteRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityDeleteRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { activityId } = request.params;
 
-    const activity = await getActivityById(env.DATABASE, activityId);
+    const activity = await getActivityById(databaseSource, activityId);
 
     if(!activity)
         return Response.json({ success: false });
@@ -26,13 +28,13 @@ export async function handleActivityDeleteRequest(request: RequestWithKey, env: 
     if(activity.status === "deleted")
         return Response.json({ success: false });
 
-    await updateActivityStatus(env.DATABASE, activity.id, "deleted");
+    await updateActivityStatus(databaseSource, activity.id, "deleted");
 
     await env.BUCKET.delete(`activities/${activity.id}.json`);
 
-    await deleteActivitySummaries(env.DATABASE, activity.id);
+    await deleteActivitySummaries(databaseSource, activity.id);
 
-    await updatePersonalBestActivitySummary(env.DATABASE, activity.user);
+    await updatePersonalBestActivitySummary(databaseSource, activity.user);
 
     return Response.json({ success: true });
 };

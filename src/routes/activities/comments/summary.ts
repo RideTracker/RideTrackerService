@@ -2,6 +2,8 @@ import { getActivityCommentsCount } from "../../../controllers/activities/commen
 import { getActivityCommentsSummary } from "../../../controllers/activities/comments/getActivityCommentsSummary";
 import { getActivityById } from "../../../controllers/activities/getActivityById";
 import { getUserById } from "../../../controllers/users/getUserById";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const activityCommentSummaryRequestSchema = {
     params: {
@@ -12,22 +14,22 @@ export const activityCommentSummaryRequestSchema = {
     }
 };
 
-export async function handleActivityCommentsSummaryRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityCommentsSummaryRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { activityId } = request.params;
 
-    const activity = await getActivityById(env.DATABASE, activityId);
+    const activity = await getActivityById(databaseSource, activityId);
 
     if(activity.status === "deleted")
         return Response.json({ success: false, message: "Activity has been deleted." });
 
-    const comments = await getActivityCommentsSummary(env.DATABASE, activityId);
+    const comments = await getActivityCommentsSummary(databaseSource, activityId);
 
     if(!comments)
         return Response.json({ success: false, message: "!comments" });
 
-    const count = await getActivityCommentsCount(env.DATABASE, activityId);
+    const count = await getActivityCommentsCount(databaseSource, activityId);
 
-    const commentUsers = await Promise.all(comments.map((comment) => getUserById(env.DATABASE, comment.user)));
+    const commentUsers = await Promise.all(comments.map((comment) => getUserById(databaseSource, comment.user)));
 
     return Response.json({
         success: true,

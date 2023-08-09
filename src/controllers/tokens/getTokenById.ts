@@ -1,5 +1,6 @@
 import { Token } from "@ridetracker/authservice";
+import DatabaseSource from "../../database/databaseSource";
 
-export async function getTokenById(database: D1Database, id: string): Promise<Token> {
-    return await database.prepare("SELECT * FROM tokens WHERE id = ?").bind(id).first();
+export async function getTokenById(databaseSource: DatabaseSource, id: string): Promise<Token> {
+    return await databaseSource.prepare("SELECT * FROM tokens WHERE id = ?", id).first();
 };

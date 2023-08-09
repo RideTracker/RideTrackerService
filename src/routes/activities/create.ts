@@ -2,6 +2,8 @@ import { createActivity } from "../../controllers/activities/createActivity";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
 import { getActivityByLocalId } from "../../controllers/activities/getActivityByLocalId";
 import { getDevice } from "../../controllers/devices/getDevice";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
+import DatabaseSource from "../../database/databaseSource";
 
 export const createActivityRequestSchema = {
     content: {
@@ -93,13 +95,13 @@ export const createActivityRequestSchema = {
     }
 };
 
-export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, versionFeatureFlags: VersionFeatureFlags) {
+export async function handleCreateActivityRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { visibility, sessions, recording } = request.content;
 
     let userId = request.key.user;
 
     if(request.key.type === "device") {
-        const device = await getDevice(env.DATABASE, request.key.user);
+        const device = await getDevice(databaseSource, request.key.user);
 
         if(!device)
             return Response.json({ success: false });
@@ -123,12 +125,12 @@ export async function handleCreateActivityRequest(request: RequestWithKey, env: 
     else
         localId = recording.id;
 
-    const existingActivity = await getActivityByLocalId(env.DATABASE, userId, localId);
+    const existingActivity = await getActivityByLocalId(databaseSource, userId, localId);
 
     if(existingActivity)
         return Response.json({ success: false, message: "You have already uploaded this activity!" });
 
-    const activity = await createActivity(env.DATABASE, userId, visibility, localId);
+    const activity = await createActivity(databaseSource, userId, visibility, localId);
 
     if(!activity)
         return Response.json({ success: false });

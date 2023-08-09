@@ -1,6 +1,8 @@
 import { createBike } from "../../controllers/bikes/createBike";
 import { getBikeById } from "../../controllers/bikes/getBikeById";
 import { getBikeImagesCount } from "../../controllers/bikes/images/getBikeImagesCount";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const uploadBikeImageRequestSchema = {
     params: {
@@ -11,10 +13,10 @@ export const uploadBikeImageRequestSchema = {
     }
 };
 
-export async function handleUploadBikeImageRequest(request: RequestWithKey, env: Env) {
+export async function handleUploadBikeImageRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { bikeId } = request.params;
 
-    const bike = await getBikeById(env.DATABASE, bikeId);
+    const bike = await getBikeById(databaseSource, bikeId);
 
     if(!bike)
         return Response.json({ success: false });
@@ -22,7 +24,7 @@ export async function handleUploadBikeImageRequest(request: RequestWithKey, env:
     if(bike.user !== request.key.user)
         return Response.json({ success: false });
 
-    const imageCount = await getBikeImagesCount(env.DATABASE, bike.id);
+    const imageCount = await getBikeImagesCount(databaseSource, bike.id);
 
     if(imageCount >= 5)
         return Response.json({ success: false });

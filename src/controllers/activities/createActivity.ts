@@ -1,11 +1,9 @@
 import { Activity, ActivityVisibility } from "@ridetracker/ridetrackertypes";
-import { getActivityById } from "./getActivityById";
+import DatabaseSource from "../../database/databaseSource";
 
-export async function createActivity(database: D1Database, user: string, visibility: ActivityVisibility, localId: string): Promise<Activity> {
+export async function createActivity(databaseSource: DatabaseSource, user: string, visibility: ActivityVisibility, localId: string): Promise<Activity> {
     const id = crypto.randomUUID();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO activities (id, user, visibility, status, local_id, timestamp) VALUES (?, ?, ?, ?, ?, ?)").bind(id, user, visibility, "created", localId, timestamp).run();
-
-    return await getActivityById(database, id);
+    return await databaseSource.prepare("INSERT INTO activities (id, user, visibility, status, local_id, timestamp) VALUES (?, ?, ?, ?, ?, ?) RETURNING *", id, user, visibility, "created", localId, timestamp).first();
 };

@@ -2,6 +2,8 @@ import { getActivitiesByUser } from "../../controllers/activities/getActivitiesB
 import { getActivityCountByUser } from "../../controllers/activities/getActivityCountByUser";
 import { getUserFollowersCount } from "../../controllers/users/follows/getUserFollowersCount";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 
 export const profileActivitiesRequestSchema = {
     params: {
@@ -19,11 +21,11 @@ export const profileActivitiesRequestSchema = {
     }
 };
 
-export async function handleProfileActivitiesRequest(request: RequestWithKey, env: Env) {
+export async function handleProfileActivitiesRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { userId } = request.params;
     const { offset } = request.content;
 
-    const activities = await getActivitiesByUser(env.DATABASE, userId, offset);
+    const activities = await getActivitiesByUser(databaseSource, userId, offset);
 
     if(!activities || !activities.length)
         return Response.json({ success: false });

@@ -1,6 +1,8 @@
 import { getActivityById } from "@ridetracker/ridetrackerclient";
 import { getActivityCommentById } from "../../../controllers/activities/comments/getActivityCommentById";
 import { getUserById } from "../../../controllers/users/getUserById";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
+import DatabaseSource from "../../../database/databaseSource";
 
 export const activityCommentRequestSchema = {
     params: {
@@ -16,10 +18,10 @@ export const activityCommentRequestSchema = {
     }
 };
 
-export async function handleActivityCommentRequest(request: RequestWithKey, env: Env) {
+export async function handleActivityCommentRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { id, commentId } = request.params;
 
-    const comment = await getActivityCommentById(env.DATABASE, commentId);
+    const comment = await getActivityCommentById(databaseSource, commentId);
 
     if(!comment)
         return Response.json({ success: false });
@@ -27,7 +29,7 @@ export async function handleActivityCommentRequest(request: RequestWithKey, env:
     if(comment.activity !== id)
         return Response.json({ success: false });
 
-    const commentUser = await getUserById(env.DATABASE, comment.user);
+    const commentUser = await getUserById(databaseSource, comment.user);
 
     return Response.json({
         success: true,

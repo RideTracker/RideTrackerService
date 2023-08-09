@@ -1,6 +1,8 @@
 import { getActivities } from "../controllers/activities/getActivities";
 import { getActivitiesByFeed } from "../controllers/activities/getActivitiesByFeed";
 import { getPollsByFeed } from "../controllers/polls/getPollsByFeed";
+import DatabaseSource from "../database/databaseSource";
+import { FeatureFlagsExecution } from "../models/FeatureFlagsExecution";
 import { Poll } from "../models/Poll";
 
 export const feedRequestSchema = {
@@ -51,11 +53,11 @@ export const feedRequestSchema = {
     }
 };
 
-export async function handleFeedRequest(request: RequestWithKey, env: Env) {
+export async function handleFeedRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { relations, search, order, timeline, includePolls } = request.query;
     const { offsets } = request.content;
 
-    const activities = await getActivitiesByFeed(env.DATABASE, request.key.user, offsets.activities, 7, relations, search, order, timeline);
+    const activities = await getActivitiesByFeed(databaseSource, request.key.user, offsets.activities, 7, relations, search, order, timeline);
 
     if(!activities)
         return new Response(undefined, { status: 404, statusText: "Not Found" });
@@ -63,7 +65,7 @@ export async function handleFeedRequest(request: RequestWithKey, env: Env) {
     let polls: Poll[] = [];
 
     if(includePolls)
-        polls = await getPollsByFeed(env.DATABASE, offsets.polls, 1);
+        polls = await getPollsByFeed(databaseSource, offsets.polls, 1);
 
     return Response.json({
         success: true,

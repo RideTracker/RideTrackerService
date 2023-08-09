@@ -1,3 +1,4 @@
+import DatabaseSource from "../../../database/databaseSource";
 import { User } from "../../../models/user";
 import { UserVerification } from "../../../models/userVerification";
 import { getUserVerification } from "./getUserVerification";
@@ -10,12 +11,10 @@ export async function generateUserVerificationCode(): Promise<string> {
     return String(randomArray[0] % 1000000).padStart(6, '0');
 };
 
-export async function createUserVerification(database: D1Database, user: User): Promise<UserVerification> {
+export async function createUserVerification(databaseSource: DatabaseSource, user: User): Promise<UserVerification> {
     const id = crypto.randomUUID();
     const code = await generateUserVerificationCode();
     const timestamp = Date.now();
 
-    await database.prepare("INSERT INTO user_verifications (id, user, code, timestamp) VALUES (?, ?, ?, ?)").bind(id, user.id, code, timestamp).run();
-    
-    return await getUserVerification(database, id);
+    return await databaseSource.prepare("INSERT INTO user_verifications (id, user, code, timestamp) VALUES (?, ?, ?, ?) RETURNING *", id, user.id, code, timestamp).first<UserVerification>();
 };

@@ -1,3 +1,5 @@
-export async function deleteActivitySummaries(database: D1Database, activityId: string): Promise<void> {
-    await database.prepare("DELETE FROM activity_summary WHERE id = ?").bind(activityId).run();
+import DatabaseSource from "../../../database/databaseSource";
+
+export async function deleteActivitySummaries(databaseSource: DatabaseSource, activityId: string): Promise<void> {
+    await databaseSource.prepare("DELETE FROM activity_summary WHERE id = ?", activityId).run();
 };

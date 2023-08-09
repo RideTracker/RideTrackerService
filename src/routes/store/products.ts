@@ -4,11 +4,13 @@ import deleteStoreCoupon from "../../controllers/store/coupons/deleteStoreCoupon
 import getStoreCouponByToken from "../../controllers/store/coupons/getStoreCouponByToken";
 import { createUserSubscription } from "../../controllers/users/subscriptions/createUserSubscription";
 import { getUserSubscriptionByToken } from "../../controllers/users/subscriptions/getUserSubscriptionByToken";
+import DatabaseSource from "../../database/databaseSource";
 import { VersionFeatureFlags } from "../../models/FeatureFlags";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { GoogleSubscriptionPurchase } from "../../models/google/GoogleSubscriptionPurchase";
 
-export async function handleStoreProductsRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, versionFeatureFlags: VersionFeatureFlags) {
-    if(versionFeatureFlags.disableSubscriptions) {
+export async function handleStoreProductsRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
+    if(featureFlags.version.disableSubscriptions) {
         return Response.json({
             success: false,
             message: "Subscriptions are disabled currently."

@@ -1,5 +1,6 @@
+import DatabaseSource from "../../../database/databaseSource";
 import { UserSubscription } from "../../../models/UserSubscription";
 
-export async function getUserSubscriptionByToken(database: D1Database, token: string): Promise<UserSubscription | null> {
-    return await database.prepare("SELECT * FROM user_subscriptions WHERE token = ?").bind(token).first();
+export async function getUserSubscriptionByToken(databaseSource: DatabaseSource, token: string): Promise<UserSubscription | null> {
+    return await databaseSource.prepare("SELECT * FROM user_subscriptions WHERE token = ?", token).first();
 };

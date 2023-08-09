@@ -2,6 +2,8 @@ import { getRoutesByFeed } from "../../../controllers/routes/getRoutesByFeed";
 import { getRoutesByUserFeed } from "../../../controllers/routes/getRoutesByUserFeed";
 import { getRoutesWaypoints } from "../../../controllers/routes/waypoints/getRoutesWaypoints";
 import { getUsersById } from "../../../controllers/users/getUsersByIds";
+import DatabaseSource from "../../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../../models/FeatureFlagsExecution";
 
 export const routesFeedRequestSchema = {
     content: {
@@ -53,12 +55,12 @@ export const routesFeedRequestSchema = {
     }
 };
 
-export async function handleRoutesFeedRequest(request: RequestWithKey, env: Env) {
+export async function handleRoutesFeedRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     const { offset, bounds } = request.content;
 
-    const routes = await getRoutesByFeed(env.DATABASE, offset, 5, bounds);
-    const routesUsers = (routes.length)?(await getUsersById(env.DATABASE, routes.map((route) => route.user))):(undefined);
-    const routesWaypoints = (routes.length)?(await getRoutesWaypoints(env.DATABASE, routes.map((route) => route.id))):(undefined);
+    const routes = await getRoutesByFeed(databaseSource, offset, 5, bounds);
+    const routesUsers = (routes.length)?(await getUsersById(databaseSource, routes.map((route) => route.user))):(undefined);
+    const routesWaypoints = (routes.length)?(await getRoutesWaypoints(databaseSource, routes.map((route) => route.id))):(undefined);
 
     return Response.json({
         success: true,

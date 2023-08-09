@@ -2,6 +2,8 @@ import { createBike } from "../../controllers/bikes/createBike";
 import getFormattedBikeModel from "../../controllers/bikes/getFormattedBikeModel";
 import { createBikeImage } from "../../controllers/bikes/images/createBikeImage";
 import { getUserById } from "../../controllers/users/getUserById";
+import DatabaseSource from "../../database/databaseSource";
+import { FeatureFlagsExecution } from "../../models/FeatureFlagsExecution";
 import { getDirectUploadUrl, uploadImage } from "../../utils/images";
 
 export const createBikeRequestSchema = {
@@ -29,7 +31,7 @@ export const createBikeRequestSchema = {
     }
 };
 
-export async function handleCreateBikeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>) {
+export async function handleCreateBikeRequest(request: RequestWithKey, env: Env, context: EventContext<Env, string, null>, databaseSource: DatabaseSource, featureFlags: FeatureFlagsExecution) {
     let { name } = request.content;
     const { model, images } = request.content;
 
@@ -37,12 +39,12 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
         return Response.json({ success: false });
 
     if(!name?.length) {
-        const user = await getUserById(env.DATABASE, request.key.user);
+        const user = await getUserById(databaseSource, request.key.user);
 
         name = `${user.firstname}'${(user.firstname.endsWith('s'))?(""):("s")} ${getFormattedBikeModel(model).toLowerCase()}`;
     }
 
-    const bike = await createBike(env.DATABASE, request.key.user, name, model);
+    const bike = await createBike(databaseSource, request.key.user, name, model);
 
     if(!bike)
         return Response.json({ success: false });
@@ -62,7 +64,7 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
         if(!upload.success)
             return Response.json({ success: false });
 
-        await createBikeImage(env.DATABASE, bike.id, directUpload.id, 0);
+        await createBikeImage(databaseSource, bike.id, directUpload.id, 0);
 
         images.shift();
 
@@ -82,7 +84,7 @@ export async function handleCreateBikeRequest(request: RequestWithKey, env: Env,
                 if(!upload.success)
                     return;
 
-                await createBikeImage(env.DATABASE, bike.id, directUpload.id, 1 + index);
+                await createBikeImage(databaseSource, bike.id, directUpload.id, 1 + index);
             })));
         }
     }

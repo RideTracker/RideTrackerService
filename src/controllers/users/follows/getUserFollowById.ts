@@ -1,5 +1,6 @@
+import DatabaseSource from "../../../database/databaseSource";
 import { UserFollow } from "../../../models/userFollow";
 
-export async function getUserFollowById(database: D1Database, id: string): Promise<UserFollow> {
-    return await database.prepare("SELECT * FROM user_follows WHERE id = ?").bind(id).first();
+export async function getUserFollowById(databaseSource: DatabaseSource, id: string): Promise<UserFollow> {
+    return await databaseSource.prepare("SELECT * FROM user_follows WHERE id = ?", id).first();
 };
