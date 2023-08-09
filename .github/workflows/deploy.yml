@@ -51,5 +51,5 @@ jobs:
                     ANALYTICS_SERVICE_HOST:${{ vars.ANALYTICS_HOST }} 
                     ANALYTICS_SERVICE_CLIENT_ID:${{ vars.ANALYTICS_CLIENT_ID }} 
                     ANALYTICS_SERVICE_CLIENT_TOKEN:${{ secrets.ANALYTICS_CLIENT_TOKEN }}
-                    ROUTE_SERVICE_CLIENT_ID:${{ vars.ROUTE_CLIENT_ID }} 
-                    ROUTE_SERVICE_CLIENT_TOKEN:${{ secrets.ROUTE_CLIENT_TOKEN }}
+                    ROUTE_SERVICE_CLIENT_ID:${{ vars.ROUTE_SERVICE_CLIENT_ID }} 
+                    ROUTE_SERVICE_CLIENT_TOKEN:${{ secrets.ROUTE_SERVICE_CLIENT_TOKEN }}
