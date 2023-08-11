@@ -15,6 +15,9 @@ jobs:
         run: curl -sSfL https://get.tur.so/install.sh | bash
         continue-on-error: true
 
+      - name: Reload bash source
+        run: source /home/runner/.bashrc
+
       - name: Create temporary folder
         run: mkdir ${{ runner.temp }}/artifacts
       
