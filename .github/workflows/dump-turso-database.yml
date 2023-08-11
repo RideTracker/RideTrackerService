@@ -2,7 +2,16 @@ run-name: Create backup
 
 on:
   workflow_dispatch:
+    inputs:
+      database:
+        type: "string"
+        required: true
+        
   workflow_call:
+    inputs:
+      database:
+        type: "string"
+        required: true
 
 jobs:
   deploy:
@@ -18,13 +27,13 @@ jobs:
         run: curl -sSfL https://get.tur.so/install.sh | bash
         continue-on-error: true
       
-      - name: Dump ridetracker-production
-        run: /home/runner/.turso/turso db shell ridetracker-production .dump > ${{ runner.temp }}/artifacts/database.sql
+      - name: Dump ${{ inputs.database }}
+        run: /home/runner/.turso/turso db shell ${{ inputs.database }} .dump > ${{ runner.temp }}/artifacts/database.sql
       
       - name: Get current timestamp
-        run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
       
       - uses: actions/upload-artifact@v3
         with:
-          name: ridetracker-production-turso-${{ env.TIMESTAMP }}
+          name: turso-${{ inputs.database }}-${{ env.TIMESTAMP }}
           path: ${{ runner.temp }}/artifacts
