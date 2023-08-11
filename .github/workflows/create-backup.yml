@@ -12,7 +12,7 @@ jobs:
       TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
     steps:
       - name: Install Turso CLI
-        run: curl -sSfL https://get.tur.so/install.sh | bash
+        run: brew install tursodatabase/tap/turso
 
       - name: Create temporary folder
         run: mkdir ${{ runner.temp }}/artifacts
