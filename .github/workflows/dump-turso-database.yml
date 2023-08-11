@@ -1,24 +1,27 @@
-run-name: Create backup
+name: dump-turso-database
+run-name: Dump Turso database
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      database:
+      DATABASE:
         type: "string"
         required: true
         
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      database:
+      DATABASE:
+        description: "Database to dump"
         type: "string"
         required: true
 
 jobs:
-  deploy:
-    name: Create Turso backup
+  dump-database:
+    name: Dump ${{ inputs.DATABASE }} using Turso CLI
     runs-on: ubuntu-latest
     env:
       TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
+      
     steps:
       - name: Create temporary folder
         run: mkdir ${{ runner.temp }}/artifacts
@@ -28,12 +31,13 @@ jobs:
         continue-on-error: true
       
       - name: Dump ${{ inputs.database }}
-        run: /home/runner/.turso/turso db shell ${{ inputs.database }} .dump > ${{ runner.temp }}/artifacts/database.sql
+        run: /home/runner/.turso/turso db shell ${{ inputs.DATABASE }} .dump > ${{ runner.temp }}/artifacts/database.sql
       
       - name: Get current timestamp
-        run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
       
-      - uses: actions/upload-artifact@v3
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: turso-${{ inputs.database }}-${{ env.TIMESTAMP }}
+          name: Turso-${{ inputs.DATABASE }}-${{ env.TIMESTAMP }}
           path: ${{ runner.temp }}/artifacts
