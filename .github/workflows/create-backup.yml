@@ -19,7 +19,7 @@ jobs:
         continue-on-error: true
       
       - name: Dump ridetracker-production
-        run: .turso/turso db shell ridetracker-production .dump > ${{ runner.temp }}/artifacts/database.sql
+        run: /home/runner/.turso/turso db shell ridetracker-production .dump > ${{ runner.temp }}/artifacts/database.sql
       
       - name: Get current timestamp
         run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
