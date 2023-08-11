@@ -16,7 +16,7 @@ jobs:
         continue-on-error: true
 
       - name: Reload bash source
-        run: source /home/runner/.bashrc
+        run: exec bash
 
       - name: Create temporary folder
         run: mkdir ${{ runner.temp }}/artifacts
