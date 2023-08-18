@@ -1,0 +1,43 @@
+name: dump-turso-database
+run-name: Dump Turso database
+
+on:
+  workflow_call:
+    inputs:
+      DATABASE:
+        type: "string"
+        required: true
+        
+  workflow_dispatch:
+    inputs:
+      DATABASE:
+        description: "Database to dump"
+        type: "string"
+        required: true
+
+jobs:
+  dump-database:
+    name: Dump ${{ inputs.DATABASE }} using Turso CLI
+    runs-on: ubuntu-latest
+    env:
+      TURSO_API_TOKEN: ${{ secrets.TURSO_API_TOKEN }}
+      
+    steps:
+      - name: Create temporary folder
+        run: mkdir ${{ runner.temp }}/artifacts
+        
+      - name: Install Turso CLI
+        run: curl -sSfL https://get.tur.so/install.sh | bash
+        continue-on-error: true
+      
+      - name: Dump ${{ inputs.database }}
+        run: /home/runner/.turso/turso db shell ${{ inputs.DATABASE }} .dump > ${{ runner.temp }}/artifacts/database.sql
+      
+      - name: Get current timestamp
+        run: echo "TIMESTAMP=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
+      
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Turso-${{ inputs.DATABASE }}-${{ env.TIMESTAMP }}
+          path: ${{ runner.temp }}/artifacts
