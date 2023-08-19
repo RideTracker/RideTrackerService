@@ -17,7 +17,6 @@ import UserAgent from "./models/UserAgent";
 import getDatabaseSource from "./controllers/database/getDatabaseSource";
 import { FeatureFlagsExecution } from "./models/FeatureFlagsExecution";
 import { DatabaseSource } from "@ridetracker/authservice";
-import getCookie from "./controllers/cookies/getCookie";
 
 const router = createRouter();
 
@@ -28,14 +27,7 @@ async function getResponse(request: RequestWithKey, env: Env, context: Execution
         if(request.method === "OPTIONS")
             return new Response(undefined, { status: 200, statusText: "OK" });
 
-        let userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
-
-        if(!userAgent) {
-            const cookies = request.headers.get("Cookie");
-
-            if(cookies)
-                userAgent = getUserAgentGroups(getCookie(cookies, "User-Agent"));
-        }
+        let userAgent = getUserAgentGroups(request.headers.get("X-User-Agent") ?? request.headers.get("User-Agent"));
 
         if(!userAgent) {
             return new Response(undefined, {
