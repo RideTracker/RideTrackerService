@@ -38,6 +38,9 @@ export default {
         let executionFeatureFlags: FeatureFlagsExecution | null = null;
 
         try {
+            if(request.method === "OPTIONS")
+                return new Response(undefined, { status: 200, statusText: "OK" });
+
             const userAgent = getUserAgentGroups(request.headers.get("X-User-Agent") ?? request.headers.get("User-Agent"));
 
             if(!userAgent) {

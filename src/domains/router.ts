@@ -62,8 +62,6 @@ export default function createRouter() {
     // TODO: withContent and withParams should be executed in withSchema, when the schema requires them
     // TODO: this will clean up this file at least
 
-    router.options("*", () => new Response(undefined, { status: 200, statusText: "OK" }));
-
     router.post("/api/auth/login", withContent, withSchema(authLoginSchema), handleAuthLoginRequest);
     router.post("/api/auth/login/verify", withContent, withSchema(authLoginVerificationSchema), handleAuthLoginVerificationRequest);
     router.get("/api/auth/login/verify/:verificationId/code", withStaging, withParams, withSchema(authLoginVerificationCodeSchema), handleAuthLoginVerificationCodeRequest);
