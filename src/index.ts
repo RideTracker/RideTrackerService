@@ -38,7 +38,7 @@ export default {
         let executionFeatureFlags: FeatureFlagsExecution | null = null;
 
         try {
-            const userAgent = getUserAgentGroups(request.headers.get("User-Agent"));
+            const userAgent = getUserAgentGroups(request.headers.get("X-User-Agent") ?? request.headers.get("User-Agent"));
 
             if(!userAgent) {
                 return new Response(undefined, {
