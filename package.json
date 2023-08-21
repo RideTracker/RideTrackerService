@@ -27,7 +27,7 @@
     "cloudflare-workers-and-google-oauth": "^1.2.0",
     "geolib": "^3.3.3",
     "install": "^0.13.0",
-    "itty-router": "^3.0.12",
+    "itty-router": "^4.0.22",
     "itty-router-extras": "^0.4.2",
     "npm": "^9.8.0"
   }
